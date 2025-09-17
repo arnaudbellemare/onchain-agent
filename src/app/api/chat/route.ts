@@ -4,8 +4,24 @@ export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
     
+    // Validate messages array
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      return Response.json({
+        message: "❌ No messages provided",
+        success: false
+      });
+    }
+    
     // Get the last message from the user
     const lastMessage = messages[messages.length - 1];
+    
+    if (!lastMessage || !lastMessage.content) {
+      return Response.json({
+        message: "❌ Invalid message format",
+        success: false
+      });
+    }
+    
     const userMessage = lastMessage.content.toLowerCase();
     
     // Initialize AgentKit
@@ -25,6 +41,8 @@ export async function POST(req: Request) {
       try {
         // Get real wallet details using AgentKit
         const actions = agentKit.getActions();
+        console.log("Available actions:", actions.map(a => a.name));
+        
         const walletDetailsAction = actions.find(action => action.name === "getWalletDetails");
         
         if (walletDetailsAction) {
@@ -34,6 +52,7 @@ export async function POST(req: Request) {
           response = `❌ Wallet details action not found. Available actions: ${actions.map(a => a.name).join(", ")}`;
         }
       } catch (error) {
+        console.error("Balance check error:", error);
         response = `❌ Error checking wallet details: ${error instanceof Error ? error.message : "Unknown error"}`;
       }
     } 
@@ -89,7 +108,25 @@ export async function POST(req: Request) {
       }
     }
     else {
-      response = `🤖 **Onchain AI Assistant Ready!**\n\n✅ **AgentKit Status:** Connected and initialized\n🌐 **Network:** ${process.env.NETWORK_ID || "base-sepolia"}\n🔑 **API Keys:** Configured\n\nI can help you with:\n\n💰 **Check Balance** - "Check my balance"\n📤 **Send Tokens** - "Send 0.1 ETH to [address]"\n🔗 **Smart Contracts** - "Interact with contract [address]"\n🔄 **DeFi Operations** - "Swap tokens" or "Add liquidity"\n🏦 **Wallet Info** - "Show my wallet address"\n\nWhat would you like to do?`;
+      // Handle simple commands like "whats my balance" or "balance"
+      if (userMessage.includes("balance") || userMessage.includes("whats")) {
+        try {
+          const actions = agentKit.getActions();
+          const walletDetailsAction = actions.find(action => action.name === "getWalletDetails");
+          
+          if (walletDetailsAction) {
+            const result = await walletDetailsAction.invoke();
+            response = `💰 **Your Wallet Details:**\n\n${result}\n\n✅ Successfully retrieved from ${process.env.NETWORK_ID || "base-sepolia"} network!`;
+          } else {
+            response = `❌ Wallet details action not found. Available actions: ${actions.map(a => a.name).join(", ")}`;
+          }
+        } catch (error) {
+          console.error("Balance check error:", error);
+          response = `❌ Error checking wallet details: ${error instanceof Error ? error.message : "Unknown error"}`;
+        }
+      } else {
+        response = `🤖 **Onchain AI Assistant Ready!**\n\n✅ **AgentKit Status:** Connected and initialized\n🌐 **Network:** ${process.env.NETWORK_ID || "base-sepolia"}\n🔑 **API Keys:** Configured\n\nI can help you with:\n\n💰 **Check Balance** - "Check my balance" or "whats my balance"\n📤 **Send Tokens** - "Send 0.1 ETH to [address]"\n🔗 **Smart Contracts** - "Interact with contract [address]"\n🔄 **DeFi Operations** - "Swap tokens" or "Add liquidity"\n🏦 **Wallet Info** - "Show my wallet address"\n\nWhat would you like to do?`;
+      }
     }
 
     return Response.json({ 
