@@ -1,36 +1,128 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Coinbase AgentKit with Perplexity AI
 
-## Getting Started
+A Next.js application that integrates Coinbase AgentKit with Perplexity AI for autonomous on-chain operations.
 
-First, run the development server:
+## Features
+
+- 🤖 AI-powered crypto wallet assistant using Perplexity AI
+- 💳 Wallet operations (check balances, send tokens)
+- 🔗 Smart contract interactions
+- 🌐 Web3 integration with Base network
+- ⚡ Built with Next.js 15 and TypeScript
+- 🎨 Modern UI with Tailwind CSS
+
+## Setup
+
+### 1. Environment Variables
+
+Create a `.env.local` file with your API keys:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Coinbase Developer Platform API Keys
+CDP_API_KEY_NAME="your-cdp-api-key-name"
+CDP_API_KEY_PRIVATE_KEY="your-cdp-private-key"
+
+# Perplexity API Key (for the LLM)
+PERPLEXITY_API_KEY="your-perplexity-api-key"
+
+# Network Configuration
+NETWORK_ID="base-sepolia"  # or base-mainnet for production
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Get API Keys
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### Coinbase Developer Platform (CDP)
+1. Visit [CDP Portal](https://portal.cdp.coinbase.com/)
+2. Create an account and navigate to API Keys
+3. Generate a new API key pair
+4. Copy both the Key Name and Private Key
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### Perplexity API
+1. Go to [Perplexity API](https://www.perplexity.ai/settings/api)
+2. Create an account and get your API key
+3. Ensure you have sufficient credits
 
-## Learn More
+### 3. Local Development
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Install dependencies
+npm install
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Start development server
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Visit `http://localhost:3000` to test your application.
 
-## Deploy on Vercel
+## Deployment to Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Option 1: Using Vercel CLI
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Deploy
+vercel
+```
+
+### Option 2: Using Vercel Dashboard
+
+1. Push your code to GitHub
+2. Connect your repository on [Vercel Dashboard](https://vercel.com/dashboard)
+3. Import your project
+4. Configure environment variables in the Vercel dashboard
+
+### Environment Variables in Vercel
+
+Add these environment variables in your Vercel project settings:
+
+- `CDP_API_KEY_NAME`
+- `CDP_API_KEY_PRIVATE_KEY`
+- `PERPLEXITY_API_KEY`
+- `NETWORK_ID`
+
+## Usage
+
+1. Open the application in your browser
+2. Type a message like:
+   - "Check my wallet balance"
+   - "Send 0.1 ETH to 0x..."
+   - "What tokens do I have?"
+3. The AI will process your request and perform the on-chain operation
+
+## Architecture
+
+- **Frontend**: Next.js 15 with React 19
+- **AI**: Perplexity AI (llama-3.1-sonar-small-128k-online)
+- **Blockchain**: Coinbase AgentKit with Base network
+- **Styling**: Tailwind CSS
+- **Deployment**: Vercel
+
+## Security
+
+- Never commit `.env` files to version control
+- Use different API keys for development and production
+- Regularly rotate your API keys
+- Monitor your agent's transaction activity
+- Set appropriate spending limits on your CDP account
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Environment Variables Not Loading**
+   - Restart your development server after changing `.env` files
+   - Ensure environment variables don't have spaces around the `=` sign
+
+2. **Build Failures**
+   - Check that all required environment variables are set in Vercel
+   - Ensure your API keys are valid and have proper permissions
+
+3. **Runtime Errors**
+   - Check your network connectivity and API rate limits
+   - Ensure your CDP account has sufficient funds for transactions
+
+## License
+
+MIT
