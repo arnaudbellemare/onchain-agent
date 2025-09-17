@@ -28,7 +28,7 @@ export async function POST(req: Request) {
         const walletDetailsAction = actions.find(action => action.name === "getWalletDetails");
         
         if (walletDetailsAction) {
-          const result = await walletDetailsAction.invoke({});
+          const result = await walletDetailsAction.invoke();
           response = `💰 **Your Wallet Details:**\n\n${result}\n\n✅ Successfully retrieved from ${process.env.NETWORK_ID || "base-sepolia"} network!`;
         } else {
           response = `❌ Wallet details action not found. Available actions: ${actions.map(a => a.name).join(", ")}`;
@@ -79,7 +79,7 @@ export async function POST(req: Request) {
         const walletDetailsAction = actions.find(action => action.name === "getWalletDetails");
         
         if (walletDetailsAction) {
-          const result = await walletDetailsAction.invoke({});
+          const result = await walletDetailsAction.invoke();
           response = `🏦 **Your Wallet Information:**\n\n${result}\n\n✅ Successfully retrieved from AgentKit!\n\nNetwork: ${process.env.NETWORK_ID || "base-sepolia"}`;
         } else {
           response = `❌ Wallet details action not found. Available actions: ${actions.map(a => a.name).join(", ")}`;
