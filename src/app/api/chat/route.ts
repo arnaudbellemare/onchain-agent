@@ -1,3 +1,4 @@
+// Clean API route without AI SDK dependencies
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
@@ -31,4 +32,3 @@ export async function POST(req: Request) {
     );
   }
 }
-// Force fresh deployment
