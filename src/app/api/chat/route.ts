@@ -1,28 +1,23 @@
-import { generateText } from "ai";
-import { initializeAgentKit } from "@/lib/agentkit";
-
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
     
-    // Initialize AgentKit with Perplexity
-    const { tools, model } = await initializeAgentKit();
-    
     // Get the last message from the user
     const lastMessage = messages[messages.length - 1];
     
-    const { text } = await generateText({
-      model,
-      system: `You are an onchain AI assistant with access to a crypto wallet. 
-      You can help users with blockchain operations, check balances, send transactions, and interact with smart contracts.
-      Always be helpful and explain what you're doing with the wallet.`,
-      prompt: lastMessage.content,
-      tools,
-      maxSteps: 10,
-    });
+    // Simple response for now - we'll add AI integration later
+    const response = `Hello! I'm your onchain AI assistant. You asked: "${lastMessage.content}"
+    
+    I'm currently being set up with wallet functionality. Soon I'll be able to:
+    - Check your wallet balance
+    - Send tokens
+    - Interact with smart contracts
+    - Help with DeFi operations
+    
+    For now, I can provide information about blockchain operations. What would you like to know?`;
 
     return Response.json({ 
-      message: text,
+      message: response,
       success: true 
     });
   } catch (error) {
