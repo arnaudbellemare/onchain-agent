@@ -15,12 +15,13 @@ export async function initializeAgentKit() {
     }
 
     // For now, return a mock successful initialization
-    // This will be replaced with actual AgentKit initialization
+    // This will be replaced with actual AgentKit initialization once we resolve the API
     return {
       agentKit: { 
         networkId,
         apiKeyName: process.env.CDP_API_KEY_NAME,
-        status: "configured"
+        status: "configured",
+        ready: true
       },
       success: true,
     };
