@@ -2,7 +2,10 @@ import { initializeAgentKit } from "@/lib/agentkit";
 
 export async function POST(req: Request) {
   try {
-    const { messages } = await req.json();
+    console.log("API called");
+    const body = await req.json();
+    console.log("Request body:", body);
+    const { messages } = body;
     
     // Validate messages array
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
@@ -23,9 +26,24 @@ export async function POST(req: Request) {
     }
     
     const userMessage = lastMessage.content.toLowerCase();
+    console.log("User message:", userMessage);
     
     // Initialize AgentKit
-    const { agentKit, success, error } = await initializeAgentKit();
+    console.log("Initializing AgentKit...");
+    let agentKit, success, error;
+    try {
+      const result = await initializeAgentKit();
+      agentKit = result.agentKit;
+      success = result.success;
+      error = result.error;
+      console.log("AgentKit result:", { success, error, hasAgentKit: !!agentKit });
+    } catch (initError) {
+      console.error("AgentKit initialization error:", initError);
+      return Response.json({
+        message: `❌ Failed to initialize AgentKit: ${initError instanceof Error ? initError.message : "Unknown error"}`,
+        success: false
+      });
+    }
     
     if (!success || !agentKit) {
       return Response.json({
