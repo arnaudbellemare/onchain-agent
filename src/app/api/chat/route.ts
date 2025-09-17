@@ -155,8 +155,9 @@ export async function POST(req: Request) {
     console.error("Error in chat API:", error);
     return Response.json(
       { 
-        error: "Failed to process request",
-        details: error instanceof Error ? error.message : "Unknown error"
+        message: `❌ Error: ${error instanceof Error ? error.message : "Unknown error"}`,
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error"
       },
       { status: 500 }
     );

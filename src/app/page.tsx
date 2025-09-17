@@ -24,10 +24,12 @@ export default function Home() {
       });
 
       const data = await res.json();
+      console.log("API Response:", data);
+      
       if (data.success) {
         setResponse(data.message);
       } else {
-        setResponse(`Error: ${data.error}`);
+        setResponse(`Error: ${data.error || data.message || "Unknown error"}`);
       }
     } catch (error) {
       setResponse(`Error: ${error instanceof Error ? error.message : "Unknown error"}`);
