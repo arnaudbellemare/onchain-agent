@@ -9,7 +9,7 @@ interface PaymentRequest {
   urgency: 'low' | 'medium' | 'high';
   type: 'vendor_payment' | 'payroll' | 'invoice' | 'refund' | 'subscription';
   recipient: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 interface PaymentRail {
@@ -368,7 +368,7 @@ export class EnhancedPaymentRouter {
   }
 
   // Run CAPO optimization
-  private async runCAPOOptimization(request: PaymentRequest, decision: PaymentDecision): Promise<void> {
+  private async runCAPOOptimization(request: PaymentRequest, _decision: PaymentDecision): Promise<void> {
     const taskDescription = `Select optimal payment rail for ${request.type} of ${request.currency} ${request.amount}`;
     const testCases = [request];
     
@@ -382,7 +382,7 @@ export class EnhancedPaymentRouter {
   }
 
   // Run GEPA optimization
-  private async runGEPAOptimization(request: PaymentRequest, decision: PaymentDecision): Promise<void> {
+  private async runGEPAOptimization(request: PaymentRequest, _decision: PaymentDecision): Promise<void> {
     const testCases = [request];
     
     const result = await costAwareOptimizer.optimize(this.optimizationConfig.optimizationBudget);

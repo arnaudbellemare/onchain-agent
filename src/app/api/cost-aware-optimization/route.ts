@@ -97,11 +97,11 @@ async function runCAPOOptimization(budget: number, task: string) {
   console.log(`Running CAPO optimization for task: ${task}`);
   
   const startTime = Date.now();
-  const testCases = [
-    { amount: 50, urgency: 'low', type: 'vendor_payment' },
-    { amount: 500, urgency: 'medium', type: 'payroll' },
-    { amount: 5000, urgency: 'high', type: 'invoice' }
-  ];
+    const testCases = [
+      { amount: 50, urgency: 'low' as const, type: 'vendor_payment' as const, currency: 'USD', recipient: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6' },
+      { amount: 500, urgency: 'medium' as const, type: 'payroll' as const, currency: 'USD', recipient: '0x8ba1f109551bD432803012645Hac136c' },
+      { amount: 5000, urgency: 'high' as const, type: 'invoice' as const, currency: 'USD', recipient: 'company-invoice-account' }
+    ];
   
   const result = await capoOptimizer.optimize(task, testCases);
   const duration = Date.now() - startTime;
@@ -287,7 +287,7 @@ async function runDemo() {
 }
 
 // Run custom optimization
-async function runCustomOptimization(config: any) {
+async function runCustomOptimization(config: { method: string; budget?: number; task?: string }) {
   if (config.method === 'gepa') {
     return await runGEPAOptimization(config.budget || 100);
   } else if (config.method === 'capo') {
@@ -298,7 +298,7 @@ async function runCustomOptimization(config: any) {
 }
 
 // Route payment request
-async function routePayment(request: any) {
+async function routePayment(request: { amount: number; currency: string; urgency: 'low' | 'medium' | 'high'; type: 'vendor_payment' | 'payroll' | 'invoice' | 'refund' | 'subscription'; recipient: string }) {
   const decision = await enhancedPaymentRouter.routePayment(request);
   return NextResponse.json({
     success: true,
@@ -307,7 +307,7 @@ async function routePayment(request: any) {
 }
 
 // Update pricing configuration
-async function updatePricing(config: any) {
+async function updatePricing(config: { pricing?: Record<string, unknown>; capo?: Record<string, unknown> }) {
   costAwareOptimizer.updatePricing(config.pricing || {});
   
   if (config.capo) {

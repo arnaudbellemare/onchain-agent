@@ -20,19 +20,21 @@ interface OptimizationResult {
     budget: number;
     duration: number;
     timestamp: string;
-    pricing?: any;
-    config?: any;
+    pricing?: Record<string, unknown>;
+    config?: Record<string, unknown>;
   };
 }
 
+interface PaymentRequest {
+  amount: number;
+  currency: string;
+  urgency: string;
+  type: string;
+  recipient: string;
+}
+
 interface PaymentDecision {
-  request: {
-    amount: number;
-    currency: string;
-    urgency: string;
-    type: string;
-    recipient: string;
-  };
+  request: PaymentRequest;
   decision: {
     selectedRail: string;
     reasoning: string;

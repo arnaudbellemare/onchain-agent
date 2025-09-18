@@ -1,5 +1,10 @@
 // Cost-Aware GEPA Optimization Engine with Real API/GPU Pricing
-import { x402APIWrapper } from './x402APIWrapper';
+
+interface TestCase {
+  amount: number;
+  urgency: string;
+  type: string;
+}
 
 interface CostMetrics {
   tokensIn: number;
@@ -133,7 +138,7 @@ export class CostAwareOptimizer {
   }
 
   // Evaluate prompt performance with real cost tracking
-  async evaluatePrompt(prompt: string, testCases: any[]): Promise<{ accuracy: number; avgCost: number; score: number }> {
+  async evaluatePrompt(prompt: string, testCases: TestCase[]): Promise<{ accuracy: number; avgCost: number; score: number }> {
     let totalAccuracy = 0;
     let totalCost = 0;
     let validTests = 0;
@@ -174,7 +179,7 @@ export class CostAwareOptimizer {
   }
 
   // Simulate accuracy evaluation (replace with real evaluation in production)
-  private simulateAccuracy(prompt: string, testCase: any): number {
+  private simulateAccuracy(prompt: string, _testCase: TestCase): number {
     // Base accuracy on prompt characteristics
     let accuracy = 0.7; // Base accuracy
     

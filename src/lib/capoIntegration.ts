@@ -2,6 +2,14 @@
 // Based on the paper: "CAPO: Cost-Aware Prompt Optimization" (arXiv:2504.16005)
 import { costAwareOptimizer } from './costAwareOptimizer';
 
+interface PaymentRequest {
+  amount: number;
+  currency: string;
+  urgency: string;
+  type: string;
+  recipient: string;
+}
+
 interface CAPOConfig {
   populationSize: number;
   budget: number;
@@ -180,7 +188,7 @@ export class CAPOOptimizer {
   }
 
   // Evaluate individual with cost tracking
-  async evaluateIndividual(individual: CAPOIndividual, testCases: any[]): Promise<void> {
+  async evaluateIndividual(individual: CAPOIndividual, _testCases: PaymentRequest[]): Promise<void> {
     if (this.shouldStopEarly(individual)) {
       console.log(`CAPO: Early stopping for individual with fitness ${individual.fitness.toFixed(4)}`);
       return;
@@ -196,7 +204,7 @@ export class CAPOOptimizer {
       individual.cost = costMetrics.totalCostUSD;
       
       // Simulate accuracy evaluation
-      individual.accuracy = this.simulateAccuracy(individual.prompt, testCases);
+      individual.accuracy = this.simulateAccuracy(individual.prompt, _testCases);
       
       // Calculate fitness using Pareto optimization
       individual.fitness = this.calculateFitness(individual);
@@ -211,7 +219,7 @@ export class CAPOOptimizer {
   }
 
   // Simulate accuracy evaluation
-  private simulateAccuracy(prompt: string, testCases: any[]): number {
+  private simulateAccuracy(prompt: string, _testCases: PaymentRequest[]): number {
     let accuracy = 0.6; // Base accuracy
     
     // Reward concise prompts
@@ -258,7 +266,7 @@ export class CAPOOptimizer {
   }
 
   // Main CAPO optimization loop
-  async optimize(taskDescription: string, testCases: any[]): Promise<CAPOResult> {
+  async optimize(taskDescription: string, testCases: PaymentRequest[]): Promise<CAPOResult> {
     console.log(`CAPO: Starting optimization with budget ${this.config.budget}`);
     
     this.initializePopulation(taskDescription);

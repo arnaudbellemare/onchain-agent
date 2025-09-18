@@ -190,7 +190,7 @@ export class X402APIWrapper {
   }
 
   // Check if provider is available for the request
-  private isProviderAvailable(provider: APIProvider, request: APIRequest): boolean {
+  private isProviderAvailable(provider: APIProvider, _request: APIRequest): boolean {
     // Check if provider has required API key
     if (!provider.apiKey) return false;
     

@@ -66,7 +66,7 @@ export class OptimizationEngine {
     this.optimizationRules.push({
       id: 'cost_optimization',
       name: 'Cost-Based Provider Switching',
-      condition: (metrics) => {
+      condition: (_metrics) => {
         const prices = priceMonitor.getCurrentPrices();
         const cheapestProvider = prices.reduce((min, current) => 
           current.currentCost < min.currentCost ? current : min
@@ -74,7 +74,7 @@ export class OptimizationEngine {
         const currentProvider = this.getCurrentProvider();
         return cheapestProvider.currentCost < currentProvider.cost * 0.9; // 10% cheaper
       },
-      action: (metrics) => {
+      action: (_metrics) => {
         const prices = priceMonitor.getCurrentPrices();
         const cheapestProvider = prices.reduce((min, current) => 
           current.currentCost < min.currentCost ? current : min
@@ -99,12 +99,12 @@ export class OptimizationEngine {
     this.optimizationRules.push({
       id: 'performance_optimization',
       name: 'Performance-Based Provider Switching',
-      condition: (metrics) => {
+      condition: (_metrics) => {
         const currentProvider = this.getCurrentProvider();
         const performance = this.providerPerformance.get(currentProvider.id);
         return performance ? performance.reliability < 0.9 : false;
       },
-      action: (metrics) => {
+      action: (_metrics) => {
         const bestPerformingProvider = this.getBestPerformingProvider();
         const currentProvider = this.getCurrentProvider();
         
@@ -125,12 +125,12 @@ export class OptimizationEngine {
     this.optimizationRules.push({
       id: 'load_balancing',
       name: 'Load Balancing Optimization',
-      condition: (metrics) => {
+      condition: (_metrics) => {
         const currentProvider = this.getCurrentProvider();
         const performance = this.providerPerformance.get(currentProvider.id);
         return performance ? performance.totalRequests > 1000 : false; // High usage
       },
-      action: (metrics) => {
+      action: (_metrics) => {
         const leastUsedProvider = this.getLeastUsedProvider();
         
         return {
