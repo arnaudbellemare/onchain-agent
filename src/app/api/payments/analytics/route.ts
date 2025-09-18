@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     
     // Calculate API cost optimization opportunities
     const apiCosts = paymentDB.getAPICosts();
-    const x402EnabledAPIs = apiCosts.filter(api => api.x402Enabled);
+    // const x402EnabledAPIs = apiCosts.filter(api => api.x402Enabled);
     const traditionalAPIs = apiCosts.filter(api => !api.x402Enabled);
     
     const x402Savings = traditionalAPIs.reduce((total, api) => {

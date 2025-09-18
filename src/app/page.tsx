@@ -36,8 +36,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [portfolioData, setPortfolioData] = useState<PortfolioData | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalType, setModalType] = useState<"send" | "swap" | "request">("send");
-  const [selectedAsset, setSelectedAsset] = useState<{ symbol: string; name: string; balance: string; value: string; change24h: string; change24hPercent: string } | null>(null);
+  const [modalType] = useState<"send" | "swap" | "request">("send");
+  const [selectedAsset] = useState<{ symbol: string; name: string; balance: string; value: string; change24h: string; change24hPercent: string } | null>(null);
   const [notification, setNotification] = useState({
     message: "",
     type: "info" as "success" | "error" | "info",
@@ -282,15 +282,12 @@ export default function Home() {
           <div className="space-y-12">
             {/* Hero Section */}
             <div className="text-center space-y-6">
-              <h1 className="text-5xl font-light text-white leading-tight">
-                Business Payments,<br />
-                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                  Simplified
-                </span>
+              <h1 className="text-4xl font-light text-white leading-tight">
+                Business Payments
+                <span className="block text-blue-400">Simplified</span>
               </h1>
-              <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
-                Let AI handle your payroll, vendor payments, and expense management. 
-                Focus on growing your business, not managing transactions.
+              <p className="text-lg text-gray-400 max-w-xl mx-auto">
+                AI-powered payroll, vendor payments, and expense management.
               </p>
             </div>
 
@@ -496,25 +493,16 @@ export default function Home() {
             </div>
 
             {/* Business Actions Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {businessActions.map((action) => (
                 <button
                   key={action.id}
                   onClick={action.action}
-                  className="group relative overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20"
+                  className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 text-left transition-all duration-200 hover:bg-white/10 hover:border-white/20"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="relative z-10">
-                    <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                      {action.icon}
-                    </div>
-                    <h3 className="text-xl font-medium text-white mb-2 group-hover:text-blue-300 transition-colors">
-                      {action.title}
-                    </h3>
-                    <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors">
-                      {action.description}
-                    </p>
-                  </div>
+                  <div className="text-2xl mb-3">{action.icon}</div>
+                  <h3 className="text-lg font-medium text-white mb-2">{action.title}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">{action.description}</p>
                 </button>
               ))}
             </div>

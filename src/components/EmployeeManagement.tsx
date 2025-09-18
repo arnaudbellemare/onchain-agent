@@ -94,23 +94,23 @@ export default function EmployeeManagement({ onEmployeeAdded }: EmployeeManageme
   };
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-light text-white">Employee Management</h2>
-          <p className="text-gray-400">Manage employee payroll and payment schedules</p>
+          <h1 className="text-3xl font-light text-white mb-2">Employees</h1>
+          <p className="text-gray-400">Manage your team and automate payroll</p>
         </div>
         <div className="flex space-x-3">
           <button
             onClick={() => setShowAddForm(true)}
-            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-105"
+            className="bg-white/10 hover:bg-white/20 backdrop-blur-xl text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 border border-white/10"
           >
             Add Employee
           </button>
           <button
             onClick={processPayroll}
-            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-105"
+            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200"
           >
             Process Payroll
           </button>
@@ -119,100 +119,108 @@ export default function EmployeeManagement({ onEmployeeAdded }: EmployeeManageme
 
       {/* Add Employee Form */}
       {showAddForm && (
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
-          <h3 className="text-xl font-medium text-white mb-4">Add New Employee</h3>
-          <form onSubmit={handleAddEmployee} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Name</label>
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-xl font-light text-white">Add Employee</h3>
+            <button
+              onClick={() => setShowAddForm(false)}
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              ✕
+            </button>
+          </div>
+          <form onSubmit={handleAddEmployee} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm text-gray-300">Full Name</label>
                 <input
                   type="text"
                   value={newEmployee.name}
                   onChange={(e) => setNewEmployee({...newEmployee, name: e.target.value})}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors"
                   placeholder="John Doe"
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+              <div className="space-y-2">
+                <label className="text-sm text-gray-300">Email</label>
                 <input
                   type="email"
                   value={newEmployee.email}
                   onChange={(e) => setNewEmployee({...newEmployee, email: e.target.value})}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors"
                   placeholder="john@company.com"
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Wallet Address</label>
+              <div className="space-y-2">
+                <label className="text-sm text-gray-300">Wallet Address</label>
                 <input
                   type="text"
                   value={newEmployee.walletAddress}
                   onChange={(e) => setNewEmployee({...newEmployee, walletAddress: e.target.value})}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors font-mono text-sm"
                   placeholder="0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6"
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Salary (USDC)</label>
+              <div className="space-y-2">
+                <label className="text-sm text-gray-300">Salary (USDC)</label>
                 <input
                   type="number"
                   value={newEmployee.salary}
                   onChange={(e) => setNewEmployee({...newEmployee, salary: e.target.value})}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors"
                   placeholder="5000"
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Payment Schedule</label>
+              <div className="space-y-2">
+                <label className="text-sm text-gray-300">Payment Schedule</label>
                 <select
                   value={newEmployee.paymentSchedule}
                   onChange={(e) => setNewEmployee({...newEmployee, paymentSchedule: e.target.value as 'monthly' | 'biweekly' | 'weekly'})}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors"
                 >
                   <option value="monthly">Monthly</option>
                   <option value="biweekly">Bi-weekly</option>
                   <option value="weekly">Weekly</option>
                 </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Department</label>
+              <div className="space-y-2">
+                <label className="text-sm text-gray-300">Department</label>
                 <input
                   type="text"
                   value={newEmployee.department}
                   onChange={(e) => setNewEmployee({...newEmployee, department: e.target.value})}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors"
                   placeholder="Engineering"
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Role</label>
+              <div className="space-y-2">
+                <label className="text-sm text-gray-300">Role</label>
                 <input
                   type="text"
                   value={newEmployee.role}
                   onChange={(e) => setNewEmployee({...newEmployee, role: e.target.value})}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors"
                   placeholder="Senior Developer"
                   required
                 />
               </div>
             </div>
-            <div className="flex justify-end space-x-3">
+            <div className="flex justify-end space-x-3 pt-4">
               <button
                 type="button"
                 onClick={() => setShowAddForm(false)}
-                className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-all duration-200"
+                className="px-6 py-3 text-gray-400 hover:text-white transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition-all duration-200"
+                className="bg-white/10 hover:bg-white/20 backdrop-blur-xl text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 border border-white/10"
               >
                 Add Employee
               </button>
@@ -222,61 +230,74 @@ export default function EmployeeManagement({ onEmployeeAdded }: EmployeeManageme
       )}
 
       {/* Employees List */}
-      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
-        <h3 className="text-xl font-medium text-white mb-4">Employees ({employees.length})</h3>
-        <div className="space-y-4">
-          {employees.map((employee) => (
-            <div key={employee.id} className="bg-white/5 border border-white/10 rounded-lg p-4">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-3 mb-2">
-                    <h4 className="text-lg font-medium text-white">{employee.name}</h4>
-                    <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-sm">
-                      {employee.role}
-                    </span>
-                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded text-sm">
-                      {employee.department}
-                    </span>
+      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-xl font-light text-white">Team ({employees.length})</h3>
+          <div className="text-sm text-gray-400">
+            Total Monthly Payroll: ${employees.reduce((sum, emp) => sum + emp.salary, 0).toLocaleString()} USDC
+          </div>
+        </div>
+        
+        {employees.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-4">No employees added yet</div>
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="bg-white/10 hover:bg-white/20 backdrop-blur-xl text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 border border-white/10"
+            >
+              Add Your First Employee
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {employees.map((employee) => (
+              <div key={employee.id} className="bg-white/5 border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                      <span className="text-white font-medium text-lg">
+                        {employee.name.split(' ').map(n => n[0]).join('')}
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-medium text-white">{employee.name}</h4>
+                      <div className="flex items-center space-x-3 text-sm text-gray-400">
+                        <span>{employee.role}</span>
+                        <span>•</span>
+                        <span>{employee.department}</span>
+                        <span>•</span>
+                        <span className="font-mono">
+                          {employee.walletAddress.slice(0, 6)}...{employee.walletAddress.slice(-4)}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                    <div>
-                      <span className="text-gray-400">Email:</span>
-                      <span className="text-white ml-2">{employee.email}</span>
+                  <div className="text-right">
+                    <div className="text-lg font-medium text-white">
+                      ${employee.salary.toLocaleString()} USDC
                     </div>
-                    <div>
-                      <span className="text-gray-400">Wallet:</span>
-                      <span className="text-white ml-2 font-mono">
-                        {employee.walletAddress.slice(0, 6)}...{employee.walletAddress.slice(-4)}
-                      </span>
+                    <div className="text-sm text-gray-400 capitalize">
+                      {employee.paymentSchedule}
                     </div>
-                    <div>
-                      <span className="text-gray-400">Salary:</span>
-                      <span className="text-white ml-2">${employee.salary.toLocaleString()} USDC</span>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t border-white/10">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="text-gray-400">
+                      Next payment: {employee.nextPaymentDate.toDateString()}
                     </div>
-                    <div>
-                      <span className="text-gray-400">Schedule:</span>
-                      <span className="text-white ml-2 capitalize">{employee.paymentSchedule}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-400">Next Payment:</span>
-                      <span className="text-white ml-2">{employee.nextPaymentDate.toDateString()}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-400">Status:</span>
-                      <span className={`ml-2 px-2 py-1 rounded text-xs ${
-                        employee.status === 'active' 
-                          ? 'bg-green-500/20 text-green-400' 
-                          : 'bg-red-500/20 text-red-400'
-                      }`}>
-                        {employee.status}
-                      </span>
+                    <div className="flex items-center space-x-2">
+                      <div className={`w-2 h-2 rounded-full ${
+                        employee.status === 'active' ? 'bg-green-500' : 'bg-red-500'
+                      }`}></div>
+                      <span className="text-gray-400 capitalize">{employee.status}</span>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
