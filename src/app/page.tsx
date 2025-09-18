@@ -120,6 +120,22 @@ export default function Home() {
       action: () => setMessage("Generate comprehensive audit report for Q4. Show all transactions, approval chains, and flag any anomalies for compliance review.")
     },
     {
+      id: "x402-api",
+      title: "x402 API Payments",
+      description: "Autonomous AI payments for API access and services",
+      icon: "🔗",
+      color: "from-cyan-500 to-blue-600",
+      action: () => setMessage("Set up x402 protocol for autonomous API payments. Configure AI agents to pay $0.001 per API call using USDC on Base network.")
+    },
+    {
+      id: "micropayments",
+      title: "Micropayment Services",
+      description: "Pay-per-query and autonomous resource purchasing",
+      icon: "💎",
+      color: "from-emerald-500 to-teal-600",
+      action: () => setMessage("Enable micropayment services for AI agents. Set up pay-per-query data access, autonomous tool purchasing, and machine-to-machine commerce.")
+    },
+    {
       id: "ai-chat",
       title: "AI Command Center",
       description: "Natural language control for all financial operations",
@@ -372,6 +388,55 @@ export default function Home() {
               </div>
             </div>
 
+            {/* x402 Autonomous AI Commerce */}
+            <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-light text-white mb-4">x402 Autonomous AI Commerce</h2>
+                <p className="text-gray-300 text-lg max-w-3xl mx-auto">
+                  Powered by x402 protocol - enabling AI agents to autonomously pay for API access, 
+                  digital services, and content using instant USDC payments over HTTP.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <span className="text-white text-2xl">🤖</span>
+                  </div>
+                  <h3 className="text-xl font-medium text-white mb-3">Machine-to-Machine Payments</h3>
+                  <ul className="text-sm text-gray-400 space-y-2">
+                    <li>• AI agents pay for API access autonomously</li>
+                    <li>• No accounts, sessions, or manual auth</li>
+                    <li>• HTTP 402 &ldquo;Payment Required&rdquo; protocol</li>
+                    <li>• Instant USDC payments on Base network</li>
+                  </ul>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <span className="text-white text-2xl">⚡</span>
+                  </div>
+                  <h3 className="text-xl font-medium text-white mb-3">Micropayments & Pay-Per-Use</h3>
+                  <ul className="text-sm text-gray-400 space-y-2">
+                    <li>• $0.001 per API call micropayments</li>
+                    <li>• Pay-per-query data services</li>
+                    <li>• Autonomous resource purchasing</li>
+                    <li>• Frictionless web payments</li>
+                  </ul>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <span className="text-white text-2xl">🌐</span>
+                  </div>
+                  <h3 className="text-xl font-medium text-white mb-3">Robot-Native Commerce</h3>
+                  <ul className="text-sm text-gray-400 space-y-2">
+                    <li>• Universal standard for AI transactions</li>
+                    <li>• Open protocol, not Coinbase-locked</li>
+                    <li>• Chain-agnostic and extensible</li>
+                    <li>• Next-gen autonomous business models</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
             {/* Competitive Differentiator & Scalability */}
             <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
               <div className="text-center mb-8">
@@ -523,6 +588,8 @@ export default function Home() {
                   <span className="px-3 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full border border-purple-500/30">Custom workflows</span>
                   <span className="px-3 py-1 bg-green-500/20 text-green-300 text-xs rounded-full border border-green-500/30">24/7 automation</span>
                   <span className="px-3 py-1 bg-orange-500/20 text-orange-300 text-xs rounded-full border border-orange-500/30">Predictive analytics</span>
+                  <span className="px-3 py-1 bg-cyan-500/20 text-cyan-300 text-xs rounded-full border border-cyan-500/30">x402 protocol</span>
+                  <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 text-xs rounded-full border border-emerald-500/30">Micropayments</span>
                 </div>
               </div>
               
