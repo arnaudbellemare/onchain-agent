@@ -22,7 +22,7 @@ interface Service {
 
 export default function WhatWeOffer() {
   const [selectedService, setSelectedService] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring' | 'explanation'>('services');
+  const [activeTab, setActiveTab] = useState<'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring' | 'explanation' | 'universal'>('services');
 
   const services: Service[] = [
     {
@@ -114,6 +114,21 @@ export default function WhatWeOffer() {
       ],
       realExample: 'Enterprise: $15,000/month manual processes → $4,500/month with automation = $10,500/month savings',
       savings: '$126,000/year'
+    },
+    {
+      id: 'x402-compatibility',
+      title: 'x402 API Compatibility',
+      description: 'Make any API x402-compatible with micropayments and autonomous optimization',
+      icon: 'bridge',
+      costReduction: '30-60%',
+      howItWorks: [
+        'Convert traditional APIs to x402 micropayment model',
+        'Add autonomous cost optimization to any service',
+        'Enable pay-per-use for subscription-based APIs',
+        'Provide universal API cost monitoring and switching'
+      ],
+      realExample: 'SaaS company: $8,000/month API subscriptions → $3,200/month with x402 compatibility = $4,800/month savings',
+      savings: '$57,600/year'
     }
   ];
 
@@ -164,6 +179,12 @@ export default function WhatWeOffer() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
         );
+      case 'bridge':
+        return (
+          <svg {...iconProps}>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+          </svg>
+        );
       default:
         return (
           <svg {...iconProps}>
@@ -180,7 +201,7 @@ export default function WhatWeOffer() {
           What We Can Do For You
         </h1>
         <p className="text-xl text-gray-900 max-w-4xl mx-auto">
-          We reduce your business costs by 20-70% using x402 protocol micropayments and AI automation
+          We reduce your business costs by 20-70% using autonomous optimization, x402 protocol micropayments, and AI automation. We make any API x402-compatible and provide pay-per-use access to all services.
         </p>
       </div>
 
@@ -194,11 +215,12 @@ export default function WhatWeOffer() {
             { id: 'examples', label: 'x402 Examples', icon: '⚡' },
             { id: 'integration', label: 'Integration Tools', icon: '🔧' },
             { id: 'monitoring', label: 'Cost Monitoring', icon: '📊' },
-            { id: 'explanation', label: 'How We Save', icon: '💡' }
+            { id: 'explanation', label: 'How We Save', icon: '💡' },
+            { id: 'universal', label: 'Universal API Optimization', icon: '🌐' }
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as 'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring' | 'explanation')}
+              onClick={() => setActiveTab(tab.id as 'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring' | 'explanation' | 'universal')}
               className={`px-6 py-3 rounded-lg font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-blue-600 text-white shadow-lg'
@@ -384,6 +406,105 @@ export default function WhatWeOffer() {
       {/* Cost Reduction Explanation Tab */}
       {activeTab === 'explanation' && (
         <CostReductionExplanation />
+      )}
+
+      {/* Universal API Optimization Tab */}
+      {activeTab === 'universal' && (
+        <div className="space-y-8">
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Universal API Cost Optimization</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+              <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
+                <div className="text-center">
+                  <div className="text-4xl mb-4">🌐</div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">Make Any API x402-Compatible</h3>
+                  <p className="text-gray-900 text-sm">
+                    Convert traditional subscription-based APIs to micropayment model. Add x402 protocol support to any service.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="bg-green-50 rounded-lg p-6 border border-green-200">
+                <div className="text-center">
+                  <div className="text-4xl mb-4">💳</div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">Pay-Per-Use for Any Service</h3>
+                  <p className="text-gray-900 text-sm">
+                    Transform subscription models into pay-per-request. Only pay for what you actually use, when you use it.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="bg-purple-50 rounded-lg p-6 border border-purple-200">
+                <div className="text-center">
+                  <div className="text-4xl mb-4">🤖</div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">Autonomous Cost Optimization</h3>
+                  <p className="text-gray-900 text-sm">
+                    AI continuously monitors, compares, and optimizes costs across all your API providers automatically.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-8 border border-blue-200">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">How Universal Optimization Works</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4">Traditional API Model</h4>
+                  <ul className="space-y-2 text-sm text-gray-900">
+                    <li>• Monthly subscriptions regardless of usage</li>
+                    <li>• Fixed pricing tiers</li>
+                    <li>• Manual cost monitoring</li>
+                    <li>• Vendor lock-in</li>
+                    <li>• High minimum commitments</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4">Our Universal Model</h4>
+                  <ul className="space-y-2 text-sm text-gray-900">
+                    <li>• Pay only for actual usage</li>
+                    <li>• Dynamic pricing optimization</li>
+                    <li>• Autonomous cost monitoring</li>
+                    <li>• Multi-provider flexibility</li>
+                    <li>• No minimum commitments</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 bg-white rounded-xl p-8 border border-gray-200">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Supported API Types</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div className="text-2xl mb-2">🧠</div>
+                  <div className="font-semibold text-gray-900">AI APIs</div>
+                  <div className="text-sm text-gray-900">OpenAI, Anthropic, Google AI</div>
+                </div>
+                
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div className="text-2xl mb-2">☁️</div>
+                  <div className="font-semibold text-gray-900">Cloud Services</div>
+                  <div className="text-sm text-gray-900">AWS, Google Cloud, Azure</div>
+                </div>
+                
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div className="text-2xl mb-2">💳</div>
+                  <div className="font-semibold text-gray-900">Payment APIs</div>
+                  <div className="text-sm text-gray-900">Stripe, PayPal, Square</div>
+                </div>
+                
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div className="text-2xl mb-2">📊</div>
+                  <div className="font-semibold text-gray-900">Data APIs</div>
+                  <div className="text-sm text-gray-900">Any REST/GraphQL API</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

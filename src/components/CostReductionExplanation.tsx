@@ -42,10 +42,10 @@ export default function CostReductionExplanation() {
     <div className="max-w-6xl mx-auto p-8">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          How We Pay Less Than Standard GPT Prices
+          How We Optimize Costs for Any API
         </h1>
         <p className="text-xl text-gray-900 max-w-4xl mx-auto">
-          The x402 protocol eliminates subscription overhead and payment processing fees, while AI optimization reduces actual usage costs
+          We make any API x402-compatible, provide pay-per-use access to all services, and deliver autonomous cost optimization for maximum savings
         </p>
       </div>
 
