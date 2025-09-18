@@ -132,25 +132,25 @@ export default function EnterpriseOptimizationDemo() {
               <h2 className="text-2xl font-bold text-gray-900 mb-6">📊 Key Metrics</h2>
               <div className="space-y-4">
                 <div className="flex justify-between items-center p-4 bg-red-50 rounded-lg">
-                  <span className="text-gray-700">Current Monthly Cost</span>
+                  <span className="text-gray-900">Current Monthly Cost</span>
                   <span className="text-2xl font-bold text-red-600">
                     ${breakdown.currentMonthlyCost.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
-                  <span className="text-gray-700">Optimized Cost</span>
+                  <span className="text-gray-900">Optimized Cost</span>
                   <span className="text-2xl font-bold text-green-600">
                     ${breakdown.finalCost.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
-                  <span className="text-gray-700">Total Savings</span>
+                  <span className="text-gray-900">Total Savings</span>
                   <span className="text-2xl font-bold text-blue-600">
                     ${breakdown.totalSavings.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-purple-50 rounded-lg">
-                  <span className="text-gray-700">Optimization %</span>
+                  <span className="text-gray-900">Optimization %</span>
                   <span className="text-2xl font-bold text-purple-600">
                     {breakdown.optimizationPercent.toFixed(1)}%
                   </span>
@@ -163,13 +163,13 @@ export default function EnterpriseOptimizationDemo() {
               <h2 className="text-2xl font-bold text-gray-900 mb-6">💡 Savings Breakdown</h2>
               <div className="space-y-4">
                 <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
-                  <span className="text-gray-700">x402 Protocol Savings</span>
+                  <span className="text-gray-900">x402 Protocol Savings</span>
                   <span className="text-xl font-bold text-blue-600">
                     ${breakdown.x402Savings.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
-                  <span className="text-gray-700">AgentKit Automation</span>
+                  <span className="text-gray-900">AgentKit Automation</span>
                   <span className="text-xl font-bold text-green-600">
                     ${breakdown.agentKitSavings.toLocaleString()}
                   </span>
@@ -258,16 +258,16 @@ export default function EnterpriseOptimizationDemo() {
                   </div>
                   <div className="grid md:grid-cols-3 gap-4">
                     <div>
-                      <p className="text-sm font-medium text-gray-600 mb-1">Trigger</p>
-                      <p className="text-gray-800">{example.trigger}</p>
+                      <p className="text-sm font-medium text-gray-900 mb-1">Trigger</p>
+                      <p className="text-gray-900">{example.trigger}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-600 mb-1">Action</p>
-                      <p className="text-gray-800">{example.action}</p>
+                      <p className="text-sm font-medium text-gray-900 mb-1">Action</p>
+                      <p className="text-gray-900">{example.action}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-600 mb-1">Result</p>
-                      <p className="text-gray-800">{example.result}</p>
+                      <p className="text-sm font-medium text-gray-900 mb-1">Result</p>
+                      <p className="text-gray-900">{example.result}</p>
                     </div>
                   </div>
                 </div>
@@ -285,7 +285,7 @@ export default function EnterpriseOptimizationDemo() {
               <div className="grid md:grid-cols-2 gap-8">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">x402 Protocol Benefits</h3>
-                  <ul className="space-y-2 text-gray-700">
+                  <ul className="space-y-2 text-gray-900">
                     <li>✅ Granular per-call cost tracking</li>
                     <li>✅ Real-time price discovery</li>
                     <li>✅ Direct USDC payments</li>
@@ -295,7 +295,7 @@ export default function EnterpriseOptimizationDemo() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">AgentKit Automation Benefits</h3>
-                  <ul className="space-y-2 text-gray-700">
+                  <ul className="space-y-2 text-gray-900">
                     <li>✅ 24/7 autonomous optimization</li>
                     <li>✅ Predictive cost management</li>
                     <li>✅ Smart provider routing</li>
@@ -312,15 +312,15 @@ export default function EnterpriseOptimizationDemo() {
               <div className="space-y-4">
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <code className="text-sm text-blue-600">GET /api/optimization/demo?type=breakdown</code>
-                  <p className="text-sm text-gray-600 mt-1">Returns 90% optimization breakdown with real numbers</p>
+                  <p className="text-sm text-gray-900 mt-1">Returns 90% optimization breakdown with real numbers</p>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <code className="text-sm text-blue-600">GET /api/optimization/demo?type=autonomous</code>
-                  <p className="text-sm text-gray-600 mt-1">Returns autonomous optimization examples</p>
+                  <p className="text-sm text-gray-900 mt-1">Returns autonomous optimization examples</p>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <code className="text-sm text-blue-600">GET /api/payments/analytics</code>
-                  <p className="text-sm text-gray-600 mt-1">Returns current cost analytics and optimization opportunities</p>
+                  <p className="text-sm text-gray-900 mt-1">Returns current cost analytics and optimization opportunities</p>
                 </div>
               </div>
             </div>
