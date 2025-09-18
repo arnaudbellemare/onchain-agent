@@ -3,14 +3,14 @@
 // import { baseSepolia, base } from 'viem/chains';
 
 // Blockchain configuration
-const getRpcUrl = () => {
-  const networkId = process.env.NETWORK_ID || 'base-sepolia';
-  if (networkId === 'base-mainnet') {
-    return 'https://mainnet.base.org';
-  } else {
-    return 'https://sepolia.base.org';
-  }
-};
+// const getRpcUrl = () => {
+//   const networkId = process.env.NETWORK_ID || 'base-sepolia';
+//   if (networkId === 'base-mainnet') {
+//     return 'https://mainnet.base.org';
+//   } else {
+//     return 'https://sepolia.base.org';
+//   }
+// };
 
 // CDP API integration for wallet operations
 export class BlockchainService {
@@ -41,8 +41,6 @@ export class BlockchainService {
   // Get real balance from blockchain
   async getBalance(address?: string): Promise<string> {
     try {
-      const walletAddress = address || await this.getWalletAddress();
-      
       // For now, return a mock balance that simulates real blockchain data
       // In production, this would use viem to get the actual balance
       const mockBalance = (Math.random() * 5 + 0.1).toFixed(4);
@@ -57,15 +55,6 @@ export class BlockchainService {
   // Send real ETH transaction
   async sendETH(to: string, amount: string): Promise<string> {
     try {
-      const walletAddress = await this.getWalletAddress();
-      
-      // Create transaction data (for future implementation)
-      // const transactionData = {
-      //   to,
-      //   value: parseEther(amount),
-      //   from: walletAddress,
-      // };
-
       // For now, return a mock transaction hash
       // In a real implementation, you would sign and send the transaction
       const mockTxHash = `0x${Math.random().toString(16).substr(2, 64)}`;
@@ -73,7 +62,6 @@ export class BlockchainService {
       return `Transaction submitted successfully!
       
 Transaction Details:
-- From: ${walletAddress}
 - To: ${to}
 - Amount: ${amount} ETH
 - Transaction Hash: ${mockTxHash}

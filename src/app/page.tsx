@@ -77,11 +77,11 @@ export default function Home() {
     { label: "Wallet Info", command: "Show wallet address", icon: "🏦" },
   ];
 
-  const handleAssetSend = (asset: any) => {
+  const handleAssetSend = (asset: { symbol: string; name: string; balance: string; value: string; change24h: string; change24hPercent: string }) => {
     setMessage(`Send 0.1 ${asset.symbol} to`);
   };
 
-  const handleAssetSwap = (asset: any) => {
+  const handleAssetSwap = (asset: { symbol: string; name: string; balance: string; value: string; change24h: string; change24hPercent: string }) => {
     setMessage(`Swap 1 ${asset.symbol} to USDC`);
   };
 
