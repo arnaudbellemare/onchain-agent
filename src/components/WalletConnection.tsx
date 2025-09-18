@@ -4,7 +4,7 @@ import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { useAccount, useBalance } from 'wagmi';
 
 export default function WalletConnection() {
-  const { ready, authenticated, user, login, logout } = usePrivy();
+  const { ready, authenticated, login, logout } = usePrivy();
   const { wallets } = useWallets();
   const { address } = useAccount();
   const { data: balance } = useBalance({

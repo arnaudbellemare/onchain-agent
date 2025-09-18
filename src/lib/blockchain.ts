@@ -39,10 +39,11 @@ export class BlockchainService {
   }
 
   // Get real balance from blockchain
-  async getBalance(_address?: string): Promise<string> {
+  async getBalance(address?: string): Promise<string> {
     try {
       // For now, return a mock balance that simulates real blockchain data
       // In production, this would use viem to get the actual balance
+      console.log('Getting balance for address:', address || 'default');
       const mockBalance = (Math.random() * 5 + 0.1).toFixed(4);
       
       return mockBalance;

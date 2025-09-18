@@ -211,15 +211,15 @@ export default function AIDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-300">
             <div>
               <div className="font-medium text-white mb-2">x402 Examples:</div>
-              <div>• "Process x402 API payment"</div>
-              <div>• "Enable micropayment services"</div>
-              <div>• "Call x402 API 5 times"</div>
+              <div>• &ldquo;Process x402 API payment&rdquo;</div>
+              <div>• &ldquo;Enable micropayment services&rdquo;</div>
+              <div>• &ldquo;Call x402 API 5 times&rdquo;</div>
             </div>
             <div>
               <div className="font-medium text-white mb-2">AgentKit Examples:</div>
-              <div>• "Send 0.1 ETH to 0x..."</div>
-              <div>• "Swap 1 ETH to USDC"</div>
-              <div>• "Check my wallet balance"</div>
+              <div>• &ldquo;Send 0.1 ETH to 0x...&rdquo;</div>
+              <div>• &ldquo;Swap 1 ETH to USDC&rdquo;</div>
+              <div>• &ldquo;Check my wallet balance&rdquo;</div>
             </div>
           </div>
         </div>

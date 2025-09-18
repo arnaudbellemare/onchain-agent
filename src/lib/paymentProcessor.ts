@@ -237,8 +237,8 @@ export class PaymentProcessor {
   private async executePayment(
     recipientAddress: string,
     amount: number,
-    _description: string,
-    _transactionId: string
+    description: string,
+    transactionId: string
   ): Promise<{ success: boolean; transactionHash?: string; error?: string }> {
     try {
       if (!this.agentKit) {
@@ -255,6 +255,7 @@ export class PaymentProcessor {
 
       const walletDetails = await walletDetailsAction.invoke();
       console.log('Wallet details:', walletDetails);
+      console.log('Payment details:', { description, transactionId, recipientAddress, amount });
 
       // Execute transfer using AgentKit
       const transferAction = actions.find((action) => action.name === "nativeTransfer");
