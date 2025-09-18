@@ -1,13 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import PortfolioCard from "@/components/PortfolioCard";
-import AssetRow from "@/components/AssetRow";
-import TradingInterface from "@/components/TradingInterface";
-import Sidebar from "@/components/Sidebar";
+import WalletConnection from "@/components/WalletConnection";
 import TransactionModal from "@/components/TransactionModal";
 import Notification from "@/components/Notification";
-import WalletConnection from "@/components/WalletConnection";
+import AIDashboard from "@/components/AIDashboard";
 
 interface PortfolioData {
   totalBalance: string;
@@ -23,13 +20,13 @@ interface PortfolioData {
 }
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState("portfolio");
+  const [activeTab, setActiveTab] = useState("dashboard");
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [portfolioData, setPortfolioData] = useState<PortfolioData | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalType, setModalType] = useState<"send" | "swap">("send");
+  const [modalType, setModalType] = useState<"send" | "swap" | "request">("send");
   const [selectedAsset, setSelectedAsset] = useState<{ symbol: string; name: string; balance: string; value: string; change24h: string; change24hPercent: string } | null>(null);
   const [notification, setNotification] = useState({
     message: "",
@@ -41,12 +38,25 @@ export default function Home() {
   useEffect(() => {
     setPortfolioData({
       totalBalance: "2.8473",
-      totalValue: "$8,247.32",
+      totalValue: "$8,541.90",
       assets: [
-        { symbol: "ETH", name: "Ethereum", balance: "2.8473", value: "$8,247.32", change24h: "+$127.45", change24hPercent: "+1.57%" },
-        { symbol: "USDC", name: "USD Coin", balance: "1,250.00", value: "$1,250.00", change24h: "$0.00", change24hPercent: "0.00%" },
-        { symbol: "BTC", name: "Bitcoin", balance: "0.0234", value: "$1,567.89", change24h: "-$23.12", change24hPercent: "-1.45%" },
-      ]
+        {
+          symbol: "ETH",
+          name: "Ethereum",
+          balance: "2.8473",
+          value: "$8,541.90",
+          change24h: "+$127.45",
+          change24hPercent: "+1.52%",
+        },
+        {
+          symbol: "USDC",
+          name: "USD Coin",
+          balance: "1,500.00",
+          value: "$1,500.00",
+          change24h: "$0.00",
+          change24hPercent: "0.00%",
+        },
+      ],
     });
   }, []);
 
@@ -81,35 +91,7 @@ export default function Home() {
     }
   };
 
-  const quickActions = [
-    { label: "Check Balance", command: "check my balance", icon: "💰" },
-    { label: "Send ETH", command: "Send 0.1 ETH to", icon: "📤" },
-    { label: "Swap Tokens", command: "Swap 1 ETH to USDC", icon: "🔄" },
-    { label: "Wallet Info", command: "Show wallet address", icon: "🏦" },
-  ];
-
-  const handleAssetSend = (asset: { symbol: string; name: string; balance: string; value: string; change24h: string; change24hPercent: string }) => {
-    setSelectedAsset(asset);
-    setModalType("send");
-    setModalOpen(true);
-  };
-
-  const handleAssetSwap = (asset: { symbol: string; name: string; balance: string; value: string; change24h: string; change24hPercent: string }) => {
-    setSelectedAsset(asset);
-    setModalType("swap");
-    setModalOpen(true);
-  };
-
-  const handleExecuteSwap = (fromToken: string, toToken: string, amount: string) => {
-    if (!amount || isNaN(parseFloat(amount))) {
-      alert("Please enter a valid amount");
-      return;
-    }
-    setMessage(`Swap ${amount} ${fromToken} to ${toToken}`);
-    setActiveTab("assistant");
-  };
-
-  const handleModalConfirm = (data: { type: string; amount: string; token?: string; recipient?: string; fromToken?: string; toToken?: string }) => {
+  const handleModalConfirm = (data: { type: string; amount: string; token?: string; recipient?: string; fromToken?: string; toToken?: string; slippage?: number; message?: string }) => {
     if (data.type === "send" && data.token && data.recipient) {
       setMessage(`Send ${data.amount} ${data.token} to ${data.recipient}`);
       setNotification({
@@ -124,336 +106,263 @@ export default function Home() {
         type: "info",
         isVisible: true
       });
+    } else if (data.type === "request" && data.token && data.recipient) {
+      const requestMessage = data.message ? ` for ${data.message}` : "";
+      setMessage(`Request ${data.amount} ${data.token} from ${data.recipient}${requestMessage}`);
+      setNotification({
+        message: `Payment request sent for ${data.amount} ${data.token}`,
+        type: "info",
+        isVisible: true
+      });
     }
-    setActiveTab("assistant");
+    setActiveTab("ai");
   };
 
-  const handleQuickAction = (command: string) => {
-    setMessage(command);
-  };
+  const quickActions = [
+    { 
+      label: "Send", 
+      icon: "↗", 
+      action: () => {
+        setSelectedAsset({ 
+          symbol: "ETH", 
+          name: "Ethereum", 
+          balance: portfolioData?.totalBalance || "0",
+          value: portfolioData?.totalValue || "$0",
+          change24h: "+$0.00",
+          change24hPercent: "+0.00%"
+        });
+        setModalType("send");
+        setModalOpen(true);
+      }
+    },
+    { 
+      label: "Swap", 
+      icon: "⇄", 
+      action: () => {
+        setSelectedAsset({ 
+          symbol: "ETH", 
+          name: "Ethereum", 
+          balance: portfolioData?.totalBalance || "0",
+          value: portfolioData?.totalValue || "$0",
+          change24h: "+$0.00",
+          change24hPercent: "+0.00%"
+        });
+        setModalType("swap");
+        setModalOpen(true);
+      }
+    },
+    { 
+      label: "Request", 
+      icon: "↙", 
+      action: () => {
+        setSelectedAsset({ 
+          symbol: "ETH", 
+          name: "Ethereum", 
+          balance: portfolioData?.totalBalance || "0",
+          value: portfolioData?.totalValue || "$0",
+          change24h: "+$0.00",
+          change24hPercent: "+0.00%"
+        });
+        setModalType("request");
+        setModalOpen(true);
+      }
+    },
+    { 
+      label: "AI", 
+      icon: "🤖", 
+      action: () => setActiveTab("ai")
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <header className="bg-gray-800 border-b border-gray-700">
+      <header className="border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <h1 className="text-xl font-bold text-white">AgentKit Pro</h1>
-              </div>
-              <nav className="ml-10 flex space-x-8">
+            <div className="flex items-center space-x-8">
+              <h1 className="text-xl font-semibold text-white">AgentKit</h1>
+              <nav className="hidden md:flex space-x-6">
                 <button
-                  onClick={() => setActiveTab("portfolio")}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    activeTab === "portfolio" 
-                      ? "bg-blue-600 text-white" 
-                      : "text-gray-300 hover:text-white hover:bg-gray-700"
+                  onClick={() => setActiveTab("dashboard")}
+                  className={`text-sm font-medium transition-colors ${
+                    activeTab === "dashboard" 
+                      ? "text-white" 
+                      : "text-gray-400 hover:text-white"
                   }`}
                 >
-                  Portfolio
+                  Dashboard
                 </button>
                 <button
-                  onClick={() => setActiveTab("trading")}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    activeTab === "trading" 
-                      ? "bg-blue-600 text-white" 
-                      : "text-gray-300 hover:text-white hover:bg-gray-700"
+                  onClick={() => setActiveTab("transactions")}
+                  className={`text-sm font-medium transition-colors ${
+                    activeTab === "transactions" 
+                      ? "text-white" 
+                      : "text-gray-400 hover:text-white"
                   }`}
                 >
-                  Trading
+                  Transactions
                 </button>
                 <button
-                  onClick={() => setActiveTab("assistant")}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    activeTab === "assistant" 
-                      ? "bg-blue-600 text-white" 
-                      : "text-gray-300 hover:text-white hover:bg-gray-700"
+                  onClick={() => setActiveTab("ai")}
+                  className={`text-sm font-medium transition-colors ${
+                    activeTab === "ai" 
+                      ? "text-white" 
+                      : "text-gray-400 hover:text-white"
                   }`}
                 >
                   AI Assistant
                 </button>
+                <button
+                  onClick={() => setActiveTab("ai-dashboard")}
+                  className={`text-sm font-medium transition-colors ${
+                    activeTab === "ai-dashboard" 
+                      ? "text-white" 
+                      : "text-gray-400 hover:text-white"
+                  }`}
+                >
+                  AI Dashboard
+                </button>
               </nav>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-300">
-                Base Sepolia
-              </div>
-              <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-              <WalletConnection />
-            </div>
+            
+            <WalletConnection />
           </div>
         </div>
       </header>
 
-      <div className="flex">
-        <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === "portfolio" && (
-          <div className="space-y-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {activeTab === "dashboard" && (
+          <div className="space-y-8">
             {/* Portfolio Overview */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <PortfolioCard
-                title="Total Balance"
-                value={`${portfolioData?.totalBalance} ETH`}
-                subtitle={portfolioData?.totalValue}
-              />
-              <PortfolioCard
-                title="24h Change"
-                value="+$104.33"
-                change="+$104.33"
-                changePercent="+1.28%"
-                isPositive={true}
-              />
-              <PortfolioCard
-                title="Active Assets"
-                value={portfolioData?.assets.length?.toString() || "0"}
-                subtitle="Tokens"
-              />
-            </div>
-
-            {/* Quick Actions */}
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <button
-                  onClick={() => {
-                    setSelectedAsset({ 
-                      symbol: "ETH", 
-                      name: "Ethereum", 
-                      balance: portfolioData?.totalBalance || "0",
-                      value: portfolioData?.totalValue || "$0",
-                      change24h: "+$0.00",
-                      change24hPercent: "+0.00%"
-                    });
-                    setModalType("send");
-                    setModalOpen(true);
-                  }}
-                  className="flex flex-col items-center p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
-                >
-                  <span className="text-2xl mb-2">📤</span>
-                  <span className="text-sm font-medium text-white">Send ETH</span>
-                </button>
-                <button
-                  onClick={() => {
-                    setSelectedAsset({ 
-                      symbol: "ETH", 
-                      name: "Ethereum", 
-                      balance: portfolioData?.totalBalance || "0",
-                      value: portfolioData?.totalValue || "$0",
-                      change24h: "+$0.00",
-                      change24hPercent: "+0.00%"
-                    });
-                    setModalType("swap");
-                    setModalOpen(true);
-                  }}
-                  className="flex flex-col items-center p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
-                >
-                  <span className="text-2xl mb-2">🔄</span>
-                  <span className="text-sm font-medium text-white">Swap ETH</span>
-                </button>
-                <button
-                  onClick={() => setMessage("check my balance")}
-                  className="flex flex-col items-center p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
-                >
-                  <span className="text-2xl mb-2">💰</span>
-                  <span className="text-sm font-medium text-white">Check Balance</span>
-                </button>
-                <button
-                  onClick={() => setMessage("Show wallet address")}
-                  className="flex flex-col items-center p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
-                >
-                  <span className="text-2xl mb-2">🏦</span>
-                  <span className="text-sm font-medium text-white">Wallet Info</span>
-                </button>
+              <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+                <div className="text-sm text-gray-400 mb-1">Total Balance</div>
+                <div className="text-2xl font-semibold text-white">{portfolioData?.totalBalance} ETH</div>
+                <div className="text-sm text-gray-400">{portfolioData?.totalValue}</div>
+              </div>
+              <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+                <div className="text-sm text-gray-400 mb-1">24h Change</div>
+                <div className="text-2xl font-semibold text-green-400">+$127.45</div>
+                <div className="text-sm text-green-400">+1.52%</div>
+              </div>
+              <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+                <div className="text-sm text-gray-400 mb-1">Active Assets</div>
+                <div className="text-2xl font-semibold text-white">{portfolioData?.assets.length}</div>
+                <div className="text-sm text-gray-400">Tokens</div>
               </div>
             </div>
 
-            {/* Assets Table */}
-            <div className="bg-gray-800 rounded-lg border border-gray-700">
-              <div className="px-6 py-4 border-b border-gray-700">
+            {/* Quick Actions */}
+            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+              <div className="text-lg font-semibold text-white mb-6">Quick Actions</div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {quickActions.map((action, index) => (
+                  <button
+                    key={index}
+                    onClick={action.action}
+                    className="flex flex-col items-center p-6 bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-gray-600 rounded-lg transition-all duration-200 group"
+                  >
+                    <div className="text-2xl mb-2 group-hover:scale-110 transition-transform">
+                      {action.icon}
+                    </div>
+                    <span className="text-sm font-medium text-white">{action.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Assets */}
+            <div className="bg-gray-900 border border-gray-800 rounded-lg">
+              <div className="px-6 py-4 border-b border-gray-800">
                 <h3 className="text-lg font-semibold text-white">Assets</h3>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-700">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Asset</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Balance</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Value</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">24h Change</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-700">
-                    {portfolioData?.assets.map((asset, index) => (
-                      <AssetRow
-                        key={index}
-                        asset={asset}
-                        onSend={handleAssetSend}
-                        onSwap={handleAssetSwap}
-                      />
-                    ))}
-                  </tbody>
-                </table>
+              <div className="divide-y divide-gray-800">
+                {portfolioData?.assets.map((asset, index) => (
+                  <div key={index} className="px-6 py-4 flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                        <span className="text-white font-semibold">{asset.symbol.charAt(0)}</span>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-white">{asset.symbol}</div>
+                        <div className="text-sm text-gray-400">{asset.name}</div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-semibold text-white">{asset.balance}</div>
+                      <div className="text-sm text-gray-400">{asset.value}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className={`text-sm font-medium ${asset.change24h.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
+                        {asset.change24h}
+                      </div>
+                      <div className={`text-xs ${asset.change24hPercent.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
+                        {asset.change24hPercent}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         )}
 
-        {activeTab === "trading" && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Trading Interface */}
-            <div className="lg:col-span-2 space-y-6">
-              <TradingInterface onExecuteSwap={handleExecuteSwap} />
-
-              {/* Recent Transactions */}
-              <div className="bg-gray-800 rounded-lg border border-gray-700">
-                <div className="px-6 py-4 border-b border-gray-700">
-                  <h3 className="text-lg font-semibold text-white">Recent Transactions</h3>
-                </div>
-                <div className="p-6">
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center py-3 border-b border-gray-700">
-                      <div className="flex items-center">
-                        <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
-                          <span className="text-white text-sm">↗</span>
-                        </div>
-                        <div className="ml-3">
-                          <p className="text-sm font-medium text-white">Token Swap</p>
-                          <p className="text-xs text-gray-400">1 ETH → 2,847 USDC</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm text-white">2,847 USDC</p>
-                        <p className="text-xs text-gray-400">2 min ago</p>
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center py-3 border-b border-gray-700">
-                      <div className="flex items-center">
-                        <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                          <span className="text-white text-sm">↗</span>
-                        </div>
-                        <div className="ml-3">
-                          <p className="text-sm font-medium text-white">Send</p>
-                          <p className="text-xs text-gray-400">0.1 ETH to 0x742d...</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm text-white">0.1 ETH</p>
-                        <p className="text-xs text-gray-400">1 hour ago</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="space-y-6">
-              <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
-                <div className="space-y-3">
-                  {quickActions.map((action, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setMessage(action.command)}
-                      className="w-full flex items-center p-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
-                    >
-                      <span className="text-xl mr-3">{action.icon}</span>
-                      <span className="text-white">{action.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Market Stats */}
-              <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                <h3 className="text-lg font-semibold text-white mb-4">Market Stats</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">ETH Price</span>
-                    <span className="text-white">$2,897.45</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">24h Volume</span>
-                    <span className="text-white">$12.4B</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Market Cap</span>
-                    <span className="text-white">$348.2B</span>
-                  </div>
-                </div>
+        {activeTab === "transactions" && (
+          <div className="space-y-6">
+            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">Recent Transactions</h3>
+              <div className="text-center py-12">
+                <div className="text-gray-400 mb-2">No transactions yet</div>
+                <div className="text-sm text-gray-500">Your transaction history will appear here</div>
               </div>
             </div>
           </div>
         )}
 
-        {activeTab === "assistant" && (
+        {activeTab === "ai" && (
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gray-800 rounded-lg border border-gray-700">
-              <div className="px-6 py-4 border-b border-gray-700">
-                <h3 className="text-lg font-semibold text-white">AI Trading Assistant</h3>
-                <p className="text-sm text-gray-400">Powered by advanced AI for blockchain operations</p>
+            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+              <h2 className="text-xl font-semibold text-white mb-6">AI Assistant</h2>
+              
+              {/* Chat Interface */}
+              <div className="h-96 overflow-y-auto bg-black border border-gray-800 rounded-lg p-4 mb-6">
+                <div className="space-y-4">
+                  {response && (
+                    <div className="flex justify-start">
+                      <div className="bg-gray-800 text-white p-3 rounded-lg max-w-xs whitespace-pre-wrap border border-gray-700">
+                        {response}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
               
-              <div className="p-6">
-                <form onSubmit={handleSubmit} className="mb-6">
-                  <div className="flex gap-4">
-                    <input
-                      type="text"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Ask me to check your wallet balance, send tokens, or interact with smart contracts..."
-                      className="flex-1 bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      disabled={loading}
-                    />
-                    <button
-                      type="submit"
-                      disabled={loading || !message.trim()}
-                      className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      {loading ? "Processing..." : "Send"}
-                    </button>
-                  </div>
-                </form>
-
-                {response && (
-                  <div className="bg-gray-700 rounded-lg p-6">
-                    <h4 className="text-lg font-semibold text-white mb-3">Assistant Response:</h4>
-                    <div className="prose max-w-none">
-                      <pre className="whitespace-pre-wrap text-gray-300 font-mono text-sm">
-                        {response}
-                      </pre>
-                    </div>
-                  </div>
-                )}
-
-                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-gray-700 p-4 rounded-lg">
-                    <h4 className="font-semibold text-white mb-2">💳 Wallet Operations</h4>
-                    <p className="text-gray-300 text-sm">
-                      Check balances, send tokens, and manage your crypto wallet
-                    </p>
-                  </div>
-                  <div className="bg-gray-700 p-4 rounded-lg">
-                    <h4 className="font-semibold text-white mb-2">🔄 Token Swaps</h4>
-                    <p className="text-gray-300 text-sm">
-                      Execute token swaps and DeFi operations
-                    </p>
-                  </div>
-                  <div className="bg-gray-700 p-4 rounded-lg">
-                    <h4 className="font-semibold text-white mb-2">🔗 Smart Contracts</h4>
-                    <p className="text-gray-300 text-sm">
-                      Interact with DeFi protocols and smart contracts
-                    </p>
-                  </div>
-                </div>
-              </div>
+              {/* Input */}
+              <form onSubmit={handleSubmit} className="flex space-x-4">
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Ask your AI assistant to send, swap, or manage your assets..."
+                  className="flex-1 p-3 rounded-lg bg-black text-white border border-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={loading}
+                />
+                <button
+                  type="submit"
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-black disabled:opacity-50"
+                  disabled={loading}
+                >
+                  {loading ? "..." : "Send"}
+                </button>
+              </form>
             </div>
           </div>
         )}
-        </div>
-        <Sidebar onQuickAction={handleQuickAction} />
+
+        {activeTab === "ai-dashboard" && (
+          <AIDashboard />
+        )}
       </div>
 
       {/* Transaction Modal */}
