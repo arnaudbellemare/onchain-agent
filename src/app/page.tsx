@@ -712,7 +712,6 @@ export default function Home() {
               </form>
               </div>
             </div>
-          </div>
         )}
 
         {activeTab === "ai-dashboard" && (
