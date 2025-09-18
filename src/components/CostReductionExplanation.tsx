@@ -292,11 +292,11 @@ export default function CostReductionExplanation() {
                     <td className="py-3 px-4 text-gray-900">Base API Cost</td>
                     <td className="py-3 px-4 text-gray-900">$0.03</td>
                     <td className="py-3 px-4 text-gray-900">$0.03</td>
-                    <td className="py-3 px-4 text-gray-500">$0.00</td>
+                    <td className="py-3 px-4 text-gray-900">$0.00</td>
                   </tr>
                   <tr>
                     <td className="py-3 px-4 text-gray-900">Provider Discount</td>
-                    <td className="py-3 px-4 text-gray-500">None</td>
+                    <td className="py-3 px-4 text-gray-900">None</td>
                     <td className="py-3 px-4 text-green-600">-$0.009 (30%)</td>
                     <td className="py-3 px-4 text-green-600">$0.009</td>
                   </tr>
@@ -309,7 +309,7 @@ export default function CostReductionExplanation() {
                   <tr>
                     <td className="py-3 px-4 text-gray-900">Platform Fees</td>
                     <td className="py-3 px-4 text-gray-900">$0.002</td>
-                    <td className="py-3 px-4 text-gray-500">$0.00</td>
+                    <td className="py-3 px-4 text-gray-900">$0.00</td>
                     <td className="py-3 px-4 text-green-600">$0.002</td>
                   </tr>
                   <tr className="bg-gray-50 font-semibold">

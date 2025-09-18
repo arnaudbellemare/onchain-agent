@@ -320,17 +320,17 @@ export default function WhatWeOffer() {
               <div className="text-center">
                 <div className="text-4xl font-bold text-blue-600 mb-2">20-70%</div>
                 <div className="text-gray-900 font-medium">Cost Reduction</div>
-                <div className="text-sm text-gray-600">Average savings across all services</div>
+                <div className="text-sm text-gray-900">Average savings across all services</div>
               </div>
               <div className="text-center">
                 <div className="text-4xl font-bold text-green-600 mb-2">24/7</div>
                 <div className="text-gray-900 font-medium">AI Automation</div>
-                <div className="text-sm text-gray-600">Continuous optimization without human intervention</div>
+                <div className="text-sm text-gray-900">Continuous optimization without human intervention</div>
               </div>
               <div className="text-center">
                 <div className="text-4xl font-bold text-purple-600 mb-2">100%</div>
                 <div className="text-gray-900 font-medium">Transparent</div>
-                <div className="text-sm text-gray-600">Real-time cost tracking and savings visibility</div>
+                <div className="text-sm text-gray-900">Real-time cost tracking and savings visibility</div>
               </div>
             </div>
           </div>

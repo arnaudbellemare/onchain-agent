@@ -139,7 +139,7 @@ export default function X402OptimizationCycle() {
   const getStepTextColor = (stepIndex: number) => {
     if (stepIndex === currentStep) return 'text-blue-600 font-bold';
     if (stepIndex < currentStep) return 'text-green-600';
-    return 'text-gray-600';
+    return 'text-gray-900';
   };
 
   return (
@@ -198,7 +198,7 @@ export default function X402OptimizationCycle() {
                   {step.description}
                 </p>
                 {step.cost && (
-                  <div className="text-xs text-gray-600">
+                  <div className="text-xs text-gray-900">
                     <div>Cost: ${step.cost}</div>
                     {step.savings && (
                       <div className="text-green-600">Savings: ${step.savings}</div>
@@ -223,7 +223,7 @@ export default function X402OptimizationCycle() {
             {cycleSteps.map((_, index) => (
               <React.Fragment key={index}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  index <= currentStep ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'
+                  index <= currentStep ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-900'
                 }`}>
                   {index + 1}
                 </div>
