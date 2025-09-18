@@ -308,6 +308,45 @@ export default function EnterpriseOptimizationDemo() {
               </div>
             </div>
 
+            {/* Use Cases */}
+            <div className="bg-white rounded-xl shadow-lg p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">🚀 x402 Protocol Use Cases</h2>
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="p-6 bg-blue-50 rounded-lg">
+                  <div className="text-3xl mb-4">🤖</div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">AI Agents</h3>
+                  <p className="text-gray-700 mb-4">
+                    Agents can use the x402 Protocol to pay for API requests in real-time, enabling autonomous operations without pre-funded accounts.
+                  </p>
+                  <div className="text-sm text-blue-600 font-medium">
+                    💡 Perfect for: Autonomous AI systems, chatbots, workflow automation
+                  </div>
+                </div>
+                
+                <div className="p-6 bg-green-50 rounded-lg">
+                  <div className="text-3xl mb-4">☁️</div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Cloud Storage Providers</h3>
+                  <p className="text-gray-700 mb-4">
+                    Using x402, customers can easily access storage services without account creation, paying only for what they use.
+                  </p>
+                  <div className="text-sm text-green-600 font-medium">
+                    💡 Perfect for: AWS S3, Google Cloud Storage, Azure Blob
+                  </div>
+                </div>
+                
+                <div className="p-6 bg-purple-50 rounded-lg">
+                  <div className="text-3xl mb-4">🎨</div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Content Creators</h3>
+                  <p className="text-gray-700 mb-4">
+                    x402 unlocks instant transactions, enabling true micropayments for content consumption and creation.
+                  </p>
+                  <div className="text-sm text-purple-600 font-medium">
+                    💡 Perfect for: Pay-per-view, micro-tips, premium content access
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* API Endpoints */}
             <div className="bg-white rounded-xl shadow-lg p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">🛠️ API Endpoints</h2>

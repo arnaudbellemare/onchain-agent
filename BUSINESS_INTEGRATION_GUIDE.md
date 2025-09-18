@@ -28,7 +28,25 @@ const savings = traditionalCost - x402Cost; // $1,900
 - **AI/ML Companies** (OpenAI API users, data processing)
 - **Fintech Companies** (payment processing, KYC/AML)
 
-### **2. Enterprise Integration Partners**
+### **2. AI Agent & Automation Companies**
+- **Autonomous AI Systems** (chatbots, workflow automation)
+- **AI Agent Platforms** (LangChain, AutoGPT, AgentGPT)
+- **Robotic Process Automation** (RPA tools, business process automation)
+- **IoT Device Management** (smart devices, sensor networks)
+
+### **3. Cloud Storage & Infrastructure**
+- **Cloud Storage Providers** (AWS S3, Google Cloud Storage, Azure Blob)
+- **CDN Services** (Cloudflare, AWS CloudFront, Fastly)
+- **Database Services** (MongoDB Atlas, PlanetScale, Supabase)
+- **Serverless Platforms** (Vercel, Netlify, AWS Lambda)
+
+### **4. Content & Media Platforms**
+- **Content Creators** (YouTubers, podcasters, bloggers)
+- **Streaming Services** (Twitch, YouTube, Spotify)
+- **News & Media** (pay-per-article, premium content)
+- **Educational Platforms** (online courses, tutorials)
+
+### **5. Enterprise Integration Partners**
 - **Cloud Providers** (AWS, GCP, Azure)
 - **API Management Platforms** (Kong, Apigee, MuleSoft)
 - **DevOps Tools** (Jenkins, GitHub Actions, GitLab CI)
@@ -49,6 +67,42 @@ const savings = traditionalCost - x402Cost; // $1,900
 - **License Fee:** $50,000-200,000/year
 - **Per-transaction Fee:** $0.001-0.01 per API call
 - **Custom Development:** $150-300/hour
+
+## 🚀 **Key x402 Protocol Use Cases**
+
+### **1. AI Agents & Autonomous Systems**
+```typescript
+// Agents can pay for API requests in real-time
+const x402Client = new X402APIClient(agentKit, walletAddress);
+const result = await x402Client.makeAPICall(provider, endpoint, params);
+```
+**Benefits:**
+- No pre-funded accounts required
+- Autonomous operations without human intervention
+- Real-time payment for each API call
+- Perfect for chatbots, workflow automation, IoT devices
+
+### **2. Cloud Storage Providers**
+```typescript
+// Customers access storage without account creation
+const storageAccess = await x402Client.accessStorage(bucket, file, paymentAmount);
+```
+**Benefits:**
+- No account creation required
+- Pay only for what you use
+- Instant access to storage services
+- Perfect for AWS S3, Google Cloud Storage, Azure Blob
+
+### **3. Content Creators & Media**
+```typescript
+// True micropayments for content consumption
+const contentPayment = await x402Client.payForContent(creatorId, contentId, amount);
+```
+**Benefits:**
+- Instant micropayments
+- No subscription models needed
+- Pay-per-view, pay-per-article
+- Perfect for YouTubers, podcasters, news sites
 
 ## 🛠️ **Implementation Services You Can Offer**
 
