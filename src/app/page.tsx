@@ -19,8 +19,17 @@ interface PortfolioData {
   }>;
 }
 
+interface BusinessAction {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  color: string;
+  action: () => void;
+}
+
 export default function Home() {
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState("home");
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
@@ -59,6 +68,58 @@ export default function Home() {
       ],
     });
   }, []);
+
+  // Business actions with Apple-like design
+  const businessActions: BusinessAction[] = [
+    {
+      id: "payroll",
+      title: "Payroll",
+      description: "Pay all employees their monthly salary",
+      icon: "👥",
+      color: "from-blue-500 to-blue-600",
+      action: () => setMessage("Pay all employees their monthly salary")
+    },
+    {
+      id: "vendors",
+      title: "Vendor Payments",
+      description: "Pay all pending invoices from suppliers",
+      icon: "🏢",
+      color: "from-green-500 to-green-600",
+      action: () => setMessage("Pay all pending invoices from Supplier X")
+    },
+    {
+      id: "expenses",
+      title: "Expense Management",
+      description: "Approve all travel expenses under $500",
+      icon: "✈️",
+      color: "from-purple-500 to-purple-600",
+      action: () => setMessage("Approve all travel expenses under $500")
+    },
+    {
+      id: "approvals",
+      title: "Multi-sig Approvals",
+      description: "Require multiple signatures for large payments",
+      icon: "🔐",
+      color: "from-orange-500 to-orange-600",
+      action: () => setMessage("Set up multi-sig approval for payments over $10,000")
+    },
+    {
+      id: "compliance",
+      title: "Compliance Logging",
+      description: "Track all transactions for audit purposes",
+      icon: "📊",
+      color: "from-indigo-500 to-indigo-600",
+      action: () => setMessage("Show compliance report for this quarter")
+    },
+    {
+      id: "ai-chat",
+      title: "AI Assistant",
+      description: "Chat with your financial AI assistant",
+      icon: "🤖",
+      color: "from-pink-500 to-pink-600",
+      action: () => setActiveTab("ai")
+    }
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,94 +179,34 @@ export default function Home() {
     setActiveTab("ai");
   };
 
-  const quickActions = [
-    { 
-      label: "Send", 
-      icon: "↗", 
-      action: () => {
-        setSelectedAsset({ 
-          symbol: "ETH", 
-          name: "Ethereum", 
-          balance: portfolioData?.totalBalance || "0",
-          value: portfolioData?.totalValue || "$0",
-          change24h: "+$0.00",
-          change24hPercent: "+0.00%"
-        });
-        setModalType("send");
-        setModalOpen(true);
-      }
-    },
-    { 
-      label: "Swap", 
-      icon: "⇄", 
-      action: () => {
-        setSelectedAsset({ 
-          symbol: "ETH", 
-          name: "Ethereum", 
-          balance: portfolioData?.totalBalance || "0",
-          value: portfolioData?.totalValue || "$0",
-          change24h: "+$0.00",
-          change24hPercent: "+0.00%"
-        });
-        setModalType("swap");
-        setModalOpen(true);
-      }
-    },
-    { 
-      label: "Request", 
-      icon: "↙", 
-      action: () => {
-        setSelectedAsset({ 
-          symbol: "ETH", 
-          name: "Ethereum", 
-          balance: portfolioData?.totalBalance || "0",
-          value: portfolioData?.totalValue || "$0",
-          change24h: "+$0.00",
-          change24hPercent: "+0.00%"
-        });
-        setModalType("request");
-        setModalOpen(true);
-      }
-    },
-    { 
-      label: "AI", 
-      icon: "🤖", 
-      action: () => setActiveTab("ai")
-    },
-  ];
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
       {/* Header */}
-      <header className="border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+      <header className="backdrop-blur-xl bg-black/20 border-b border-white/10">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex justify-between items-center h-20">
             <div className="flex items-center space-x-8">
-              <h1 className="text-xl font-semibold text-white">AgentKit</h1>
-              <nav className="hidden md:flex space-x-6">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">A</span>
+                </div>
+                <h1 className="text-2xl font-light text-white">AgentKit</h1>
+              </div>
+              <nav className="hidden md:flex space-x-8">
                 <button
-                  onClick={() => setActiveTab("dashboard")}
-                  className={`text-sm font-medium transition-colors ${
-                    activeTab === "dashboard" 
+                  onClick={() => setActiveTab("home")}
+                  className={`text-sm font-medium transition-all duration-200 ${
+                    activeTab === "home" 
                       ? "text-white" 
                       : "text-gray-400 hover:text-white"
                   }`}
                 >
-                  Dashboard
-                </button>
-                <button
-                  onClick={() => setActiveTab("transactions")}
-                  className={`text-sm font-medium transition-colors ${
-                    activeTab === "transactions" 
-                      ? "text-white" 
-                      : "text-gray-400 hover:text-white"
-                  }`}
-                >
-                  Transactions
+                  Home
                 </button>
                 <button
                   onClick={() => setActiveTab("ai")}
-                  className={`text-sm font-medium transition-colors ${
+                  className={`text-sm font-medium transition-all duration-200 ${
                     activeTab === "ai" 
                       ? "text-white" 
                       : "text-gray-400 hover:text-white"
@@ -215,13 +216,13 @@ export default function Home() {
                 </button>
                 <button
                   onClick={() => setActiveTab("ai-dashboard")}
-                  className={`text-sm font-medium transition-colors ${
+                  className={`text-sm font-medium transition-all duration-200 ${
                     activeTab === "ai-dashboard" 
                       ? "text-white" 
                       : "text-gray-400 hover:text-white"
                   }`}
                 >
-                  AI Dashboard
+                  Dashboard
                 </button>
               </nav>
             </div>
@@ -231,78 +232,63 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === "dashboard" && (
-          <div className="space-y-8">
-            {/* Portfolio Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-                <div className="text-sm text-gray-400 mb-1">Total Balance</div>
-                <div className="text-2xl font-semibold text-white">{portfolioData?.totalBalance} ETH</div>
-                <div className="text-sm text-gray-400">{portfolioData?.totalValue}</div>
-              </div>
-              <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-                <div className="text-sm text-gray-400 mb-1">24h Change</div>
-                <div className="text-2xl font-semibold text-green-400">+$127.45</div>
-                <div className="text-sm text-green-400">+1.52%</div>
-              </div>
-              <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-                <div className="text-sm text-gray-400 mb-1">Active Assets</div>
-                <div className="text-2xl font-semibold text-white">{portfolioData?.assets.length}</div>
-                <div className="text-sm text-gray-400">Tokens</div>
-              </div>
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        {activeTab === "home" && (
+          <div className="space-y-12">
+            {/* Hero Section */}
+            <div className="text-center space-y-6">
+              <h1 className="text-5xl font-light text-white leading-tight">
+                Business Payments,<br />
+                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                  Simplified
+                </span>
+              </h1>
+              <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+                Let AI handle your payroll, vendor payments, and expense management. 
+                Focus on growing your business, not managing transactions.
+              </p>
             </div>
 
-            {/* Quick Actions */}
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-              <div className="text-lg font-semibold text-white mb-6">Quick Actions</div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {quickActions.map((action, index) => (
-                  <button
-                    key={index}
-                    onClick={action.action}
-                    className="flex flex-col items-center p-6 bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-gray-600 rounded-lg transition-all duration-200 group"
-                  >
-                    <div className="text-2xl mb-2 group-hover:scale-110 transition-transform">
+            {/* Business Actions Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {businessActions.map((action) => (
+                <button
+                  key={action.id}
+                  onClick={action.action}
+                  className="group relative overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative z-10">
+                    <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
                       {action.icon}
                     </div>
-                    <span className="text-sm font-medium text-white">{action.label}</span>
-                  </button>
-                ))}
-              </div>
+                    <h3 className="text-xl font-medium text-white mb-2 group-hover:text-blue-300 transition-colors">
+                      {action.title}
+                    </h3>
+                    <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors">
+                      {action.description}
+                    </p>
+                  </div>
+                </button>
+              ))}
             </div>
 
-            {/* Assets */}
-            <div className="bg-gray-900 border border-gray-800 rounded-lg">
-              <div className="px-6 py-4 border-b border-gray-800">
-                <h3 className="text-lg font-semibold text-white">Assets</h3>
-              </div>
-              <div className="divide-y divide-gray-800">
-                {portfolioData?.assets.map((asset, index) => (
-                  <div key={index} className="px-6 py-4 flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                        <span className="text-white font-semibold">{asset.symbol.charAt(0)}</span>
-                      </div>
-                      <div>
-                        <div className="font-semibold text-white">{asset.symbol}</div>
-                        <div className="text-sm text-gray-400">{asset.name}</div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-semibold text-white">{asset.balance}</div>
-                      <div className="text-sm text-gray-400">{asset.value}</div>
-                    </div>
-                    <div className="text-right">
-                      <div className={`text-sm font-medium ${asset.change24h.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
-                        {asset.change24h}
-                      </div>
-                      <div className={`text-xs ${asset.change24hPercent.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
-                        {asset.change24hPercent}
-                      </div>
-                    </div>
-                  </div>
-                ))}
+            {/* Portfolio Overview */}
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+              <h2 className="text-2xl font-light text-white mb-6">Treasury Overview</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="text-3xl font-light text-white mb-1">{portfolioData?.totalValue}</div>
+                  <div className="text-sm text-gray-400">Total Treasury</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-light text-green-400 mb-1">+$127.45</div>
+                  <div className="text-sm text-gray-400">24h Change</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-light text-white mb-1">{portfolioData?.assets.length}</div>
+                  <div className="text-sm text-gray-400">Active Assets</div>
+                </div>
               </div>
             </div>
           </div>
@@ -322,15 +308,18 @@ export default function Home() {
 
         {activeTab === "ai" && (
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-white mb-6">AI Assistant</h2>
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-light text-white mb-2">AI Financial Assistant</h2>
+                <p className="text-gray-400">Ask me to handle your business payments, payroll, or any financial task</p>
+              </div>
               
               {/* Chat Interface */}
-              <div className="h-96 overflow-y-auto bg-black border border-gray-800 rounded-lg p-4 mb-6">
+              <div className="h-96 overflow-y-auto bg-black/20 backdrop-blur-xl border border-white/10 rounded-xl p-6 mb-6">
                 <div className="space-y-4">
                   {response && (
                     <div className="flex justify-start">
-                      <div className="bg-gray-800 text-white p-3 rounded-lg max-w-xs whitespace-pre-wrap border border-gray-700">
+                      <div className="bg-white/10 backdrop-blur-xl text-white p-4 rounded-xl max-w-2xl whitespace-pre-wrap border border-white/10">
                         {response}
                       </div>
                     </div>
@@ -344,13 +333,13 @@ export default function Home() {
                   type="text"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Ask your AI assistant to send, swap, or manage your assets..."
-                  className="flex-1 p-3 rounded-lg bg-black text-white border border-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Try: 'Pay all employees their monthly salary' or 'Approve all travel expenses under $500'"
+                  className="flex-1 p-4 rounded-xl bg-white/5 backdrop-blur-xl text-white border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200"
                   disabled={loading}
                 />
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-black disabled:opacity-50"
+                  className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-medium hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 disabled:opacity-50 transition-all duration-200 hover:scale-105"
                   disabled={loading}
                 >
                   {loading ? "..." : "Send"}
