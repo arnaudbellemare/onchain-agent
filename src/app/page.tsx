@@ -73,48 +73,48 @@ export default function Home() {
   const businessActions: BusinessAction[] = [
     {
       id: "payroll",
-      title: "Payroll",
-      description: "Pay all employees their monthly salary",
+      title: "Set-and-Forget Payroll",
+      description: "Automate monthly salary payments across all rails",
       icon: "👥",
       color: "from-blue-500 to-blue-600",
-      action: () => setMessage("Pay all employees their monthly salary")
+      action: () => setMessage("Set up automated payroll for all employees with multi-rail optimization")
     },
     {
       id: "vendors",
-      title: "Vendor Payments",
-      description: "Pay all pending invoices from suppliers",
+      title: "Smart Vendor Payments",
+      description: "AI-optimized invoice processing and payment routing",
       icon: "🏢",
       color: "from-green-500 to-green-600",
-      action: () => setMessage("Pay all pending invoices from Supplier X")
+      action: () => setMessage("Process all pending vendor invoices with optimal payment routing")
     },
     {
       id: "expenses",
-      title: "Expense Management",
-      description: "Approve all travel expenses under $500",
+      title: "Intelligent Expense Management",
+      description: "Custom approval workflows with AI decision making",
       icon: "✈️",
       color: "from-purple-500 to-purple-600",
-      action: () => setMessage("Approve all travel expenses under $500")
+      action: () => setMessage("Create custom expense approval workflow for travel under $500")
     },
     {
       id: "approvals",
-      title: "Multi-sig Approvals",
-      description: "Require multiple signatures for large payments",
+      title: "Multi-Rail Approvals",
+      description: "Unified approval system across all payment methods",
       icon: "🔐",
       color: "from-orange-500 to-orange-600",
-      action: () => setMessage("Set up multi-sig approval for payments over $10,000")
+      action: () => setMessage("Set up unified multi-sig approval for payments over $10,000 across all rails")
     },
     {
-      id: "compliance",
-      title: "Compliance Logging",
-      description: "Track all transactions for audit purposes",
+      id: "analytics",
+      title: "Predictive Analytics",
+      description: "AI-powered cash flow insights and optimization",
       icon: "📊",
       color: "from-indigo-500 to-indigo-600",
-      action: () => setMessage("Show compliance report for this quarter")
+      action: () => setMessage("Show predictive cash flow analysis and optimization recommendations")
     },
     {
       id: "ai-chat",
-      title: "AI Assistant",
-      description: "Chat with your financial AI assistant",
+      title: "AI Command Center",
+      description: "Natural language control for all financial operations",
       icon: "🤖",
       color: "from-pink-500 to-pink-600",
       action: () => setActiveTab("ai")
@@ -249,6 +249,121 @@ export default function Home() {
               </p>
             </div>
 
+            {/* Value Propositions */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Time & Cost Savings */}
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                    <span className="text-white text-xl">⚡</span>
+                  </div>
+                  <h3 className="text-xl font-medium text-white">Time & Cost Savings</h3>
+                </div>
+                <p className="text-gray-300 leading-relaxed mb-4">
+                  Lean finance and ops teams want &ldquo;set-and-forget&rdquo; payment intelligence, 
+                  no matter which rails they run on.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2 text-sm text-gray-400">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    <span>90% reduction in manual payment processing</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-gray-400">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    <span>24/7 automated operations</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-gray-400">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    <span>Multi-rail optimization</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Customization */}
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
+                    <span className="text-white text-xl">🔧</span>
+                  </div>
+                  <h3 className="text-xl font-medium text-white">Customization</h3>
+                </div>
+                <p className="text-gray-300 leading-relaxed mb-4">
+                  Mainstream platforms are inflexible; AgentKit + AI lets a business 
+                  automate custom workflows impossible elsewhere.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2 text-sm text-gray-400">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span>Custom approval workflows</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-gray-400">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span>Industry-specific automation</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-gray-400">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <span>AI-powered decision making</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* All-in-One Control */}
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center">
+                    <span className="text-white text-xl">🎛️</span>
+                  </div>
+                  <h3 className="text-xl font-medium text-white">All-in-One Control</h3>
+                </div>
+                <p className="text-gray-300 leading-relaxed mb-4">
+                  Manage, monitor, and optimize all payment flows (across rail types, 
+                  currencies, and platforms) from a unified interface with built-in AI intelligence.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2 text-sm text-gray-400">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    <span>Unified dashboard</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-gray-400">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    <span>Cross-platform monitoring</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-gray-400">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    <span>Real-time optimization</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Next-Gen Analytics */}
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-600 rounded-xl flex items-center justify-center">
+                    <span className="text-white text-xl">📊</span>
+                  </div>
+                  <h3 className="text-xl font-medium text-white">Next-Gen Analytics</h3>
+                </div>
+                <p className="text-gray-300 leading-relaxed mb-4">
+                  Get insights and automation mainstream providers can&apos;t match. 
+                  AI-powered analytics that predict and optimize your cash flow.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2 text-sm text-gray-400">
+                    <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+                    <span>Predictive cash flow</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-gray-400">
+                    <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+                    <span>Cost optimization insights</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-gray-400">
+                    <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+                    <span>Automated reporting</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Business Actions Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {businessActions.map((action) => (
@@ -271,6 +386,52 @@ export default function Home() {
                   </div>
                 </button>
               ))}
+            </div>
+
+            {/* Competitive Advantage */}
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+              <h2 className="text-2xl font-light text-white mb-6 text-center">Why AgentKit Beats Mainstream Platforms</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <span className="text-white text-2xl">🚫</span>
+                  </div>
+                  <h3 className="text-lg font-medium text-white mb-2">Traditional Platforms</h3>
+                  <ul className="text-sm text-gray-400 space-y-1">
+                    <li>• Rigid, one-size-fits-all</li>
+                    <li>• Manual processes</li>
+                    <li>• Limited customization</li>
+                    <li>• Basic reporting</li>
+                    <li>• Single rail focus</li>
+                  </ul>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <span className="text-white text-2xl">✅</span>
+                  </div>
+                  <h3 className="text-lg font-medium text-white mb-2">AgentKit + AI</h3>
+                  <ul className="text-sm text-gray-400 space-y-1">
+                    <li>• Fully customizable workflows</li>
+                    <li>• AI-powered automation</li>
+                    <li>• Multi-rail optimization</li>
+                    <li>• Predictive analytics</li>
+                    <li>• Unified control center</li>
+                  </ul>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <span className="text-white text-2xl">📈</span>
+                  </div>
+                  <h3 className="text-lg font-medium text-white mb-2">The Result</h3>
+                  <ul className="text-sm text-gray-400 space-y-1">
+                    <li>• 90% less manual work</li>
+                    <li>• 24/7 operations</li>
+                    <li>• Custom business logic</li>
+                    <li>• Real-time insights</li>
+                    <li>• Future-proof architecture</li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
             {/* Portfolio Overview */}
@@ -311,7 +472,13 @@ export default function Home() {
             <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
               <div className="text-center mb-8">
                 <h2 className="text-3xl font-light text-white mb-2">AI Financial Assistant</h2>
-                <p className="text-gray-400">Ask me to handle your business payments, payroll, or any financial task</p>
+                <p className="text-gray-400 mb-4">Ask me to handle your business payments, payroll, or any financial task</p>
+                <div className="flex flex-wrap justify-center gap-2">
+                  <span className="px-3 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full border border-blue-500/30">Multi-rail optimization</span>
+                  <span className="px-3 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full border border-purple-500/30">Custom workflows</span>
+                  <span className="px-3 py-1 bg-green-500/20 text-green-300 text-xs rounded-full border border-green-500/30">24/7 automation</span>
+                  <span className="px-3 py-1 bg-orange-500/20 text-orange-300 text-xs rounded-full border border-orange-500/30">Predictive analytics</span>
+                </div>
               </div>
               
               {/* Chat Interface */}
