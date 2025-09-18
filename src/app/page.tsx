@@ -5,6 +5,8 @@ import PortfolioCard from "@/components/PortfolioCard";
 import AssetRow from "@/components/AssetRow";
 import TradingInterface from "@/components/TradingInterface";
 import Sidebar from "@/components/Sidebar";
+import TransactionModal from "@/components/TransactionModal";
+import Notification from "@/components/Notification";
 
 interface PortfolioData {
   totalBalance: string;
@@ -25,6 +27,14 @@ export default function Home() {
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [portfolioData, setPortfolioData] = useState<PortfolioData | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<"send" | "swap">("send");
+  const [selectedAsset, setSelectedAsset] = useState<{ symbol: string; name: string; balance: string; value: string; change24h: string; change24hPercent: string } | null>(null);
+  const [notification, setNotification] = useState({
+    message: "",
+    type: "info" as "success" | "error" | "info",
+    isVisible: false
+  });
 
   // Mock portfolio data
   useEffect(() => {
@@ -78,15 +88,43 @@ export default function Home() {
   ];
 
   const handleAssetSend = (asset: { symbol: string; name: string; balance: string; value: string; change24h: string; change24hPercent: string }) => {
-    setMessage(`Send 0.1 ${asset.symbol} to`);
+    setSelectedAsset(asset);
+    setModalType("send");
+    setModalOpen(true);
   };
 
   const handleAssetSwap = (asset: { symbol: string; name: string; balance: string; value: string; change24h: string; change24hPercent: string }) => {
-    setMessage(`Swap 1 ${asset.symbol} to USDC`);
+    setSelectedAsset(asset);
+    setModalType("swap");
+    setModalOpen(true);
   };
 
   const handleExecuteSwap = (fromToken: string, toToken: string, amount: string) => {
+    if (!amount || isNaN(parseFloat(amount))) {
+      alert("Please enter a valid amount");
+      return;
+    }
     setMessage(`Swap ${amount} ${fromToken} to ${toToken}`);
+    setActiveTab("assistant");
+  };
+
+  const handleModalConfirm = (data: { type: string; amount: string; token?: string; recipient?: string; fromToken?: string; toToken?: string }) => {
+    if (data.type === "send" && data.token && data.recipient) {
+      setMessage(`Send ${data.amount} ${data.token} to ${data.recipient}`);
+      setNotification({
+        message: `Sending ${data.amount} ${data.token} to ${data.recipient.substring(0, 6)}...`,
+        type: "info",
+        isVisible: true
+      });
+    } else if (data.type === "swap" && data.fromToken && data.toToken) {
+      setMessage(`Swap ${data.amount} ${data.fromToken} to ${data.toToken}`);
+      setNotification({
+        message: `Swapping ${data.amount} ${data.fromToken} to ${data.toToken}...`,
+        type: "info",
+        isVisible: true
+      });
+    }
+    setActiveTab("assistant");
   };
 
   const handleQuickAction = (command: string) => {
@@ -169,6 +207,63 @@ export default function Home() {
                 value={portfolioData?.assets.length?.toString() || "0"}
                 subtitle="Tokens"
               />
+            </div>
+
+            {/* Quick Actions */}
+            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+              <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <button
+                  onClick={() => {
+                    setSelectedAsset({ 
+                      symbol: "ETH", 
+                      name: "Ethereum", 
+                      balance: portfolioData?.totalBalance || "0",
+                      value: portfolioData?.totalValue || "$0",
+                      change24h: "+$0.00",
+                      change24hPercent: "+0.00%"
+                    });
+                    setModalType("send");
+                    setModalOpen(true);
+                  }}
+                  className="flex flex-col items-center p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+                >
+                  <span className="text-2xl mb-2">📤</span>
+                  <span className="text-sm font-medium text-white">Send ETH</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedAsset({ 
+                      symbol: "ETH", 
+                      name: "Ethereum", 
+                      balance: portfolioData?.totalBalance || "0",
+                      value: portfolioData?.totalValue || "$0",
+                      change24h: "+$0.00",
+                      change24hPercent: "+0.00%"
+                    });
+                    setModalType("swap");
+                    setModalOpen(true);
+                  }}
+                  className="flex flex-col items-center p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+                >
+                  <span className="text-2xl mb-2">🔄</span>
+                  <span className="text-sm font-medium text-white">Swap ETH</span>
+                </button>
+                <button
+                  onClick={() => setMessage("check my balance")}
+                  className="flex flex-col items-center p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+                >
+                  <span className="text-2xl mb-2">💰</span>
+                  <span className="text-sm font-medium text-white">Check Balance</span>
+                </button>
+                <button
+                  onClick={() => setMessage("Show wallet address")}
+                  className="flex flex-col items-center p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+                >
+                  <span className="text-2xl mb-2">🏦</span>
+                  <span className="text-sm font-medium text-white">Wallet Info</span>
+                </button>
+              </div>
             </div>
 
             {/* Assets Table */}
@@ -358,6 +453,23 @@ export default function Home() {
         </div>
         <Sidebar onQuickAction={handleQuickAction} />
       </div>
+
+      {/* Transaction Modal */}
+      <TransactionModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onConfirm={handleModalConfirm}
+        type={modalType}
+        asset={selectedAsset}
+      />
+
+      {/* Notification */}
+      <Notification
+        message={notification.message}
+        type={notification.type}
+        isVisible={notification.isVisible}
+        onClose={() => setNotification({ ...notification, isVisible: false })}
+      />
     </div>
   );
 }
