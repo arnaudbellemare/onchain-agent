@@ -8,6 +8,7 @@ import X402UseCaseShowcase from './X402UseCaseShowcase';
 import BusinessIntegrationWidget from './BusinessIntegrationWidget';
 import RealTimeCostMonitoring from './RealTimeCostMonitoring';
 import CostReductionExplanation from './CostReductionExplanation';
+import RealX402Wrapper from './RealX402Wrapper';
 
 interface Service {
   id: string;
@@ -22,7 +23,7 @@ interface Service {
 
 export default function WhatWeOffer() {
   const [selectedService, setSelectedService] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring' | 'explanation' | 'universal'>('services');
+  const [activeTab, setActiveTab] = useState<'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring' | 'explanation' | 'universal' | 'real-wrapper'>('services');
 
   const services: Service[] = [
     {
@@ -216,11 +217,12 @@ export default function WhatWeOffer() {
             { id: 'integration', label: 'Integration Tools', icon: '🔧' },
             { id: 'monitoring', label: 'Cost Monitoring', icon: '📊' },
             { id: 'explanation', label: 'How We Save', icon: '💡' },
-            { id: 'universal', label: 'Universal API Optimization', icon: '🌐' }
+            { id: 'universal', label: 'Universal API Optimization', icon: '🌐' },
+            { id: 'real-wrapper', label: 'Real x402 Wrapper', icon: '⚡' }
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as 'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring' | 'explanation' | 'universal')}
+              onClick={() => setActiveTab(tab.id as 'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring' | 'explanation' | 'universal' | 'real-wrapper')}
               className={`px-6 py-3 rounded-lg font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-blue-600 text-white shadow-lg'
@@ -505,6 +507,11 @@ export default function WhatWeOffer() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Real x402 Wrapper Tab */}
+      {activeTab === 'real-wrapper' && (
+        <RealX402Wrapper />
       )}
     </div>
   );
