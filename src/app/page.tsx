@@ -137,6 +137,14 @@ export default function Home() {
       action: () => setMessage("Enable micropayment services for AI agents. Set up pay-per-query data access, autonomous tool purchasing, and machine-to-machine commerce.")
     },
     {
+      id: "commerce-scheme",
+      title: "Commerce Scheme (Refunds/Escrow)",
+      description: "CDP-facilitated refunds and escrow flows for e-commerce",
+      icon: "",
+      color: "from-indigo-500 to-indigo-600",
+      action: () => setMessage("Set up commerce scheme with CDP-facilitated refunds and escrow flows. Configure automated refund processing, dispute resolution, and secure escrow services for e-commerce transactions.")
+    },
+    {
       id: "ai-chat",
       title: "AI Command Center",
       description: "Natural language control for all financial operations",
@@ -444,6 +452,68 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Commerce Scheme - Q1 2026 */}
+            <div className="space-y-16">
+              <div className="text-center space-y-4">
+                <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 text-sm font-medium rounded-full border border-blue-200 mb-4">
+                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                  Coming Q1 2026
+                </div>
+                <h2 className="text-3xl font-semibold text-gray-900">Commerce Scheme (Refunds/Escrow)</h2>
+                <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                  CDP-facilitated refunds and escrow flows for e-commerce. Built for the future of 
+                  autonomous commerce with secure dispute resolution and automated refund processing.
+                </p>
+              </div>
+              
+              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-12">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <div className="w-6 h-6 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <div className="w-3 h-3 bg-white rounded-sm"></div>
+                      </div>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Automated Refunds</h3>
+                    <ul className="text-sm text-gray-600 space-y-2">
+                      <li>• Instant refund processing</li>
+                      <li>• Policy-based automation</li>
+                      <li>• Multi-rail refund routing</li>
+                      <li>• Customer satisfaction focus</li>
+                    </ul>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <div className="w-6 h-6 bg-green-600 rounded-lg flex items-center justify-center">
+                        <div className="w-3 h-3 bg-white rounded-sm"></div>
+                      </div>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Secure Escrow</h3>
+                    <ul className="text-sm text-gray-600 space-y-2">
+                      <li>• CDP-facilitated escrow services</li>
+                      <li>• Smart contract automation</li>
+                      <li>• Dispute resolution protocols</li>
+                      <li>• Trustless transaction security</li>
+                    </ul>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <div className="w-6 h-6 bg-purple-600 rounded-lg flex items-center justify-center">
+                        <div className="w-3 h-3 bg-white rounded-sm"></div>
+                      </div>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">E-commerce Ready</h3>
+                    <ul className="text-sm text-gray-600 space-y-2">
+                      <li>• Platform integrations</li>
+                      <li>• API-first architecture</li>
+                      <li>• Scalable dispute handling</li>
+                      <li>• Global commerce support</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* x402 Autonomous AI Commerce */}
             <div className="space-y-16">
               <div className="text-center space-y-4">
@@ -502,21 +572,23 @@ export default function Home() {
             </div>
 
             {/* Competitive Differentiator & Scalability */}
-            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+            <div className="bg-gray-50 border border-gray-200 rounded-2xl p-8">
               <div className="text-center mb-8">
-                <h2 className="text-3xl font-light text-white mb-4">Future-Ready & Scalable</h2>
-                <p className="text-gray-300 text-lg max-w-3xl mx-auto">
+                <h2 className="text-3xl font-light text-gray-900 mb-4">Future-Ready & Scalable</h2>
+                <p className="text-gray-600 text-lg max-w-3xl mx-auto">
                   As more suppliers accept digital assets and international business expands, 
                   you&apos;re already equipped for instant global reach.
                 </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <span className="text-white text-2xl">🌍</span>
+                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <div className="w-6 h-6 bg-green-600 rounded-lg flex items-center justify-center">
+                      <div className="w-3 h-3 bg-white rounded-sm"></div>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-medium text-white mb-3">Future Readiness</h3>
-                  <ul className="text-sm text-gray-400 space-y-2">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Future Readiness</h3>
+                  <ul className="text-sm text-gray-600 space-y-2">
                     <li>• Instant global reach with fiat or crypto</li>
                     <li>• Ready for digital asset adoption</li>
                     <li>• International business expansion ready</li>
@@ -524,11 +596,13 @@ export default function Home() {
                   </ul>
                 </div>
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <span className="text-white text-2xl">🏢</span>
+                  <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <div className="w-6 h-6 bg-purple-600 rounded-lg flex items-center justify-center">
+                      <div className="w-3 h-3 bg-white rounded-sm"></div>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-medium text-white mb-3">White-Label & Ecosystem</h3>
-                  <ul className="text-sm text-gray-400 space-y-2">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">White-Label & Ecosystem</h3>
+                  <ul className="text-sm text-gray-600 space-y-2">
                     <li>• Offer AI automation as a service</li>
                     <li>• Integrate with existing business tools</li>
                     <li>• Partner and client-ready platform</li>
@@ -633,25 +707,25 @@ export default function Home() {
             {/* Portfolio Overview */}
             <div className="space-y-16">
               <div className="text-center space-y-4">
-                <h2 className="text-4xl font-bold text-white">Treasury Overview</h2>
-                <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                <h2 className="text-3xl font-semibold text-gray-900">Treasury Overview</h2>
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                   Real-time view of your business treasury and payment capabilities
                 </p>
               </div>
               
-              <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-12">
+              <div className="bg-gray-50 border border-gray-200 rounded-2xl p-12">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
-                  <div className="text-3xl font-light text-white mb-1">{portfolioData?.totalValue}</div>
-                  <div className="text-sm text-gray-400">Total Treasury</div>
+                  <div className="text-3xl font-light text-gray-900 mb-1">{portfolioData?.totalValue}</div>
+                  <div className="text-sm text-gray-600">Total Treasury</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-light text-green-400 mb-1">+$127.45</div>
-                  <div className="text-sm text-gray-400">24h Change</div>
+                  <div className="text-3xl font-light text-green-600 mb-1">+$127.45</div>
+                  <div className="text-sm text-gray-600">24h Change</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-light text-white mb-1">{portfolioData?.assets.length}</div>
-                  <div className="text-sm text-gray-400">Active Assets</div>
+                  <div className="text-3xl font-light text-gray-900 mb-1">{portfolioData?.assets.length}</div>
+                  <div className="text-sm text-gray-600">Active Assets</div>
                 </div>
               </div>
               </div>
@@ -741,39 +815,39 @@ export default function Home() {
             {/* Getting Started */}
             <div className="space-y-16">
               <div className="text-center space-y-4">
-                <h2 className="text-4xl font-bold text-white">Getting Started</h2>
-                <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                <h2 className="text-3xl font-semibold text-gray-900">Getting Started</h2>
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                   Follow these steps to begin transforming your business operations
                 </p>
               </div>
               
-              <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-12">
+              <div className="bg-gray-50 border border-gray-200 rounded-2xl p-12">
               <div className="space-y-4">
                 <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                     <span className="text-white text-sm font-bold">1</span>
                   </div>
                   <div>
-                    <h3 className="text-lg font-medium text-white mb-2">Connect Your Wallet</h3>
-                    <p className="text-gray-300">Click &ldquo;Connect Wallet&rdquo; and choose your preferred method: email, social login, or existing wallet (MetaMask, etc.)</p>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Connect Your Wallet</h3>
+                    <p className="text-gray-600">Click &ldquo;Connect Wallet&rdquo; and choose your preferred method: email, social login, or existing wallet (MetaMask, etc.)</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                     <span className="text-white text-sm font-bold">2</span>
                   </div>
                   <div>
-                    <h3 className="text-lg font-medium text-white mb-2">Try the AI Assistant</h3>
-                    <p className="text-gray-300">Go to &ldquo;AI Assistant&rdquo; tab and start with simple commands like &ldquo;Check my balance&rdquo; or &ldquo;Show me my wallet details&rdquo;</p>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Try the AI Assistant</h3>
+                    <p className="text-gray-600">Go to &ldquo;AI Assistant&rdquo; tab and start with simple commands like &ldquo;Check my balance&rdquo; or &ldquo;Show me my wallet details&rdquo;</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                     <span className="text-white text-sm font-bold">3</span>
                   </div>
                   <div>
-                    <h3 className="text-lg font-medium text-white mb-2">Explore Business Features</h3>
-                    <p className="text-gray-300">Try the business action cards on the home page or use the AI assistant for complex operations</p>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Explore Business Features</h3>
+                    <p className="text-gray-600">Try the business action cards on the home page or use the AI assistant for complex operations</p>
                   </div>
                 </div>
               </div>
