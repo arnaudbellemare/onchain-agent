@@ -248,6 +248,16 @@ export default function Home() {
                 >
                   Dashboard
                 </button>
+                <button
+                  onClick={() => setActiveTab("guide")}
+                  className={`text-sm font-medium transition-all duration-200 ${
+                    activeTab === "guide" 
+                      ? "text-white" 
+                      : "text-gray-400 hover:text-white"
+                  }`}
+                >
+                  How to Use
+                </button>
               </nav>
             </div>
             
@@ -630,6 +640,188 @@ export default function Home() {
 
         {activeTab === "ai-dashboard" && (
           <AIDashboard />
+        )}
+
+        {activeTab === "guide" && (
+          <div className="max-w-4xl mx-auto space-y-8">
+            {/* Getting Started */}
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+              <h2 className="text-3xl font-light text-white mb-6">🚀 Getting Started</h2>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-white text-sm font-bold">1</span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-medium text-white mb-2">Connect Your Wallet</h3>
+                    <p className="text-gray-300">Click &ldquo;Connect Wallet&rdquo; and choose your preferred method: email, social login, or existing wallet (MetaMask, etc.)</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-white text-sm font-bold">2</span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-medium text-white mb-2">Try the AI Assistant</h3>
+                    <p className="text-gray-300">Go to &ldquo;AI Assistant&rdquo; tab and start with simple commands like &ldquo;Check my balance&rdquo; or &ldquo;Show me my wallet details&rdquo;</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-white text-sm font-bold">3</span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-medium text-white mb-2">Explore Business Features</h3>
+                    <p className="text-gray-300">Try the business action cards on the home page or use the AI assistant for complex operations</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* AI Commands */}
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+              <h2 className="text-3xl font-light text-white mb-6">🤖 AI Commands & Prompts</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Basic Commands */}
+                <div>
+                  <h3 className="text-xl font-medium text-white mb-4">Basic Commands</h3>
+                  <div className="space-y-3">
+                    <div className="bg-black/20 p-3 rounded-lg">
+                      <code className="text-green-400 text-sm">&ldquo;Check my balance&rdquo;</code>
+                      <p className="text-gray-400 text-xs mt-1">Get your wallet balance and details</p>
+                    </div>
+                    <div className="bg-black/20 p-3 rounded-lg">
+                      <code className="text-green-400 text-sm">&ldquo;Show my wallet address&rdquo;</code>
+                      <p className="text-gray-400 text-xs mt-1">Display your wallet address</p>
+                    </div>
+                    <div className="bg-black/20 p-3 rounded-lg">
+                      <code className="text-green-400 text-sm">&ldquo;Send 0.1 ETH to 0x...&rdquo;</code>
+                      <p className="text-gray-400 text-xs mt-1">Send tokens to an address</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Business Commands */}
+                <div>
+                  <h3 className="text-xl font-medium text-white mb-4">Business Operations</h3>
+                  <div className="space-y-3">
+                    <div className="bg-black/20 p-3 rounded-lg">
+                      <code className="text-blue-400 text-sm">&ldquo;Set up automated payroll&rdquo;</code>
+                      <p className="text-gray-400 text-xs mt-1">Configure employee salary automation</p>
+                    </div>
+                    <div className="bg-black/20 p-3 rounded-lg">
+                      <code className="text-blue-400 text-sm">&ldquo;Process vendor invoices&rdquo;</code>
+                      <p className="text-gray-400 text-xs mt-1">AI-powered invoice processing</p>
+                    </div>
+                    <div className="bg-black/20 p-3 rounded-lg">
+                      <code className="text-blue-400 text-sm">&ldquo;Show cash flow analysis&rdquo;</code>
+                      <p className="text-gray-400 text-xs mt-1">Predictive financial insights</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Advanced Features */}
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+              <h2 className="text-3xl font-light text-white mb-6">⚡ Advanced Features</h2>
+              
+              <div className="space-y-6">
+                {/* x402 Protocol */}
+                <div>
+                  <h3 className="text-xl font-medium text-white mb-3">🔗 x402 Protocol (AI Commerce)</h3>
+                  <div className="space-y-3">
+                    <div className="bg-black/20 p-3 rounded-lg">
+                      <code className="text-cyan-400 text-sm">&ldquo;Set up x402 protocol for API payments&rdquo;</code>
+                      <p className="text-gray-400 text-xs mt-1">Enable autonomous AI payments for API access</p>
+                    </div>
+                    <div className="bg-black/20 p-3 rounded-lg">
+                      <code className="text-cyan-400 text-sm">&ldquo;Enable micropayment services&rdquo;</code>
+                      <p className="text-gray-400 text-xs mt-1">Pay-per-query and autonomous purchasing</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Compliance & Security */}
+                <div>
+                  <h3 className="text-xl font-medium text-white mb-3">🔒 Compliance & Security</h3>
+                  <div className="space-y-3">
+                    <div className="bg-black/20 p-3 rounded-lg">
+                      <code className="text-orange-400 text-sm">&ldquo;Generate compliance report&rdquo;</code>
+                      <p className="text-gray-400 text-xs mt-1">SOC 2, GDPR, and audit reports</p>
+                    </div>
+                    <div className="bg-black/20 p-3 rounded-lg">
+                      <code className="text-orange-400 text-sm">&ldquo;Set up multi-sig approval&rdquo;</code>
+                      <p className="text-gray-400 text-xs mt-1">Multi-signature security for large payments</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+              <h2 className="text-3xl font-light text-white mb-6">🎯 Quick Actions</h2>
+              <p className="text-gray-300 mb-6">Click these buttons on the home page for instant setup:</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="bg-gradient-to-r from-blue-500/10 to-blue-600/10 p-4 rounded-lg border border-blue-500/20">
+                  <div className="text-2xl mb-2">👥</div>
+                  <h4 className="font-medium text-white mb-1">Set-and-Forget Payroll</h4>
+                  <p className="text-gray-400 text-sm">Automate monthly salary payments</p>
+                </div>
+                <div className="bg-gradient-to-r from-green-500/10 to-green-600/10 p-4 rounded-lg border border-green-500/20">
+                  <div className="text-2xl mb-2">🏢</div>
+                  <h4 className="font-medium text-white mb-1">Smart Vendor Payments</h4>
+                  <p className="text-gray-400 text-sm">AI-optimized invoice processing</p>
+                </div>
+                <div className="bg-gradient-to-r from-purple-500/10 to-purple-600/10 p-4 rounded-lg border border-purple-500/20">
+                  <div className="text-2xl mb-2">✈️</div>
+                  <h4 className="font-medium text-white mb-1">Expense Management</h4>
+                  <p className="text-gray-400 text-sm">Custom approval workflows</p>
+                </div>
+                <div className="bg-gradient-to-r from-cyan-500/10 to-cyan-600/10 p-4 rounded-lg border border-cyan-500/20">
+                  <div className="text-2xl mb-2">🔗</div>
+                  <h4 className="font-medium text-white mb-1">x402 API Payments</h4>
+                  <p className="text-gray-400 text-sm">Autonomous AI payments</p>
+                </div>
+                <div className="bg-gradient-to-r from-emerald-500/10 to-emerald-600/10 p-4 rounded-lg border border-emerald-500/20">
+                  <div className="text-2xl mb-2">💎</div>
+                  <h4 className="font-medium text-white mb-1">Micropayment Services</h4>
+                  <p className="text-gray-400 text-sm">Pay-per-query services</p>
+                </div>
+                <div className="bg-gradient-to-r from-pink-500/10 to-pink-600/10 p-4 rounded-lg border border-pink-500/20">
+                  <div className="text-2xl mb-2">🤖</div>
+                  <h4 className="font-medium text-white mb-1">AI Command Center</h4>
+                  <p className="text-gray-400 text-sm">Natural language control</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Support */}
+            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-xl border border-white/10 rounded-2xl p-8 text-center">
+              <h2 className="text-3xl font-light text-white mb-4">💡 Need Help?</h2>
+              <p className="text-gray-300 mb-6">
+                Start with simple commands and gradually explore advanced features. 
+                The AI assistant is designed to understand natural language - just describe what you want to do!
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <button
+                  onClick={() => setActiveTab("ai")}
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105"
+                >
+                  Try AI Assistant
+                </button>
+                <button
+                  onClick={() => setActiveTab("home")}
+                  className="bg-white/10 hover:bg-white/20 backdrop-blur-xl text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 border border-white/10"
+                >
+                  Explore Features
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
 
