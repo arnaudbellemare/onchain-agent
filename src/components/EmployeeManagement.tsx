@@ -28,11 +28,15 @@ export default function EmployeeManagement({ onEmployeeAdded }: EmployeeManageme
     try {
       const response = await fetch('/api/payments/payroll');
       const data = await response.json();
-      if (data.success) {
+      if (data.success && data.data && data.data.employees) {
         setEmployees(data.data.employees);
+      } else {
+        console.warn('No employee data received:', data);
+        setEmployees([]);
       }
     } catch (error) {
       console.error('Error fetching employees:', error);
+      setEmployees([]);
     }
   };
 
@@ -52,7 +56,7 @@ export default function EmployeeManagement({ onEmployeeAdded }: EmployeeManageme
       });
 
       const data = await response.json();
-      if (data.success) {
+      if (data.success && data.data && data.data.employee) {
         setEmployees([...employees, data.data.employee]);
         setNewEmployee({
           name: '',
@@ -65,9 +69,13 @@ export default function EmployeeManagement({ onEmployeeAdded }: EmployeeManageme
         });
         setShowAddForm(false);
         onEmployeeAdded?.(data.data.employee);
+      } else {
+        console.error('Failed to add employee:', data);
+        alert('Failed to add employee. Please try again.');
       }
     } catch (error) {
       console.error('Error adding employee:', error);
+      alert('Error adding employee. Please try again.');
     }
   };
 
@@ -81,15 +89,15 @@ export default function EmployeeManagement({ onEmployeeAdded }: EmployeeManageme
       });
 
       const data = await response.json();
-      if (data.success) {
-        alert(`Payroll processed successfully! ${data.data.transactionCount} employees paid.`);
+      if (data.success && data.data) {
+        alert(`Payroll processed successfully! ${data.data.transactionCount || 0} employees paid.`);
         fetchEmployees(); // Refresh the list
       } else {
-        alert('Failed to process payroll: ' + data.message);
+        alert('Failed to process payroll: ' + (data.message || 'Unknown error'));
       }
     } catch (error) {
       console.error('Error processing payroll:', error);
-      alert('Error processing payroll');
+      alert('Error processing payroll. Please try again.');
     }
   };
 
@@ -234,11 +242,11 @@ export default function EmployeeManagement({ onEmployeeAdded }: EmployeeManageme
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-light text-white">Team ({employees.length})</h3>
           <div className="text-sm text-gray-400">
-            Total Monthly Payroll: ${employees.reduce((sum, emp) => sum + emp.salary, 0).toLocaleString()} USDC
+            Total Monthly Payroll: ${employees.reduce((sum, emp) => sum + (emp.salary || 0), 0).toLocaleString()} USDC
           </div>
         </div>
         
-        {employees.length === 0 ? (
+        {!employees || employees.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-gray-400 mb-4">No employees added yet</div>
             <button
@@ -250,52 +258,59 @@ export default function EmployeeManagement({ onEmployeeAdded }: EmployeeManageme
           </div>
         ) : (
           <div className="space-y-3">
-            {employees.map((employee) => (
-              <div key={employee.id} className="bg-white/5 border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                      <span className="text-white font-medium text-lg">
-                        {employee.name.split(' ').map(n => n[0]).join('')}
-                      </span>
-                    </div>
-                    <div>
-                      <h4 className="text-lg font-medium text-white">{employee.name}</h4>
-                      <div className="flex items-center space-x-3 text-sm text-gray-400">
-                        <span>{employee.role}</span>
-                        <span>•</span>
-                        <span>{employee.department}</span>
-                        <span>•</span>
-                        <span className="font-mono">
-                          {employee.walletAddress.slice(0, 6)}...{employee.walletAddress.slice(-4)}
+            {employees.map((employee) => {
+              if (!employee || !employee.id) return null;
+              
+              return (
+                <div key={employee.id} className="bg-white/5 border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <span className="text-white font-medium text-lg">
+                          {employee.name ? employee.name.split(' ').map(n => n[0]).join('').toUpperCase() : '??'}
                         </span>
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-medium text-white">{employee.name || 'Unknown'}</h4>
+                        <div className="flex items-center space-x-3 text-sm text-gray-400">
+                          <span>{employee.role || 'No role'}</span>
+                          <span>•</span>
+                          <span>{employee.department || 'No department'}</span>
+                          <span>•</span>
+                          <span className="font-mono">
+                            {employee.walletAddress ? 
+                              `${employee.walletAddress.slice(0, 6)}...${employee.walletAddress.slice(-4)}` : 
+                              'No wallet'
+                            }
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-lg font-medium text-white">
+                        ${employee.salary ? employee.salary.toLocaleString() : '0'} USDC
+                      </div>
+                      <div className="text-sm text-gray-400 capitalize">
+                        {employee.paymentSchedule || 'monthly'}
                       </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-lg font-medium text-white">
-                      ${employee.salary.toLocaleString()} USDC
-                    </div>
-                    <div className="text-sm text-gray-400 capitalize">
-                      {employee.paymentSchedule}
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-4 pt-4 border-t border-white/10">
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="text-gray-400">
-                      Next payment: {employee.nextPaymentDate.toDateString()}
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className={`w-2 h-2 rounded-full ${
-                        employee.status === 'active' ? 'bg-green-500' : 'bg-red-500'
-                      }`}></div>
-                      <span className="text-gray-400 capitalize">{employee.status}</span>
+                  <div className="mt-4 pt-4 border-t border-white/10">
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="text-gray-400">
+                        Next payment: {employee.nextPaymentDate ? employee.nextPaymentDate.toDateString() : 'Not set'}
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className={`w-2 h-2 rounded-full ${
+                          employee.status === 'active' ? 'bg-green-500' : 'bg-red-500'
+                        }`}></div>
+                        <span className="text-gray-400 capitalize">{employee.status || 'unknown'}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
