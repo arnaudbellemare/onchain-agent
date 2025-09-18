@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import RealAPIIntegration from "./RealAPIIntegration";
-import X402APIIntegration from "./X402APIIntegration";
-import X402UseCaseShowcase from "./X402UseCaseShowcase";
 
 interface AIAction {
   id: string;
@@ -268,11 +266,6 @@ export default function AIDashboard() {
       {/* Real API Integration */}
       <RealAPIIntegration />
 
-      {/* x402 Protocol API Integration */}
-      <X402APIIntegration />
-
-      {/* x402 Use Cases Showcase */}
-      <X402UseCaseShowcase />
     </div>
   );
 }

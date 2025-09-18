@@ -2,9 +2,12 @@
 
 import React, { useState } from 'react';
 import BusinessIntegrationWidget from './BusinessIntegrationWidget';
+import X402OptimizationCycle from './X402OptimizationCycle';
+import X402APIIntegration from './X402APIIntegration';
+import X402UseCaseShowcase from './X402UseCaseShowcase';
 
 export default function WeCanHelpSection() {
-  const [activeTab, setActiveTab] = useState<'integration' | 'business' | 'api'>('integration');
+  const [activeTab, setActiveTab] = useState<'integration' | 'business' | 'api' | 'cycle'>('integration');
 
   return (
     <div className="max-w-7xl mx-auto p-8">
@@ -23,11 +26,12 @@ export default function WeCanHelpSection() {
           {[
             { id: 'integration', label: 'API Integration', icon: '🔗' },
             { id: 'business', label: 'Business Integration', icon: '💼' },
-            { id: 'api', label: 'API Documentation', icon: '📚' }
+            { id: 'api', label: 'API Documentation', icon: '📚' },
+            { id: 'cycle', label: 'Optimization Cycle', icon: '🔄' }
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as 'integration' | 'business' | 'api')}
+              onClick={() => setActiveTab(tab.id as 'integration' | 'business' | 'api' | 'cycle')}
               className={`px-6 py-3 rounded-lg font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-blue-600 text-white shadow-lg'
@@ -295,12 +299,23 @@ export default function WeCanHelpSection() {
               </div>
             </div>
           </div>
+
+          {/* x402 Protocol API Integration */}
+          <X402APIIntegration />
+
+          {/* x402 Use Cases Showcase */}
+          <X402UseCaseShowcase />
         </div>
       )}
 
       {/* Business Integration Tab */}
       {activeTab === 'business' && (
         <BusinessIntegrationWidget />
+      )}
+
+      {/* Optimization Cycle Tab */}
+      {activeTab === 'cycle' && (
+        <X402OptimizationCycle />
       )}
 
       {/* API Documentation Tab */}
@@ -452,11 +467,66 @@ print("Savings:", result['savings'])`}
               </div>
             </div>
 
+            {/* API Pricing & Access */}
+            <div className="border border-gray-200 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">API Pricing & Access</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                  <h4 className="font-semibold text-gray-900 mb-2">x402 Protocol Fees</h4>
+                  <ul className="text-sm text-gray-900 space-y-1">
+                    <li>• <strong>Setup Fee:</strong> $0 (Free integration)</li>
+                    <li>• <strong>Transaction Fee:</strong> 0.1% per x402 payment</li>
+                    <li>• <strong>Monthly Platform Fee:</strong> $99/month</li>
+                    <li>• <strong>Volume Discounts:</strong> Available for 100K+ calls/month</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                  <h4 className="font-semibold text-gray-900 mb-2">API Access Requirements</h4>
+                  <ul className="text-sm text-gray-900 space-y-1">
+                    <li>• <strong>Business Verification:</strong> Required for API access</li>
+                    <li>• <strong>Wallet Connection:</strong> USDC wallet for payments</li>
+                    <li>• <strong>Volume Commitment:</strong> Minimum 10K calls/month</li>
+                    <li>• <strong>Support Level:</strong> Enterprise support included</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                <h4 className="font-semibold text-gray-900 mb-2">Contact Required for API Access</h4>
+                <p className="text-sm text-gray-900 mb-3">
+                  To access our x402 + AgentKit API system, please contact our team for:
+                </p>
+                <ul className="text-sm text-gray-900 space-y-1 mb-4">
+                  <li>• Business verification and onboarding</li>
+                  <li>• Custom integration support</li>
+                  <li>• Volume pricing negotiations</li>
+                  <li>• Technical implementation guidance</li>
+                </ul>
+                <div className="flex space-x-4">
+                  <a 
+                    href="mailto:api@your-domain.com" 
+                    className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                  >
+                    📧 Contact API Team
+                  </a>
+                  <a 
+                    href="/contact" 
+                    className="inline-block bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+                  >
+                    💬 Schedule Demo
+                  </a>
+                </div>
+              </div>
+            </div>
+
             {/* Getting Started */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Getting Started</h3>
               <ol className="list-decimal list-inside space-y-2 text-gray-900">
-                <li>Connect your wallet to get an API key</li>
+                <li>Contact our API team for business verification</li>
+                <li>Connect your wallet and get your API key</li>
                 <li>Initialize your x402 client with your business details</li>
                 <li>Start making API calls with automatic x402 payments</li>
                 <li>Monitor your savings in real-time on the dashboard</li>
@@ -465,10 +535,10 @@ print("Savings:", result['savings'])`}
               
               <div className="mt-4">
                 <a 
-                  href="/dashboard" 
+                  href="mailto:api@your-domain.com" 
                   className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
                 >
-                  Get Your API Key
+                  Contact for API Access
                 </a>
               </div>
             </div>
