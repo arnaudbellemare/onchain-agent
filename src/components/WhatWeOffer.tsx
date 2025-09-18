@@ -1,6 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import ROICalculator from './ROICalculator';
+import X402OptimizationCycle from './X402OptimizationCycle';
+import X402APIIntegration from './X402APIIntegration';
+import X402UseCaseShowcase from './X402UseCaseShowcase';
+import BusinessIntegrationWidget from './BusinessIntegrationWidget';
 
 interface Service {
   id: string;
@@ -15,6 +20,7 @@ interface Service {
 
 export default function WhatWeOffer() {
   const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'services' | 'roi' | 'cycle' | 'examples' | 'integration'>('services');
 
   const services: Service[] = [
     {
@@ -122,8 +128,36 @@ export default function WhatWeOffer() {
         </p>
       </div>
 
-      {/* Services Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      {/* Tab Navigation */}
+      <div className="flex justify-center mb-8">
+        <div className="bg-gray-100 p-1 rounded-lg">
+          {[
+            { id: 'services', label: 'Our Services', icon: '🎯' },
+            { id: 'roi', label: 'ROI Calculator', icon: '💰' },
+            { id: 'cycle', label: 'Optimization Cycle', icon: '🔄' },
+            { id: 'examples', label: 'x402 Examples', icon: '⚡' },
+            { id: 'integration', label: 'Integration Tools', icon: '🔧' }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as 'services' | 'roi' | 'cycle' | 'examples' | 'integration')}
+              className={`px-6 py-3 rounded-lg font-medium transition-all ${
+                activeTab === tab.id
+                  ? 'bg-blue-600 text-white shadow-lg'
+                  : 'text-gray-900 hover:bg-blue-50'
+              }`}
+            >
+              {tab.icon} {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Tab Content */}
+      {activeTab === 'services' && (
+        <>
+          {/* Services Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         {services.map((service) => (
           <div
             key={service.id}
@@ -217,27 +251,68 @@ export default function WhatWeOffer() {
         </div>
       )}
 
-      {/* Summary Stats */}
-      <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-8 border border-blue-200">
-        <h3 className="text-2xl font-bold text-gray-900 text-center mb-8">Why Choose Us?</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">20-70%</div>
-            <div className="text-gray-900 font-medium">Cost Reduction</div>
-            <div className="text-sm text-gray-600">Average savings across all services</div>
+          {/* Summary Stats */}
+          <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-8 border border-blue-200">
+            <h3 className="text-2xl font-bold text-gray-900 text-center mb-8">Why Choose Us?</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-blue-600 mb-2">20-70%</div>
+                <div className="text-gray-900 font-medium">Cost Reduction</div>
+                <div className="text-sm text-gray-600">Average savings across all services</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-green-600 mb-2">24/7</div>
+                <div className="text-gray-900 font-medium">AI Automation</div>
+                <div className="text-sm text-gray-600">Continuous optimization without human intervention</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-purple-600 mb-2">100%</div>
+                <div className="text-gray-900 font-medium">Transparent</div>
+                <div className="text-sm text-gray-600">Real-time cost tracking and savings visibility</div>
+              </div>
+            </div>
           </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-green-600 mb-2">24/7</div>
-            <div className="text-gray-900 font-medium">AI Automation</div>
-            <div className="text-sm text-gray-600">Continuous optimization without human intervention</div>
+        </>
+      )}
+
+      {/* ROI Calculator Tab */}
+      {activeTab === 'roi' && (
+        <div className="bg-white rounded-xl shadow-lg p-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">ROI Calculator</h2>
+          <ROICalculator />
+        </div>
+      )}
+
+      {/* Optimization Cycle Tab */}
+      {activeTab === 'cycle' && (
+        <div className="bg-white rounded-xl shadow-lg p-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">x402 + AgentKit Optimization Cycle</h2>
+          <X402OptimizationCycle />
+        </div>
+      )}
+
+      {/* x402 Examples Tab */}
+      {activeTab === 'examples' && (
+        <div className="space-y-8">
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">x402 Protocol API Integration</h2>
+            <X402APIIntegration />
           </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-purple-600 mb-2">100%</div>
-            <div className="text-gray-900 font-medium">Transparent</div>
-            <div className="text-sm text-gray-600">Real-time cost tracking and savings visibility</div>
+          
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">x402 Use Cases Showcase</h2>
+            <X402UseCaseShowcase />
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Integration Tools Tab */}
+      {activeTab === 'integration' && (
+        <div className="bg-white rounded-xl shadow-lg p-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Business Integration Tools</h2>
+          <BusinessIntegrationWidget />
+        </div>
+      )}
     </div>
   );
 }
