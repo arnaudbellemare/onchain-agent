@@ -260,13 +260,14 @@ export async function POST(req: Request) {
         const walletDetailsAction = actions.find(action => action.name === "getWalletDetails");
         
         if (walletDetailsAction) {
-          const walletDetails = await walletDetailsAction.invoke();
+          await walletDetailsAction.invoke();
           const walletAddress = "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6"; // Extract from wallet details
           
           const apiClient = new X402APIClient(agentKit, walletAddress);
           const priceData = await getBitcoinPrice(apiClient);
           
-          response = `₿ **Bitcoin Price (Real API with x402 Payment):**\n\n💰 **Current Price:** $${priceData.bitcoin?.usd || 'N/A'}\n📊 **Market Cap:** $${priceData.bitcoin?.usd_market_cap || 'N/A'}\n\n🔗 **Payment Details:**\n• API Provider: CoinGecko\n• Cost: $0.005 USDC\n• Payment Method: x402 Protocol\n• Status: ✅ Paid and Retrieved\n\n✅ Real-time data retrieved using autonomous x402 payment!`;
+          const bitcoinData = priceData.bitcoin as Record<string, unknown> | undefined;
+          response = `₿ **Bitcoin Price (Real API with x402 Payment):**\n\n💰 **Current Price:** $${bitcoinData?.usd || 'N/A'}\n📊 **Market Cap:** $${bitcoinData?.usd_market_cap || 'N/A'}\n\n🔗 **Payment Details:**\n• API Provider: CoinGecko\n• Cost: $0.005 USDC\n• Payment Method: x402 Protocol\n• Status: ✅ Paid and Retrieved\n\n✅ Real-time data retrieved using autonomous x402 payment!`;
         } else {
           response = `❌ Wallet details action not found. Available actions: ${actions.map(a => a.name).join(", ")}`;
         }
@@ -281,13 +282,18 @@ export async function POST(req: Request) {
         const walletDetailsAction = actions.find(action => action.name === "getWalletDetails");
         
         if (walletDetailsAction) {
-          const walletDetails = await walletDetailsAction.invoke();
+          await walletDetailsAction.invoke();
           const walletAddress = "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6"; // Extract from wallet details
           
           const apiClient = new X402APIClient(agentKit, walletAddress);
           const analysisData = await getBitcoinAnalysis(apiClient);
           
-          response = `🤖 **Bitcoin AI Analysis (Real API with x402 Payment):**\n\n📈 **Sentiment:** ${analysisData.sentiment}\n🎯 **Confidence:** ${(analysisData.confidence * 100).toFixed(1)}%\n\n💰 **Price Predictions:**\n• Next 24h: $${analysisData.price_prediction?.next_24h || 'N/A'}\n• Next 7 days: $${analysisData.price_prediction?.next_7d || 'N/A'}\n• Next 30 days: $${analysisData.price_prediction?.next_30d || 'N/A'}\n\n🔍 **Key Insights:**\n${analysisData.key_insights?.map((insight: string) => `• ${insight}`).join('\n') || 'No insights available'}\n\n🔗 **Payment Details:**\n• API Provider: AIxbt\n• Cost: $0.02 USDC\n• Payment Method: x402 Protocol\n• Status: ✅ Paid and Retrieved\n\n✅ AI-powered analysis retrieved using autonomous x402 payment!`;
+          const sentiment = analysisData.sentiment as string;
+          const confidence = analysisData.confidence as number;
+          const pricePrediction = analysisData.price_prediction as Record<string, unknown> | undefined;
+          const keyInsights = analysisData.key_insights as string[] | undefined;
+          
+          response = `🤖 **Bitcoin AI Analysis (Real API with x402 Payment):**\n\n📈 **Sentiment:** ${sentiment}\n🎯 **Confidence:** ${(confidence * 100).toFixed(1)}%\n\n💰 **Price Predictions:**\n• Next 24h: $${pricePrediction?.next_24h || 'N/A'}\n• Next 7 days: $${pricePrediction?.next_7d || 'N/A'}\n• Next 30 days: $${pricePrediction?.next_30d || 'N/A'}\n\n🔍 **Key Insights:**\n${keyInsights?.map((insight: string) => `• ${insight}`).join('\n') || 'No insights available'}\n\n🔗 **Payment Details:**\n• API Provider: AIxbt\n• Cost: $0.02 USDC\n• Payment Method: x402 Protocol\n• Status: ✅ Paid and Retrieved\n\n✅ AI-powered analysis retrieved using autonomous x402 payment!`;
         } else {
           response = `❌ Wallet details action not found. Available actions: ${actions.map(a => a.name).join(", ")}`;
         }
@@ -302,14 +308,21 @@ export async function POST(req: Request) {
         const walletDetailsAction = actions.find(action => action.name === "getWalletDetails");
         
         if (walletDetailsAction) {
-          const walletDetails = await walletDetailsAction.invoke();
+          await walletDetailsAction.invoke();
           const walletAddress = "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6"; // Extract from wallet details
           
           const apiClient = new X402APIClient(agentKit, walletAddress);
           const duneData = await getDuneQueryResults(apiClient, 123456);
           
-          response = `📊 **Dune Analytics Data (Real API with x402 Payment):**\n\n🔍 **Query Results:**\n• Execution ID: ${duneData.execution_id}\n• Query ID: ${duneData.query_id}\n• Status: ${duneData.state}\n• Rows: ${duneData.result?.metadata?.row_count || 0}\n\n📈 **Sample Data:**\n${duneData.result?.rows?.slice(0, 3).map((row: any) => 
-            `• Date: ${row.date}, Volume: $${row.volume?.toLocaleString()}, Transactions: ${row.transactions?.toLocaleString()}`
+          const executionId = duneData.execution_id as string;
+          const queryId = duneData.query_id as string;
+          const state = duneData.state as string;
+          const result = duneData.result as Record<string, unknown> | undefined;
+          const metadata = result?.metadata as Record<string, unknown> | undefined;
+          const rows = result?.rows as Record<string, unknown>[] | undefined;
+          
+          response = `📊 **Dune Analytics Data (Real API with x402 Payment):**\n\n🔍 **Query Results:**\n• Execution ID: ${executionId}\n• Query ID: ${queryId}\n• Status: ${state}\n• Rows: ${metadata?.row_count || 0}\n\n📈 **Sample Data:**\n${rows?.slice(0, 3).map((row: Record<string, unknown>) => 
+            `• Date: ${row.date}, Volume: $${(row.volume as number)?.toLocaleString()}, Transactions: ${(row.transactions as number)?.toLocaleString()}`
           ).join('\n') || 'No data available'}\n\n🔗 **Payment Details:**\n• API Provider: Dune Analytics\n• Cost: $0.01 USDC\n• Payment Method: x402 Protocol\n• Status: ✅ Paid and Retrieved\n\n✅ On-chain analytics retrieved using autonomous x402 payment!`;
         } else {
           response = `❌ Wallet details action not found. Available actions: ${actions.map(a => a.name).join(", ")}`;

@@ -1,84 +1,24 @@
 "use client";
 
 import { useState } from 'react';
-import { apiProviders, X402APIClient, getProviderById, getBitcoinPrice, getDuneQueryResults, getBitcoinAnalysis } from '@/lib/apiProviders';
+import { apiProviders, X402APIClient, getBitcoinPrice, getDuneQueryResults, getBitcoinAnalysis } from '@/lib/apiProviders';
 
 interface APIResult {
   id: string;
   provider: string;
   endpoint: string;
   cost: number;
-  result: any;
+  result: Record<string, unknown> | null;
   timestamp: Date;
   transactionHash?: string;
   status: 'success' | 'error' | 'pending';
 }
 
 export default function RealAPIIntegration() {
-  const [apiClient, setApiClient] = useState<X402APIClient | null>(null);
+  const [apiClient] = useState<X402APIClient | null>(null);
   const [results, setResults] = useState<APIResult[]>([]);
-  const [loading, setLoading] = useState<string | null>(null);
+  const [loading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  // Initialize API client (would be done when wallet connects)
-  const initializeAPIClient = (agentKit: any, walletAddress: string) => {
-    const client = new X402APIClient(agentKit, walletAddress);
-    setApiClient(client);
-  };
-
-  // Make real API call with x402 payment
-  const makeAPICall = async (providerId: string, endpointPath: string, params: any = {}) => {
-    if (!apiClient) {
-      setError('API client not initialized. Please connect your wallet first.');
-      return;
-    }
-
-    const provider = getProviderById(providerId);
-    if (!provider) {
-      setError(`Provider ${providerId} not found`);
-      return;
-    }
-
-    const endpoint = provider.endpoints.find(e => e.path === endpointPath);
-    if (!endpoint) {
-      setError(`Endpoint ${endpointPath} not found`);
-      return;
-    }
-
-    setLoading(`${provider.name} - ${endpoint.description}`);
-    setError(null);
-
-    try {
-      const result = await apiClient.makeAPICall(provider, endpoint, params);
-      
-      const apiResult: APIResult = {
-        id: `api_${Date.now()}`,
-        provider: provider.name,
-        endpoint: endpoint.description,
-        cost: endpoint.costPerCall,
-        result: result,
-        timestamp: new Date(),
-        status: 'success'
-      };
-
-      setResults(prev => [apiResult, ...prev]);
-    } catch (err) {
-      const apiResult: APIResult = {
-        id: `api_${Date.now()}`,
-        provider: provider.name,
-        endpoint: endpoint.description,
-        cost: endpoint.costPerCall,
-        result: null,
-        timestamp: new Date(),
-        status: 'error'
-      };
-
-      setResults(prev => [apiResult, ...prev]);
-      setError(err instanceof Error ? err.message : 'Unknown error');
-    } finally {
-      setLoading(null);
-    }
-  };
 
   // Quick action functions
   const getBitcoinPriceAction = async () => {

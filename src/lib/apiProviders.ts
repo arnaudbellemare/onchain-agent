@@ -15,7 +15,7 @@ export interface APIEndpoint {
   method: 'GET' | 'POST';
   description: string;
   costPerCall: number;
-  exampleResponse: any;
+  exampleResponse: Record<string, unknown>;
 }
 
 // Real API providers with x402 integration
@@ -218,10 +218,10 @@ export const apiProviders: APIProvider[] = [
 
 // x402 Protocol implementation for API payments
 export class X402APIClient {
-  private agentKit: any;
+  private agentKit: unknown;
   private walletAddress: string;
 
-  constructor(agentKit: any, walletAddress: string) {
+  constructor(agentKit: unknown, walletAddress: string) {
     this.agentKit = agentKit;
     this.walletAddress = walletAddress;
   }
@@ -230,8 +230,8 @@ export class X402APIClient {
   async makeAPICall(
     provider: APIProvider,
     endpoint: APIEndpoint,
-    params: Record<string, any> = {}
-  ): Promise<any> {
+    params: Record<string, unknown> = {}
+  ): Promise<Record<string, unknown>> {
     try {
       // Step 1: Make initial API call (will return 402 Payment Required)
       const response = await fetch(`${provider.baseUrl}${endpoint.path}`, {
@@ -261,13 +261,18 @@ export class X402APIClient {
         }
 
         // Step 4: Retry API call with payment proof
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+          'X-402-Payment-Address': this.walletAddress
+        };
+        
+        if (paymentResult.transactionHash) {
+          headers['X-402-Payment-Proof'] = paymentResult.transactionHash;
+        }
+        
         const paidResponse = await fetch(`${provider.baseUrl}${endpoint.path}`, {
           method: endpoint.method,
-          headers: {
-            'Content-Type': 'application/json',
-            'X-402-Payment-Proof': paymentResult.transactionHash,
-            'X-402-Payment-Address': this.walletAddress
-          },
+          headers,
           body: endpoint.method === 'POST' ? JSON.stringify(params) : undefined
         });
 
@@ -297,8 +302,8 @@ export class X402APIClient {
         return { success: false, error: 'AgentKit not initialized' };
       }
 
-      const actions = this.agentKit.getActions();
-      const transferAction = actions.find((action: any) => action.name === "nativeTransfer");
+      const actions = (this.agentKit as { getActions: () => Array<{ name: string }> }).getActions();
+      const transferAction = actions.find((action: { name: string }) => action.name === "nativeTransfer");
       
       if (!transferAction) {
         return { success: false, error: 'Transfer action not found' };
@@ -338,7 +343,7 @@ export function getX402EnabledProviders(): APIProvider[] {
 }
 
 // Example usage functions
-export async function getBitcoinPrice(apiClient: X402APIClient): Promise<any> {
+export async function getBitcoinPrice(apiClient: X402APIClient): Promise<Record<string, unknown>> {
   const coingecko = getProviderById('coingecko');
   if (!coingecko) throw new Error('CoinGecko provider not found');
   
@@ -351,7 +356,7 @@ export async function getBitcoinPrice(apiClient: X402APIClient): Promise<any> {
   });
 }
 
-export async function getDuneQueryResults(apiClient: X402APIClient, queryId: number): Promise<any> {
+export async function getDuneQueryResults(apiClient: X402APIClient, queryId: number): Promise<Record<string, unknown>> {
   const dune = getProviderById('dune-analytics');
   if (!dune) throw new Error('Dune Analytics provider not found');
   
@@ -363,7 +368,7 @@ export async function getDuneQueryResults(apiClient: X402APIClient, queryId: num
   });
 }
 
-export async function getBitcoinAnalysis(apiClient: X402APIClient): Promise<any> {
+export async function getBitcoinAnalysis(apiClient: X402APIClient): Promise<Record<string, unknown>> {
   const aixbt = getProviderById('aixbt');
   if (!aixbt) throw new Error('AIxbt provider not found');
   
