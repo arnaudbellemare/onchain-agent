@@ -44,7 +44,7 @@ export default function CostReductionExplanation() {
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
           How We Pay Less Than Standard GPT Prices
         </h1>
-        <p className="text-xl text-gray-600 max-w-4xl mx-auto">
+        <p className="text-xl text-gray-900 max-w-4xl mx-auto">
           The x402 protocol eliminates subscription overhead and payment processing fees, while AI optimization reduces actual usage costs
         </p>
       </div>
@@ -86,7 +86,7 @@ export default function CostReductionExplanation() {
                   </svg>
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">No Subscription Fees</h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-900 text-sm">
                   Traditional APIs charge monthly subscriptions even for unused capacity. x402 only charges for actual usage.
                 </p>
               </div>
@@ -98,7 +98,7 @@ export default function CostReductionExplanation() {
                   </svg>
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Direct Provider Access</h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-900 text-sm">
                   x402 connects directly to providers, eliminating middleman fees and enabling bulk pricing discounts.
                 </p>
               </div>
@@ -110,7 +110,7 @@ export default function CostReductionExplanation() {
                   </svg>
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">AI Optimization</h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-900 text-sm">
                   Smart caching and request optimization reduce actual API calls by 80%, further lowering costs.
                 </p>
               </div>
@@ -170,7 +170,7 @@ export default function CostReductionExplanation() {
               <div className="text-2xl font-bold text-green-600 mb-2">
                 ${savings.toFixed(4)} Savings per Call
               </div>
-              <div className="text-lg text-gray-600">
+              <div className="text-lg text-gray-900">
                 {savingsPercentage.toFixed(1)}% Cost Reduction
               </div>
             </div>
@@ -249,7 +249,7 @@ export default function CostReductionExplanation() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h4 className="font-semibold text-gray-900 mb-3">Direct Provider Relationships</h4>
-                <ul className="space-y-2 text-sm text-gray-700">
+                <ul className="space-y-2 text-sm text-gray-900">
                   <li>• Negotiate bulk pricing with API providers</li>
                   <li>• Eliminate middleman markups</li>
                   <li>• Access enterprise pricing tiers</li>
@@ -259,7 +259,7 @@ export default function CostReductionExplanation() {
               
               <div>
                 <h4 className="font-semibold text-gray-900 mb-3">AI-Powered Optimization</h4>
-                <ul className="space-y-2 text-sm text-gray-700">
+                <ul className="space-y-2 text-sm text-gray-900">
                   <li>• Smart caching reduces redundant calls</li>
                   <li>• Request batching optimizes usage</li>
                   <li>• Predictive loading prevents waste</li>
@@ -326,7 +326,7 @@ export default function CostReductionExplanation() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-red-50 rounded-2xl p-6 border border-red-200">
               <h3 className="text-lg font-semibold text-red-800 mb-4">Why Traditional Costs More</h3>
-              <ul className="space-y-2 text-sm text-gray-700">
+              <ul className="space-y-2 text-sm text-gray-900">
                 <li>• Subscription fees for unused capacity</li>
                 <li>• Multiple middleman markups</li>
                 <li>• High payment processing fees</li>
@@ -338,7 +338,7 @@ export default function CostReductionExplanation() {
 
             <div className="bg-green-50 rounded-2xl p-6 border border-green-200">
               <h3 className="text-lg font-semibold text-green-800 mb-4">Why x402 Costs Less</h3>
-              <ul className="space-y-2 text-sm text-gray-700">
+              <ul className="space-y-2 text-sm text-gray-900">
                 <li>• Pay only for what you use</li>
                 <li>• Direct provider relationships</li>
                 <li>• Minimal processing fees (0.1%)</li>

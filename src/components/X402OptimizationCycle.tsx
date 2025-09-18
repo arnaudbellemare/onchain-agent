@@ -44,8 +44,8 @@ export default function X402OptimizationCycle() {
     },
     {
       id: 'payment',
-      title: 'x402 Payment',
-      description: 'Autonomous micropayment made via x402 protocol using USDC',
+      title: 'Smart Payment',
+      description: 'Autonomous micropayment made via blockchain protocol using USDC',
       icon: '💳',
       color: 'green',
       duration: 1500,
@@ -146,10 +146,10 @@ export default function X402OptimizationCycle() {
     <div className="max-w-7xl mx-auto p-8">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          x402 + AgentKit Optimization Cycle
+          Autonomous Optimization Cycle
         </h1>
         <p className="text-xl text-gray-900 max-w-4xl mx-auto">
-          Autonomous cost optimization loop that continuously discovers, evaluates, and optimizes API services
+          Intelligent cost optimization loop that continuously discovers, evaluates, and optimizes API services
         </p>
       </div>
 
@@ -296,54 +296,54 @@ export default function X402OptimizationCycle() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">x402 Protocol Advantages</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Blockchain Protocol Advantages</h3>
             <ul className="space-y-3">
               <li className="flex items-start">
                 <span className="text-green-500 mr-3 mt-1">✅</span>
                 <div>
                   <div className="font-medium text-gray-900">Granular Cost Tracking</div>
-                  <div className="text-sm text-gray-600">Every API call tracked with precise cost data</div>
+                  <div className="text-sm text-gray-900">Every API call tracked with precise cost data</div>
                 </div>
               </li>
               <li className="flex items-start">
                 <span className="text-green-500 mr-3 mt-1">✅</span>
                 <div>
                   <div className="font-medium text-gray-900">Autonomous Payments</div>
-                  <div className="text-sm text-gray-600">AI agents make payments without human intervention</div>
+                  <div className="text-sm text-gray-900">AI agents make payments without human intervention</div>
                 </div>
               </li>
               <li className="flex items-start">
                 <span className="text-green-500 mr-3 mt-1">✅</span>
                 <div>
                   <div className="font-medium text-gray-900">Real-time Optimization</div>
-                  <div className="text-sm text-gray-600">Continuous evaluation and service switching</div>
+                  <div className="text-sm text-gray-900">Continuous evaluation and service switching</div>
                 </div>
               </li>
             </ul>
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">AgentKit Automation</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">AI Automation Engine</h3>
             <ul className="space-y-3">
               <li className="flex items-start">
                 <span className="text-blue-500 mr-3 mt-1">🤖</span>
                 <div>
                   <div className="font-medium text-gray-900">Intelligent Discovery</div>
-                  <div className="text-sm text-gray-600">AI discovers new services and providers automatically</div>
+                  <div className="text-sm text-gray-900">AI discovers new services and providers automatically</div>
                 </div>
               </li>
               <li className="flex items-start">
                 <span className="text-blue-500 mr-3 mt-1">🤖</span>
                 <div>
                   <div className="font-medium text-gray-900">Predictive Analytics</div>
-                  <div className="text-sm text-gray-600">Anticipates cost changes and optimizes proactively</div>
+                  <div className="text-sm text-gray-900">Anticipates cost changes and optimizes proactively</div>
                 </div>
               </li>
               <li className="flex items-start">
                 <span className="text-blue-500 mr-3 mt-1">🤖</span>
                 <div>
                   <div className="font-medium text-gray-900">Autonomous Decision Making</div>
-                  <div className="text-sm text-gray-600">Makes optimization decisions without human oversight</div>
+                  <div className="text-sm text-gray-900">Makes optimization decisions without human oversight</div>
                 </div>
               </li>
             </ul>

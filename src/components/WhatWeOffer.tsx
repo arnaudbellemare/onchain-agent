@@ -348,7 +348,7 @@ export default function WhatWeOffer() {
       {/* Optimization Cycle Tab */}
       {activeTab === 'cycle' && (
         <div className="bg-white rounded-xl shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">x402 + AgentKit Optimization Cycle</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Autonomous Optimization Cycle</h2>
           <X402OptimizationCycle />
         </div>
       )}
