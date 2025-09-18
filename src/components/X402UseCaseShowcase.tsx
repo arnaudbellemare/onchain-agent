@@ -407,7 +407,7 @@ export default function X402UseCaseShowcase() {
         </div>
         
         <div className="mt-6 p-4 bg-white bg-opacity-20 rounded-lg">
-          <p className="text-sm">
+          <p className="text-sm text-gray-900">
             <strong>With x402, providers of contextual data can now seamlessly monetize using existing frameworks 
             like the Model Context Payment (MCP) protocol.</strong> The evolution of AI-driven systems demands 
             a payment infrastructure that is as seamless and autonomous as the agents using it.

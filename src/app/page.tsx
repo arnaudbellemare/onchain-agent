@@ -8,6 +8,8 @@ import AIDashboard from "@/components/AIDashboard";
 import AICommerceDashboard from "@/components/AICommerceDashboard";
 import EnterprisePartnershipDashboard from "@/components/EnterprisePartnershipDashboard";
 import EnterpriseOptimizationDemo from "@/components/EnterpriseOptimizationDemo";
+import BusinessIntegrationWidget from "@/components/BusinessIntegrationWidget";
+import WeCanHelpSection from "@/components/WeCanHelpSection";
 
 interface PortfolioData {
   totalBalance: string;
@@ -294,6 +296,26 @@ export default function Home() {
                   }`}
                 >
                   Cost Optimization
+                </button>
+                <button
+                  onClick={() => setActiveTab("we-can-help")}
+                  className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
+                    activeTab === "we-can-help" 
+                      ? "text-blue-600 bg-blue-50" 
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  }`}
+                >
+                  We Can Help
+                </button>
+                <button
+                  onClick={() => setActiveTab("integration")}
+                  className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
+                    activeTab === "integration" 
+                      ? "text-blue-600 bg-blue-50" 
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  }`}
+                >
+                  Business Integration
                 </button>
               </nav>
             </div>
@@ -889,6 +911,10 @@ export default function Home() {
           <AIDashboard />
         )}
 
+        {activeTab === "we-can-help" && (
+          <WeCanHelpSection />
+        )}
+
         {activeTab === "ai-commerce" && (
           <AICommerceDashboard />
         )}
@@ -900,6 +926,10 @@ export default function Home() {
 
         {activeTab === "optimization" && (
           <EnterpriseOptimizationDemo />
+        )}
+
+        {activeTab === "integration" && (
+          <BusinessIntegrationWidget />
         )}
 
 
