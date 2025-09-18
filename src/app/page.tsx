@@ -9,6 +9,7 @@ import AICommerceDashboard from "@/components/AICommerceDashboard";
 import EnterprisePartnershipDashboard from "@/components/EnterprisePartnershipDashboard";
 import EmployeeManagement from "@/components/EmployeeManagement";
 import EnterpriseOptimizationDemo from "@/components/EnterpriseOptimizationDemo";
+import ROICalculator from "@/components/ROICalculator";
 
 interface PortfolioData {
   totalBalance: string;
@@ -305,6 +306,16 @@ export default function Home() {
                   }`}
                 >
                   Cost Optimization
+                </button>
+                <button
+                  onClick={() => setActiveTab("roi")}
+                  className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
+                    activeTab === "roi" 
+                      ? "text-blue-600 bg-blue-50" 
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  }`}
+                >
+                  ROI Calculator
                 </button>
               </nav>
             </div>
@@ -914,6 +925,10 @@ export default function Home() {
 
         {activeTab === "optimization" && (
           <EnterpriseOptimizationDemo />
+        )}
+
+        {activeTab === "roi" && (
+          <ROICalculator />
         )}
 
         {activeTab === "guide" && (
