@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import RealAPIIntegration from "./RealAPIIntegration";
 
 interface AIAction {
   id: string;
@@ -19,44 +20,44 @@ export default function AIDashboard() {
     {
       id: "1",
       type: "send",
-      description: "x402 API Payment: OpenAI GPT-4",
+      description: "x402 Commerce: OpenAI API Payment",
       amount: "0.001",
       token: "USDC",
       recipient: "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
       status: "completed",
       timestamp: new Date(Date.now() - 300000),
-      aiReason: "Autonomous AI agent paid for API access using x402 protocol"
+      aiReason: "Autonomous commerce: AI agent paid for API access using x402 protocol"
     },
     {
       id: "2",
       type: "swap",
-      description: "AgentKit: Convert ETH to USDC for payroll",
+      description: "AgentKit Commerce: ETH to USDC for payroll",
       amount: "2.5",
       token: "ETH",
       status: "completed",
       timestamp: new Date(Date.now() - 1800000),
-      aiReason: "Smart contract executed via AgentKit for monthly payroll preparation"
+      aiReason: "Commerce automation: Smart contract executed for monthly payroll preparation"
     },
     {
       id: "3",
       type: "send",
-      description: "x402 Micropayment: Weather API",
+      description: "x402 Commerce: Weather API Micropayment",
       amount: "0.0005",
       token: "USDC",
       status: "completed",
       timestamp: new Date(Date.now() - 600000),
-      aiReason: "Pay-per-query data service accessed autonomously"
+      aiReason: "Commerce automation: Pay-per-query data service accessed autonomously"
     },
     {
       id: "4",
       type: "send",
-      description: "AgentKit: Employee Salary Payment",
+      description: "AgentKit Commerce: Employee Salary Payment",
       amount: "5000",
       token: "USDC",
       recipient: "0x8ba1f109551bD432803012645Hac136c",
       status: "pending",
       timestamp: new Date(),
-      aiReason: "Automated payroll execution via AgentKit blockchain integration"
+      aiReason: "Commerce automation: Automated payroll execution via AgentKit blockchain integration"
     }
   ]);
 
@@ -74,11 +75,11 @@ export default function AIDashboard() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "pending": return "text-yellow-400";
-      case "approved": return "text-green-400";
-      case "rejected": return "text-red-400";
-      case "completed": return "text-blue-400";
-      default: return "text-gray-400";
+      case "pending": return "text-yellow-600";
+      case "approved": return "text-green-600";
+      case "rejected": return "text-red-600";
+      case "completed": return "text-blue-600";
+      default: return "text-gray-600";
     }
   };
 
@@ -94,65 +95,65 @@ export default function AIDashboard() {
   return (
     <div className="space-y-8">
       {/* AI Status */}
-      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+      <div className="bg-white border border-gray-200 rounded-2xl p-8">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-light text-white">AI Assistant Status</h3>
+          <h3 className="text-2xl font-semibold text-gray-900">AI Commerce Assistant</h3>
           <div className="flex items-center space-x-3">
             <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-sm text-green-400 font-medium">Active</span>
+            <span className="text-sm text-green-600 font-medium">Active</span>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="text-center">
-            <div className="text-3xl font-light text-white mb-1">{aiActions.length}</div>
-            <div className="text-sm text-gray-300">Total Actions</div>
+            <div className="text-3xl font-semibold text-gray-900 mb-1">{aiActions.length}</div>
+            <div className="text-sm text-gray-600">Commerce Actions</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-light text-green-400 mb-1">
+            <div className="text-3xl font-semibold text-green-600 mb-1">
               {aiActions.filter(a => a.status === "completed").length}
             </div>
-            <div className="text-sm text-gray-300">Completed</div>
+            <div className="text-sm text-gray-600">Completed</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-light text-yellow-400 mb-1">
+            <div className="text-3xl font-semibold text-yellow-600 mb-1">
               {aiActions.filter(a => a.status === "pending").length}
             </div>
-            <div className="text-sm text-gray-300">Pending</div>
+            <div className="text-sm text-gray-600">Pending</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-light text-blue-400 mb-1">
+            <div className="text-3xl font-semibold text-blue-600 mb-1">
               {aiActions.filter(a => a.type === "send" && a.amount.includes("0.00")).length}
             </div>
-            <div className="text-sm text-gray-300">x402 Payments</div>
+            <div className="text-sm text-gray-600">x402 Payments</div>
           </div>
         </div>
       </div>
 
-      {/* AI Actions */}
-      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden">
-        <div className="px-8 py-6 border-b border-white/10">
-          <h3 className="text-2xl font-light text-white">AI Actions</h3>
-          <p className="text-sm text-gray-300 mt-2">Real blockchain transactions powered by AgentKit and x402 protocol</p>
+      {/* Commerce Actions */}
+      <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+        <div className="px-8 py-6 border-b border-gray-200">
+          <h3 className="text-2xl font-semibold text-gray-900">Commerce Actions</h3>
+          <p className="text-sm text-gray-600 mt-2">Real blockchain transactions powered by AgentKit and x402 protocol</p>
         </div>
-        <div className="divide-y divide-white/10">
+        <div className="divide-y divide-gray-200">
           {aiActions.map((action) => (
-            <div key={action.id} className="px-8 py-6 hover:bg-white/5 transition-colors duration-200">
+            <div key={action.id} className="px-8 py-6 hover:bg-gray-50 transition-colors duration-200">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-6">
                   <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
                     <span className="text-white font-semibold text-lg">{getTypeIcon(action.type)}</span>
                   </div>
                   <div>
-                    <div className="font-medium text-white text-lg">{action.description}</div>
-                    <div className="text-sm text-gray-300 mt-1">{action.aiReason}</div>
-                    <div className="text-xs text-gray-400 mt-1">
+                    <div className="font-medium text-gray-900 text-lg">{action.description}</div>
+                    <div className="text-sm text-gray-600 mt-1">{action.aiReason}</div>
+                    <div className="text-xs text-gray-500 mt-1">
                       {action.timestamp.toLocaleString()}
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-6">
                   <div className="text-right">
-                    <div className="font-medium text-white text-lg">
+                    <div className="font-medium text-gray-900 text-lg">
                       {action.amount} {action.token}
                     </div>
                     <div className={`text-sm font-medium ${getStatusColor(action.status)}`}>
@@ -182,22 +183,22 @@ export default function AIDashboard() {
         </div>
       </div>
 
-      {/* x402 & AgentKit Examples */}
-      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-        <h3 className="text-2xl font-light text-white mb-6">x402 & AgentKit Examples</h3>
+      {/* Commerce Integration Examples */}
+      <div className="bg-white border border-gray-200 rounded-2xl p-8">
+        <h3 className="text-2xl font-semibold text-gray-900 mb-6">Commerce Integration Examples</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-6">
-            <h4 className="text-lg font-semibold text-blue-400 mb-3">🔗 x402 Protocol</h4>
-            <div className="space-y-2 text-sm text-gray-300">
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+            <h4 className="text-lg font-semibold text-blue-600 mb-3">🔗 x402 Commerce Protocol</h4>
+            <div className="space-y-2 text-sm text-gray-700">
               <div>• <strong>API Payments:</strong> $0.001 per OpenAI call</div>
               <div>• <strong>Micropayments:</strong> $0.0005 per weather query</div>
-              <div>• <strong>Autonomous:</strong> No accounts or authentication</div>
+              <div>• <strong>Autonomous Commerce:</strong> No accounts or authentication</div>
               <div>• <strong>Machine-to-Machine:</strong> AI agents pay for services</div>
             </div>
           </div>
-          <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-6">
-            <h4 className="text-lg font-semibold text-green-400 mb-3">🤖 AgentKit Integration</h4>
-            <div className="space-y-2 text-sm text-gray-300">
+          <div className="bg-green-50 border border-green-200 rounded-xl p-6">
+            <h4 className="text-lg font-semibold text-green-600 mb-3">🤖 AgentKit Commerce</h4>
+            <div className="space-y-2 text-sm text-gray-700">
               <div>• <strong>Real Transactions:</strong> Actual blockchain operations</div>
               <div>• <strong>Token Swaps:</strong> ETH ↔ USDC via DEX</div>
               <div>• <strong>Payroll:</strong> Automated salary payments</div>
@@ -206,17 +207,17 @@ export default function AIDashboard() {
           </div>
         </div>
         
-        <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-6">
-          <h4 className="text-lg font-semibold text-purple-400 mb-3">💡 Try These Commands</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-300">
+        <div className="bg-purple-50 border border-purple-200 rounded-xl p-6">
+          <h4 className="text-lg font-semibold text-purple-600 mb-3">💡 Try These Commerce Commands</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
             <div>
-              <div className="font-medium text-white mb-2">x402 Examples:</div>
+              <div className="font-medium text-gray-900 mb-2">x402 Commerce Examples:</div>
               <div>• &ldquo;Process x402 API payment&rdquo;</div>
               <div>• &ldquo;Enable micropayment services&rdquo;</div>
               <div>• &ldquo;Call x402 API 5 times&rdquo;</div>
             </div>
             <div>
-              <div className="font-medium text-white mb-2">AgentKit Examples:</div>
+              <div className="font-medium text-gray-900 mb-2">AgentKit Commerce Examples:</div>
               <div>• &ldquo;Send 0.1 ETH to 0x...&rdquo;</div>
               <div>• &ldquo;Swap 1 ETH to USDC&rdquo;</div>
               <div>• &ldquo;Check my wallet balance&rdquo;</div>
@@ -225,14 +226,14 @@ export default function AIDashboard() {
         </div>
       </div>
 
-      {/* AI Settings */}
-      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-        <h3 className="text-2xl font-light text-white mb-6">AI Settings</h3>
+      {/* Commerce Settings */}
+      <div className="bg-white border border-gray-200 rounded-2xl p-8">
+        <h3 className="text-2xl font-semibold text-gray-900 mb-6">Commerce Settings</h3>
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <div className="font-medium text-white text-lg">Auto-approve small transactions</div>
-              <div className="text-sm text-gray-300 mt-1">Automatically approve transactions under 0.01 ETH</div>
+              <div className="font-medium text-gray-900 text-lg">Auto-approve small transactions</div>
+              <div className="text-sm text-gray-600 mt-1">Automatically approve transactions under 0.01 ETH</div>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" className="sr-only peer" />
@@ -241,8 +242,8 @@ export default function AIDashboard() {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <div className="font-medium text-white text-lg">Smart rebalancing</div>
-              <div className="text-sm text-gray-300 mt-1">Automatically rebalance portfolio based on market conditions</div>
+              <div className="font-medium text-gray-900 text-lg">Smart rebalancing</div>
+              <div className="text-sm text-gray-600 mt-1">Automatically rebalance portfolio based on market conditions</div>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" className="sr-only peer" defaultChecked />
@@ -251,8 +252,8 @@ export default function AIDashboard() {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <div className="font-medium text-white text-lg">Voice commands</div>
-              <div className="text-sm text-gray-300 mt-1">Enable voice-activated transactions</div>
+              <div className="font-medium text-gray-900 text-lg">Voice commands</div>
+              <div className="text-sm text-gray-600 mt-1">Enable voice-activated transactions</div>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" className="sr-only peer" />
@@ -261,6 +262,9 @@ export default function AIDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Real API Integration */}
+      <RealAPIIntegration />
     </div>
   );
 }
