@@ -232,6 +232,10 @@ export class EnhancedPaymentRouter {
     // Simplified logic based on prompt optimization
     // In production, this would use the actual LLM with the evolved prompt
     
+    if (!rails || rails.length === 0) {
+      throw new Error('No payment rails available');
+    }
+    
     let selectedRail: PaymentRail;
     
     if (prompt.includes('USDC') && prompt.includes('Base')) {
@@ -245,6 +249,10 @@ export class EnhancedPaymentRouter {
       selectedRail = rails.reduce((best, current) => 
         current.estimatedCost < best.estimatedCost ? current : best
       );
+    }
+    
+    if (!selectedRail) {
+      selectedRail = rails[0]; // Fallback to first available rail
     }
     
     return selectedRail;

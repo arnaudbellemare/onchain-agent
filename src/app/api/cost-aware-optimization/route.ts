@@ -170,6 +170,7 @@ async function runPaymentRoutingDemo() {
         }
       });
     } catch (error) {
+      console.error('Payment routing error for request:', request, error);
       results.push({
         request,
         error: error instanceof Error ? error.message : 'Routing failed'

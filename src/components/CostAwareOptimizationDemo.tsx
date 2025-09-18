@@ -35,7 +35,7 @@ interface PaymentRequest {
 
 interface PaymentDecision {
   request: PaymentRequest;
-  decision: {
+  decision?: {
     selectedRail: string;
     reasoning: string;
     confidence: number;
@@ -52,6 +52,7 @@ interface PaymentDecision {
       totalRequestCost: number;
     };
   };
+  error?: string;
 }
 
 interface PricingInfo {
@@ -246,31 +247,31 @@ export default function CostAwareOptimizationDemo() {
               <h3 className="text-lg font-semibold mb-4">Generation {index + 1}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <h4 className="font-medium text-gray-700 mb-2">Evolved Prompt:</h4>
-                  <p className="text-sm bg-gray-50 p-3 rounded border">
+                  <h4 className="font-medium text-black mb-2">Evolved Prompt:</h4>
+                  <p className="text-sm bg-gray-50 p-3 rounded border text-black">
                     {result.result.evolvedPrompt}
                   </p>
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span>Accuracy:</span>
-                    <span className="font-medium">{formatPercentage(result.result.accuracy * 100)}</span>
+                    <span className="text-black">Accuracy:</span>
+                    <span className="font-medium text-black">{formatPercentage(result.result.accuracy * 100)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Cost Reduction:</span>
+                    <span className="text-black">Cost Reduction:</span>
                     <span className="font-medium text-green-600">{formatPercentage(result.result.costReduction)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Total Cost:</span>
-                    <span className="font-medium">{formatCost(result.result.totalCost || 0)}</span>
+                    <span className="text-black">Total Cost:</span>
+                    <span className="font-medium text-black">{formatCost(result.result.totalCost || 0)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Optimization Score:</span>
-                    <span className="font-medium">{result.result.optimizationScore?.toFixed(4)}</span>
+                    <span className="text-black">Optimization Score:</span>
+                    <span className="font-medium text-black">{result.result.optimizationScore?.toFixed(4)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Duration:</span>
-                    <span className="font-medium">{result.metadata.duration}ms</span>
+                    <span className="text-black">Duration:</span>
+                    <span className="font-medium text-black">{result.metadata.duration}ms</span>
                   </div>
                 </div>
               </div>
@@ -287,31 +288,31 @@ export default function CostAwareOptimizationDemo() {
               <h3 className="text-lg font-semibold mb-4">Optimization Run {index + 1}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <h4 className="font-medium text-gray-700 mb-2">Optimized Prompt:</h4>
-                  <p className="text-sm bg-gray-50 p-3 rounded border">
+                  <h4 className="font-medium text-black mb-2">Optimized Prompt:</h4>
+                  <p className="text-sm bg-gray-50 p-3 rounded border text-black">
                     {result.result.bestPrompt}
                   </p>
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span>Final Accuracy:</span>
-                    <span className="font-medium">{formatPercentage((result.result.finalAccuracy || 0) * 100)}</span>
+                    <span className="text-black">Final Accuracy:</span>
+                    <span className="font-medium text-black">{formatPercentage((result.result.finalAccuracy || 0) * 100)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Cost Reduction:</span>
+                    <span className="text-black">Cost Reduction:</span>
                     <span className="font-medium text-green-600">{formatPercentage(result.result.costReduction || 0)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Length Reduction:</span>
+                    <span className="text-black">Length Reduction:</span>
                     <span className="font-medium text-blue-600">{formatPercentage(result.result.lengthReduction || 0)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Total Evaluations:</span>
-                    <span className="font-medium">{result.result.totalEvaluations}</span>
+                    <span className="text-black">Total Evaluations:</span>
+                    <span className="font-medium text-black">{result.result.totalEvaluations}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Pareto Front Size:</span>
-                    <span className="font-medium">{result.result.paretoFrontSize}</span>
+                    <span className="text-black">Pareto Front Size:</span>
+                    <span className="font-medium text-black">{result.result.paretoFrontSize}</span>
                   </div>
                 </div>
               </div>
@@ -323,15 +324,32 @@ export default function CostAwareOptimizationDemo() {
       {activeTab === 'payment' && paymentDecisions.length > 0 && (
         <div className="space-y-4">
           <h2 className="text-2xl font-bold">Payment Router Decisions</h2>
-          {paymentDecisions.map((decision, index) => (
+          {paymentDecisions.map((decision, index) => {
+            // Handle error cases
+            if ('error' in decision) {
+              return (
+                <div key={index} className="bg-red-50 border border-red-200 rounded-lg p-6 shadow-sm">
+                  <h3 className="text-lg font-semibold mb-4 text-red-800">
+                    Payment #{index + 1}: Error
+                  </h3>
+                  <p className="text-red-600">Error: {decision.error || 'Unknown error'}</p>
+                  <div className="mt-2 text-sm text-red-700">
+                    <p>Amount: ${decision.request.amount} {decision.request.currency}</p>
+                    <p>Type: {decision.request.type}</p>
+                  </div>
+                </div>
+              );
+            }
+            
+            return (
             <div key={index} className="bg-white border rounded-lg p-6 shadow-sm">
               <h3 className="text-lg font-semibold mb-4">
                 Payment #{index + 1}: {decision.request.type} - ${decision.request.amount}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="font-medium text-gray-700 mb-2">Request Details:</h4>
-                  <div className="space-y-1 text-sm">
+                  <h4 className="font-medium text-black mb-2">Request Details:</h4>
+                  <div className="space-y-1 text-sm text-black">
                     <div>Amount: ${decision.request.amount} {decision.request.currency}</div>
                     <div>Urgency: {decision.request.urgency}</div>
                     <div>Type: {decision.request.type}</div>
@@ -339,38 +357,39 @@ export default function CostAwareOptimizationDemo() {
                   </div>
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-700 mb-2">Decision:</h4>
-                  <div className="space-y-1 text-sm">
-                    <div>Selected Rail: <span className="font-medium">{decision.decision.selectedRail}</span></div>
-                    <div>Confidence: <span className="font-medium">{formatPercentage(decision.decision.confidence * 100)}</span></div>
-                    <div>Total Cost: <span className="font-medium">{formatCost(decision.decision.costBreakdown.totalCost)}</span></div>
+                  <h4 className="font-medium text-black mb-2">Decision:</h4>
+                  <div className="space-y-1 text-sm text-black">
+                    <div>Selected Rail: <span className="font-medium text-black">{decision.decision?.selectedRail || 'N/A'}</span></div>
+                    <div>Confidence: <span className="font-medium text-black">{formatPercentage((decision.decision?.confidence || 0) * 100)}</span></div>
+                    <div>Total Cost: <span className="font-medium text-black">{formatCost(decision.decision?.costBreakdown.totalCost || 0)}</span></div>
                   </div>
                 </div>
               </div>
               <div className="mt-4">
-                <h4 className="font-medium text-gray-700 mb-2">Reasoning:</h4>
-                <p className="text-sm text-gray-600">{decision.decision.reasoning}</p>
+                <h4 className="font-medium text-black mb-2">Reasoning:</h4>
+                <p className="text-sm text-black">{decision.decision?.reasoning || 'No reasoning available'}</p>
               </div>
               <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div>
-                  <span className="text-gray-600">Rail Fee:</span>
-                  <div className="font-medium">{formatCost(decision.decision.costBreakdown.railFee)}</div>
+                  <span className="text-black">Rail Fee:</span>
+                  <div className="font-medium text-black">{formatCost(decision.decision?.costBreakdown.railFee || 0)}</div>
                 </div>
                 <div>
-                  <span className="text-gray-600">Network Fee:</span>
-                  <div className="font-medium">{formatCost(decision.decision.costBreakdown.networkFee)}</div>
+                  <span className="text-black">Network Fee:</span>
+                  <div className="font-medium text-black">{formatCost(decision.decision?.costBreakdown.networkFee || 0)}</div>
                 </div>
                 <div>
-                  <span className="text-gray-600">Tokens Used:</span>
-                  <div className="font-medium">{decision.decision.optimizationMetrics.tokensUsed}</div>
+                  <span className="text-black">Tokens Used:</span>
+                  <div className="font-medium text-black">{decision.decision?.optimizationMetrics.tokensUsed || 0}</div>
                 </div>
                 <div>
-                  <span className="text-gray-600">Inference Time:</span>
-                  <div className="font-medium">{decision.decision.optimizationMetrics.inferenceTime.toFixed(3)}s</div>
+                  <span className="text-black">Inference Time:</span>
+                  <div className="font-medium text-black">{(decision.decision?.optimizationMetrics.inferenceTime || 0).toFixed(3)}s</div>
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -382,16 +401,16 @@ export default function CostAwareOptimizationDemo() {
               <h3 className="text-lg font-semibold mb-4">Perplexity AI Pricing</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span>Input Rate:</span>
-                  <span className="font-medium">${pricing.perplexity.inputRate.toFixed(6)}/token</span>
+                  <span className="text-black">Input Rate:</span>
+                  <span className="font-medium text-black">${pricing.perplexity.inputRate.toFixed(6)}/token</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Output Rate:</span>
-                  <span className="font-medium">${pricing.perplexity.outputRate.toFixed(6)}/token</span>
+                  <span className="text-black">Output Rate:</span>
+                  <span className="font-medium text-black">${pricing.perplexity.outputRate.toFixed(6)}/token</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Request Fee:</span>
-                  <span className="font-medium">${pricing.perplexity.requestFee.toFixed(3)}</span>
+                  <span className="text-black">Request Fee:</span>
+                  <span className="font-medium text-black">${pricing.perplexity.requestFee.toFixed(3)}</span>
                 </div>
               </div>
               <p className="text-xs text-gray-500 mt-2">{pricing.perplexity.description}</p>
@@ -401,12 +420,12 @@ export default function CostAwareOptimizationDemo() {
               <h3 className="text-lg font-semibold mb-4">GPU Inference Pricing</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span>Rate per Second:</span>
-                  <span className="font-medium">${pricing.gpu.ratePerSecond.toFixed(6)}</span>
+                  <span className="text-black">Rate per Second:</span>
+                  <span className="font-medium text-black">${pricing.gpu.ratePerSecond.toFixed(6)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Hourly Rate:</span>
-                  <span className="font-medium">${(pricing.gpu.ratePerSecond * 3600).toFixed(2)}</span>
+                  <span className="text-black">Hourly Rate:</span>
+                  <span className="font-medium text-black">${(pricing.gpu.ratePerSecond * 3600).toFixed(2)}</span>
                 </div>
               </div>
               <p className="text-xs text-gray-500 mt-2">{pricing.gpu.description}</p>
@@ -416,12 +435,12 @@ export default function CostAwareOptimizationDemo() {
               <h3 className="text-lg font-semibold mb-4">Optimization Weights</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span>Accuracy Weight:</span>
-                  <span className="font-medium">{formatPercentage(pricing.optimization.accuracyWeight * 100)}</span>
+                  <span className="text-black">Accuracy Weight:</span>
+                  <span className="font-medium text-black">{formatPercentage(pricing.optimization.accuracyWeight * 100)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Cost Weight:</span>
-                  <span className="font-medium">{formatPercentage(pricing.optimization.costWeight * 100)}</span>
+                  <span className="text-black">Cost Weight:</span>
+                  <span className="font-medium text-black">{formatPercentage(pricing.optimization.costWeight * 100)}</span>
                 </div>
               </div>
               <p className="text-xs text-gray-500 mt-2">{pricing.optimization.description}</p>
@@ -447,20 +466,20 @@ export default function CostAwareOptimizationDemo() {
           <h3 className="text-lg font-semibold text-green-800 mb-4">Optimization Summary</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div>
-              <span className="text-green-700">Best GEPA Cost Reduction:</span>
+              <span className="text-black">Best GEPA Cost Reduction:</span>
               <div className="font-bold text-green-800">
                 {Math.max(...results.filter(r => r.method === 'GEPA').map(r => r.result.costReduction), 0).toFixed(1)}%
               </div>
             </div>
             <div>
-              <span className="text-green-700">Best CAPO Cost Reduction:</span>
+              <span className="text-black">Best CAPO Cost Reduction:</span>
               <div className="font-bold text-green-800">
                 {Math.max(...results.filter(r => r.method === 'CAPO').map(r => r.result.costReduction), 0).toFixed(1)}%
               </div>
             </div>
             <div>
-              <span className="text-green-700">Total Optimizations:</span>
-              <div className="font-bold text-green-800">{results.length}</div>
+              <span className="text-black">Total Optimizations:</span>
+              <div className="font-bold text-black">{results.length}</div>
             </div>
           </div>
         </div>
