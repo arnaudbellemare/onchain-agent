@@ -6,6 +6,7 @@ import WhatWeOffer from "@/components/WhatWeOffer";
 import HowItWorks from "@/components/HowItWorks";
 import AnimatedOptimizationBackground from "@/components/AnimatedOptimizationBackground";
 import CostAwareOptimizationDemo from "@/components/CostAwareOptimizationDemo";
+import GEPAX402IntegrationDemo from "@/components/GEPAX402IntegrationDemo";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("home");
@@ -70,6 +71,16 @@ export default function Home() {
                   }`}
                 >
                   Cost Optimization
+                </button>
+                <button
+                  onClick={() => setActiveTab("gepa-x402")}
+                  className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
+                    activeTab === "gepa-x402" 
+                      ? "text-blue-600 bg-blue-50" 
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  }`}
+                >
+                  GEPA + x402
                 </button>
               </nav>
               
@@ -245,6 +256,10 @@ export default function Home() {
 
         {activeTab === "optimization" && (
           <CostAwareOptimizationDemo />
+        )}
+
+        {activeTab === "gepa-x402" && (
+          <GEPAX402IntegrationDemo />
         )}
       </main>
     </div>
