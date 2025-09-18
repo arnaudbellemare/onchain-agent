@@ -41,6 +41,7 @@ export interface ApprovalChain {
   steps: ApprovalStep[];
   autoEscalationMinutes: number;
   enabled: boolean;
+  priority: number;
 }
 
 export interface ApprovalStep {
@@ -73,7 +74,7 @@ export class ApprovalWorkflowEngine {
       recipientAddress: string;
       description: string;
       requesterId: string;
-      metadata?: Record<string, any>;
+      metadata?: Record<string, unknown>;
     }
   ): Promise<{
     requiresApproval: boolean;
@@ -141,7 +142,7 @@ export class ApprovalWorkflowEngine {
   }
 
   // Find matching approval rule
-  private findMatchingRule(transaction: any, actionType: string): ApprovalRule | null {
+  private findMatchingRule(transaction: unknown, actionType: string): ApprovalRule | null {
     for (const rule of this.approvalRules) {
       if (!rule.enabled) continue;
       
@@ -156,7 +157,7 @@ export class ApprovalWorkflowEngine {
   }
 
   // Evaluate approval conditions
-  private evaluateConditions(conditions: ApprovalCondition[], transaction: any): boolean {
+  private evaluateConditions(conditions: ApprovalCondition[], transaction: unknown): boolean {
     if (conditions.length === 0) return true;
 
     let result = this.evaluateCondition(conditions[0], transaction);
@@ -176,7 +177,7 @@ export class ApprovalWorkflowEngine {
   }
 
   // Evaluate single condition
-  private evaluateCondition(condition: ApprovalCondition, transaction: any): boolean {
+  private evaluateCondition(condition: ApprovalCondition, transaction: unknown): boolean {
     const fieldValue = this.getFieldValue(transaction, condition.field);
     
     switch (condition.operator) {
@@ -198,19 +199,19 @@ export class ApprovalWorkflowEngine {
   }
 
   // Get field value from transaction
-  private getFieldValue(transaction: any, field: string): any {
+  private getFieldValue(transaction: unknown, field: string): unknown {
     const fieldParts = field.split('.');
-    let value = transaction;
+    let value: unknown = transaction;
     
     for (const part of fieldParts) {
-      value = value?.[part];
+      value = (value as Record<string, unknown>)?.[part];
     }
     
     return value;
   }
 
   // Determine appropriate approval chain
-  private determineApprovalChain(transaction: any): ApprovalChain | null {
+  private determineApprovalChain(transaction: unknown): ApprovalChain | null {
     // Sort chains by priority (higher number = higher priority)
     const sortedChains = [...this.approvalChains]
       .filter(chain => chain.enabled)
@@ -227,22 +228,22 @@ export class ApprovalWorkflowEngine {
   }
 
   // Check if transaction matches approval chain
-  private transactionMatchesChain(transaction: any, chain: ApprovalChain): boolean {
+  private transactionMatchesChain(transaction: unknown, chain: ApprovalChain): boolean {
     // This is a simplified matching logic
     // In a real system, this would be more sophisticated
     
     // Example: High-value transactions require executive approval
-    if (transaction.amount > 100000 && chain.name.includes('Executive')) {
+    if ((transaction as {amount: number}).amount > 100000 && chain.name.includes('Executive')) {
       return true;
     }
     
     // Example: New vendor payments require manager approval
-    if (transaction.description.toLowerCase().includes('new vendor') && chain.name.includes('Manager')) {
+    if ((transaction as {description: string}).description.toLowerCase().includes('new vendor') && chain.name.includes('Manager')) {
       return true;
     }
     
     // Example: International payments require compliance approval
-    if (transaction.recipientAddress.startsWith('0x') && chain.name.includes('Compliance')) {
+    if ((transaction as {recipientAddress: string}).recipientAddress.startsWith('0x') && chain.name.includes('Compliance')) {
       return true;
     }
     
@@ -435,7 +436,8 @@ export class ApprovalWorkflowEngine {
           }
         ],
         autoEscalationMinutes: 120,
-        enabled: true
+        enabled: true,
+        priority: 1
       },
       {
         id: 'executive_approval',
@@ -459,7 +461,8 @@ export class ApprovalWorkflowEngine {
           }
         ],
         autoEscalationMinutes: 180,
-        enabled: true
+        enabled: true,
+        priority: 3
       },
       {
         id: 'compliance_approval',
@@ -475,7 +478,8 @@ export class ApprovalWorkflowEngine {
           }
         ],
         autoEscalationMinutes: 240,
-        enabled: true
+        enabled: true,
+        priority: 2
       }
     ];
   }

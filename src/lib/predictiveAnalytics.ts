@@ -52,9 +52,9 @@ export interface RiskAssessment {
 }
 
 export class PredictiveAnalyticsEngine {
-  private historicalData: any[] = [];
+  private historicalData: unknown[] = [];
   private marketData: MarketTrend[] = [];
-  private businessMetrics: BusinessMetrics;
+  private businessMetrics!: BusinessMetrics;
   private riskFactors: RiskAssessment[] = [];
 
   constructor() {
@@ -136,7 +136,7 @@ export class PredictiveAnalyticsEngine {
   }
 
   // Calculate base outflow based on historical patterns
-  private calculateBaseOutflow(dayOfWeek: number, dayOfMonth: number, month: number): number {
+  private calculateBaseOutflow(dayOfWeek: number, dayOfMonth: number, _month: number): number {
     // Payroll patterns (bi-weekly)
     const payrollMultiplier = this.isPayrollDay(dayOfMonth) ? 1.5 : 1.0;
     
@@ -204,7 +204,7 @@ export class PredictiveAnalyticsEngine {
   }
 
   // Identify key factors affecting predictions
-  private identifyKeyFactors(date: Date, inflow: number, outflow: number): string[] {
+  private identifyKeyFactors(date: Date, _inflow: number, _outflow: number): string[] {
     const factors: string[] = [];
     
     // Seasonal factors

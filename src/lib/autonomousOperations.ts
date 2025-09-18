@@ -21,7 +21,7 @@ export interface RuleTrigger {
 export interface RuleCondition {
   field: string;
   operator: 'equals' | 'greater_than' | 'less_than' | 'contains' | 'in' | 'not_in' | 'exists' | 'not_exists';
-  value: any;
+  value: unknown;
   logicalOperator?: 'AND' | 'OR';
 }
 
@@ -137,7 +137,7 @@ export class AutonomousOperationsEngine {
       // Validate rule
       const validation = this.validateRule(rule);
       if (!validation.valid) {
-        return { success: false, message: validation.error };
+        return { success: false, message: validation.error || 'Unknown validation error' };
       }
 
       this.rules.set(rule.id, rule);
@@ -194,21 +194,21 @@ export class AutonomousOperationsEngine {
   }
 
   // Check schedule trigger
-  private checkScheduleTrigger(parameters: Record<string, any>): boolean {
+  private checkScheduleTrigger(parameters: Record<string, unknown>): boolean {
     const { interval, lastExecuted } = parameters;
     const now = new Date();
     
     if (!lastExecuted) return true;
     
-    const lastExecutedDate = new Date(lastExecuted);
+    const lastExecutedDate = new Date(lastExecuted as string | number | Date);
     const timeDiff = now.getTime() - lastExecutedDate.getTime();
     
-    return timeDiff >= interval;
+    return timeDiff >= (interval as number);
   }
 
   // Check event trigger
-  private checkEventTrigger(parameters: Record<string, any>): boolean {
-    const { eventType, eventData } = parameters;
+  private checkEventTrigger(parameters: Record<string, unknown>): boolean {
+    const { eventType: _eventType, eventData: _eventData } = parameters;
     
     // This would check for specific events in the system
     // For now, we'll simulate event checking
@@ -216,25 +216,25 @@ export class AutonomousOperationsEngine {
   }
 
   // Check threshold trigger
-  private checkThresholdTrigger(parameters: Record<string, any>): boolean {
+  private checkThresholdTrigger(parameters: Record<string, unknown>): boolean {
     const { metric, threshold, operator } = parameters;
     
-    const metricValue = this.optimizationMetrics.get(metric)?.value || 0;
+    const metricValue = this.optimizationMetrics.get(metric as string)?.value || 0;
     
     switch (operator) {
       case 'greater_than':
-        return metricValue > threshold;
+        return metricValue > (threshold as number);
       case 'less_than':
-        return metricValue < threshold;
+        return metricValue < (threshold as number);
       case 'equals':
-        return metricValue === threshold;
+        return metricValue === (threshold as number);
       default:
         return false;
     }
   }
 
   // Check data change trigger
-  private checkDataChangeTrigger(parameters: Record<string, any>): boolean {
+  private checkDataChangeTrigger(parameters: Record<string, unknown>): boolean {
     // This would check for data changes in the system
     // For now, we'll simulate data change detection
     return Math.random() < 0.05; // 5% chance of data change
@@ -322,7 +322,7 @@ export class AutonomousOperationsEngine {
   }
 
   // Evaluate single condition
-  private async evaluateCondition(condition: RuleCondition): Promise<boolean> {
+  private async evaluateCondition(_condition: RuleCondition): Promise<boolean> {
     // This would evaluate conditions against actual data
     // For now, we'll simulate condition evaluation
     return Math.random() > 0.3; // 70% chance of condition being true
@@ -363,8 +363,8 @@ export class AutonomousOperationsEngine {
   }
 
   // Execute payment action
-  private async executePaymentAction(parameters: Record<string, any>): Promise<void> {
-    const { recipient, amount, currency, description } = parameters;
+  private async executePaymentAction(parameters: Record<string, unknown>): Promise<void> {
+    const { recipient, amount, currency, description: _description } = parameters;
     
     console.log(`💳 Executing payment: ${amount} ${currency} to ${recipient}`);
     
@@ -376,10 +376,10 @@ export class AutonomousOperationsEngine {
   }
 
   // Execute notification action
-  private async executeNotificationAction(parameters: Record<string, any>): Promise<void> {
-    const { type, recipients, message, priority } = parameters;
+  private async executeNotificationAction(parameters: Record<string, unknown>): Promise<void> {
+    const { type, recipients, message: _message, priority: _priority } = parameters;
     
-    console.log(`📧 Sending ${type} notification to ${recipients.length} recipients`);
+    console.log(`📧 Sending ${type} notification to ${(recipients as unknown[]).length} recipients`);
     
     // This would send actual notifications
     // For now, we'll simulate the notification
@@ -389,8 +389,8 @@ export class AutonomousOperationsEngine {
   }
 
   // Execute API call action
-  private async executeApiCallAction(parameters: Record<string, any>): Promise<void> {
-    const { url, method, headers, body } = parameters;
+  private async executeApiCallAction(parameters: Record<string, unknown>): Promise<void> {
+    const { url, method, headers: _headers, body: _body } = parameters;
     
     console.log(`🌐 Making API call: ${method} ${url}`);
     
@@ -402,8 +402,8 @@ export class AutonomousOperationsEngine {
   }
 
   // Execute data update action
-  private async executeDataUpdateAction(parameters: Record<string, any>): Promise<void> {
-    const { table, data, operation } = parameters;
+  private async executeDataUpdateAction(parameters: Record<string, unknown>): Promise<void> {
+    const { table, data: _data, operation } = parameters;
     
     console.log(`📊 Updating data: ${operation} on ${table}`);
     
@@ -415,8 +415,8 @@ export class AutonomousOperationsEngine {
   }
 
   // Execute workflow start action
-  private async executeWorkflowStartAction(parameters: Record<string, any>): Promise<void> {
-    const { workflowId, data } = parameters;
+  private async executeWorkflowStartAction(parameters: Record<string, unknown>): Promise<void> {
+    const { workflowId, data: _data } = parameters;
     
     console.log(`🔄 Starting workflow: ${workflowId}`);
     
@@ -428,8 +428,8 @@ export class AutonomousOperationsEngine {
   }
 
   // Execute optimization action
-  private async executeOptimizationAction(parameters: Record<string, any>): Promise<void> {
-    const { metric, target, strategy } = parameters;
+  private async executeOptimizationAction(parameters: Record<string, unknown>): Promise<void> {
+    const { metric, target: _target, strategy } = parameters;
     
     console.log(`🎯 Optimizing ${metric} using ${strategy}`);
     

@@ -16,7 +16,7 @@ export interface CostOptimizationService {
 
 export interface EnterpriseIntegration {
   id: string;
-  companyName: string;
+  compunknownName: string;
   industry: string;
   existingSystems: string[];
   integrationPoints: IntegrationPoint[];
@@ -109,7 +109,7 @@ export class EnterpriseCostOptimizationEngine {
         usageHours: workload.usageHours,
         monthlySavings: monthlySavings,
         optimizationMethod: 'x402_automation',
-        aiWorkloadType: workload.aiWorkloadType as any
+        aiWorkloadType: workload.aiWorkloadType as 'training' | 'inference' | 'fine_tuning' | 'data_processing'
       };
 
       this.gpuOptimizations.set(`${workload.provider}_${workload.instanceType}`, optimization);
@@ -154,7 +154,7 @@ export class EnterpriseCostOptimizationEngine {
         monthlyCalls: service.monthlyCalls,
         monthlySavings: monthlySavings,
         optimizationMethod: 'x402_protocol',
-        category: service.category as any
+        category: service.category as 'data' | 'ai' | 'infrastructure' | 'finance' | 'communication'
       };
 
       this.apiOptimizations.set(`${service.provider}_${service.name}`, optimization);
@@ -174,24 +174,24 @@ export class EnterpriseCostOptimizationEngine {
   }
 
   // Enterprise Integration Assessment
-  async assessEnterpriseIntegration(company: {
+  async assessEnterpriseIntegration(compunknown: {
     name: string;
     industry: string;
     existingSystems: string[];
     currentMonthlyCosts: number;
   }): Promise<{ success: boolean; integration: EnterpriseIntegration; message: string }> {
     try {
-      console.log(`🏢 Assessing enterprise integration for ${company.name}...`);
+      console.log(`🏢 Assessing enterprise integration for ${compunknown.name}...`);
 
-      const integrationPoints = await this.identifyIntegrationPoints(company.existingSystems);
+      const integrationPoints = await this.identifyIntegrationPoints(compunknown.existingSystems);
       const totalCostSavings = integrationPoints.reduce((sum, point) => sum + point.costReduction, 0);
-      const expectedROI = (totalCostSavings / company.currentMonthlyCosts) * 100;
+      const expectedROI = (totalCostSavings / compunknown.currentMonthlyCosts) * 100;
 
       const integration: EnterpriseIntegration = {
         id: `integration_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        companyName: company.name,
-        industry: company.industry,
-        existingSystems: company.existingSystems,
+        compunknownName: compunknown.name,
+        industry: compunknown.industry,
+        existingSystems: compunknown.existingSystems,
         integrationPoints: integrationPoints,
         costSavings: totalCostSavings,
         implementationStatus: 'evaluation',
@@ -321,9 +321,9 @@ export class EnterpriseCostOptimizationEngine {
     return baseRates[provider]?.[instanceType] || 1.0;
   }
 
-  private async calculateOptimizedGPURate(workload: any): Promise<number> {
+  private async calculateOptimizedGPURate(workload: unknown): Promise<number> {
     // Simulate x402 automation optimization
-    const currentRate = this.getCurrentGPURate(workload.provider, workload.instanceType);
+    const currentRate = this.getCurrentGPURate((workload as {provider: string}).provider, (workload as {instanceType: string}).instanceType);
     
     // x402 automation can reduce costs by 15-30% through:
     // - Dynamic pricing negotiation
@@ -363,9 +363,9 @@ export class EnterpriseCostOptimizationEngine {
     return baseCosts[provider]?.[service] || 0.01;
   }
 
-  private async calculateOptimizedAPICost(service: any): Promise<number> {
+  private async calculateOptimizedAPICost(service: unknown): Promise<number> {
     // Simulate x402 protocol optimization
-    const currentCost = this.getCurrentAPICost(service.provider, service.name);
+    const currentCost = this.getCurrentAPICost((service as {provider: string}).provider, (service as {name: string}).name);
     
     // x402 protocol can reduce costs by 20-40% through:
     // - Micropayment efficiency
@@ -407,7 +407,7 @@ export class EnterpriseCostOptimizationEngine {
       if (system.toLowerCase().includes('aws') || system.toLowerCase().includes('gcp')) {
         integrationPoints.push({
           system: system,
-          type: 'compute',
+          type: 'api',
           currentProvider: system,
           proposedSolution: 'GPU Cost Optimization',
           costReduction: 5000,
@@ -420,14 +420,14 @@ export class EnterpriseCostOptimizationEngine {
     return integrationPoints;
   }
 
-  private determinePartnershipType(partner: any): 'technology' | 'integration' | 'reseller' | 'joint_venture' {
-    if (partner.industry === 'fintech') return 'technology';
-    if (partner.industry === 'enterprise') return 'integration';
-    if (partner.currentClients > 1000) return 'reseller';
+  private determinePartnershipType(partner: unknown): 'technology' | 'integration' | 'reseller' | 'joint_venture' {
+    if ((partner as {industry: string}).industry === 'fintech') return 'technology';
+    if ((partner as {industry: string}).industry === 'enterprise') return 'integration';
+    if ((partner as {currentClients: number}).currentClients > 1000) return 'reseller';
     return 'joint_venture';
   }
 
-  private identifyMutualBenefits(partner: any): string[] {
+  private identifyMutualBenefits(partner: unknown): string[] {
     const benefits = [
       'Cost reduction through x402 protocol',
       'Enhanced AI capabilities with AgentKit',
@@ -436,27 +436,27 @@ export class EnterpriseCostOptimizationEngine {
       'Scalable infrastructure'
     ];
     
-    if (partner.industry === 'fintech') {
+    if ((partner as {industry: string}).industry === 'fintech') {
       benefits.push('Regulatory compliance automation');
     }
     
-    if (partner.currentClients > 500) {
+    if ((partner as {currentClients: number}).currentClients > 500) {
       benefits.push('Enterprise-grade security');
     }
     
     return benefits;
   }
 
-  private calculatePartnershipValue(partner: any): number {
-    const baseValue = partner.currentClients * 100; // $100 per client
-    const industryMultiplier = partner.industry === 'fintech' ? 2 : 1.5;
+  private calculatePartnershipValue(partner: unknown): number {
+    const baseValue = (partner as {currentClients: number}).currentClients * 100; // $100 per client
+    const industryMultiplier = (partner as {industry: string}).industry === 'fintech' ? 2 : 1.5;
     return baseValue * industryMultiplier;
   }
 
-  private determineFocusArea(partner: any): string {
-    if (partner.industry === 'fintech') return 'Payment Processing & Compliance';
-    if (partner.industry === 'enterprise') return 'Cost Optimization & Automation';
-    if (partner.industry === 'ai') return 'GPU & API Cost Reduction';
+  private determineFocusArea(partner: unknown): string {
+    if ((partner as {industry: string}).industry === 'fintech') return 'Payment Processing & Compliance';
+    if ((partner as {industry: string}).industry === 'enterprise') return 'Cost Optimization & Automation';
+    if ((partner as {industry: string}).industry === 'ai') return 'GPU & API Cost Reduction';
     return 'General Business Automation';
   }
 

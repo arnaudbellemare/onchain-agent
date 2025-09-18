@@ -112,7 +112,7 @@ export default function EnterpriseOptimizationDemo() {
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id as 'overview' | 'breakdown' | 'autonomous' | 'integration')}
               className={`px-6 py-3 m-2 rounded-lg font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-blue-600 text-white shadow-lg'

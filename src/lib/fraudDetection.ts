@@ -180,7 +180,11 @@ export class FraudDetectionEngine {
   }
 
   // Behavioral risk assessment
-  private async assessBehavioralRisk(transaction: any): Promise<{ score: number; reasons: string[] }> {
+  private async assessBehavioralRisk(transaction: {
+    userId: string;
+    timestamp: Date;
+    recipientAddress: string;
+  }): Promise<{ score: number; reasons: string[] }> {
     const reasons: string[] = [];
     let score = 0;
 
@@ -217,7 +221,7 @@ export class FraudDetectionEngine {
   }
 
   // Time-based risk assessment
-  private assessTimeRisk(timestamp: Date, userId: string): { score: number; reasons: string[] } {
+  private assessTimeRisk(timestamp: Date, _userId: string): { score: number; reasons: string[] } {
     const reasons: string[] = [];
     let score = 0;
 
@@ -278,7 +282,11 @@ export class FraudDetectionEngine {
   }
 
   // Pattern-based risk assessment
-  private assessPatternRisk(transaction: any): { score: number; reasons: string[] } {
+  private assessPatternRisk(transaction: {
+    userId: string;
+    amount: number;
+    timestamp: Date;
+  }): { score: number; reasons: string[] } {
     const reasons: string[] = [];
     let score = 0;
 
@@ -319,7 +327,10 @@ export class FraudDetectionEngine {
     return suspiciousPatterns.some(pattern => pattern.test(address));
   }
 
-  private matchesPattern(transaction: any, pattern: TransactionPattern): boolean {
+  private matchesPattern(transaction: {
+    amount: number;
+    timestamp: Date;
+  }, pattern: TransactionPattern): boolean {
     // Simplified pattern matching
     return (
       transaction.amount >= pattern.amount * 0.8 &&
@@ -328,7 +339,7 @@ export class FraudDetectionEngine {
     );
   }
 
-  private getRecentTransactions(userId: string, hours: number): any[] {
+  private getRecentTransactions(_userId: string, _hours: number): unknown[] {
     // This would normally query the database
     // For now, return mock data
     return [];
@@ -362,7 +373,11 @@ export class FraudDetectionEngine {
   }
 
   // Update user behavior profile
-  updateUserProfile(userId: string, transaction: any): void {
+  updateUserProfile(userId: string, transaction: {
+    amount: number;
+    recipientAddress: string;
+    timestamp: Date;
+  }): void {
     const existingProfile = this.userProfiles.get(userId);
     
     if (existingProfile) {

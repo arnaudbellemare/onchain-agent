@@ -66,7 +66,7 @@ export interface OrderItem {
 export interface Address {
   firstName: string;
   lastName: string;
-  company?: string;
+  compunknown?: string;
   address1: string;
   address2?: string;
   city: string;
@@ -270,7 +270,7 @@ export class EcommerceIntegrationManager {
         platform: platform.id,
         customerId: `customer_${i}`,
         customerEmail: `customer${i}@example.com`,
-        status: ['pending', 'processing', 'shipped', 'delivered'][Math.floor(Math.random() * 4)] as any,
+        status: (['pending', 'processing', 'shipped', 'delivered'] as const)[Math.floor(Math.random() * 4)],
         total: Math.floor(Math.random() * 1000) + 50,
         currency: 'USD',
         items: [{

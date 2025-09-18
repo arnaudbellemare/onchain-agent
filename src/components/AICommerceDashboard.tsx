@@ -84,8 +84,8 @@ export default function AICommerceDashboard() {
         predictiveAnalytics: {
           businessHealthScore: businessHealth.score,
           businessHealthGrade: businessHealth.grade,
-          cashFlowForecast,
-          optimizationRecommendations
+          cashFlowForecast: cashFlowForecast as unknown as Record<string, unknown>[],
+          optimizationRecommendations: optimizationRecommendations as unknown as Record<string, unknown>[]
         },
         ecommerceIntegrations: ecommerceAnalytics,
         autonomousOperations: executionStats
@@ -381,14 +381,14 @@ export default function AICommerceDashboard() {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Optimization Recommendations</h3>
             <div className="space-y-3">
               {metrics.predictiveAnalytics.optimizationRecommendations.slice(0, 5).map((rec) => (
-                <div key={rec.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={(rec as unknown as {id: string}).id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <div>
-                    <h4 className="font-medium text-gray-900">{rec.title}</h4>
-                    <p className="text-sm text-gray-600">{rec.description}</p>
+                    <h4 className="font-medium text-gray-900">{(rec as unknown as {title: string}).title}</h4>
+                    <p className="text-sm text-gray-600">{(rec as unknown as {description: string}).description}</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-lg font-bold text-green-600">${rec.potentialSavings.toLocaleString()}</div>
-                    <div className="text-sm text-gray-500">ROI: {rec.roi}%</div>
+                    <div className="text-lg font-bold text-green-600">${(rec as unknown as {potentialSavings: number}).potentialSavings.toLocaleString()}</div>
+                    <div className="text-sm text-gray-500">ROI: {(rec as unknown as {roi: number}).roi}%</div>
                   </div>
                 </div>
               ))}
@@ -423,9 +423,9 @@ export default function AICommerceDashboard() {
               <h4 className="font-semibold text-gray-900 mb-4">Top Products</h4>
               <div className="space-y-2">
                 {metrics.ecommerceIntegrations.topProducts.slice(0, 5).map((product) => (
-                  <div key={product.productId} className="flex justify-between">
-                    <span className="text-gray-600">{product.name}</span>
-                    <span className="font-medium">${product.revenue.toLocaleString()}</span>
+                  <div key={(product as unknown as {productId: string}).productId} className="flex justify-between">
+                    <span className="text-gray-600">{(product as unknown as {name: string}).name}</span>
+                    <span className="font-medium">${(product as unknown as {revenue: number}).revenue.toLocaleString()}</span>
                   </div>
                 ))}
               </div>

@@ -232,7 +232,7 @@ export class X402OptimizationDemo {
   // Generate comprehensive optimization report
   static generateOptimizationReport(): string {
     const breakdown = this.demonstrate90PercentOptimization();
-    const granular = this.demonstrateGranularTracking();
+    const _granular = this.demonstrateGranularTracking();
     const autonomous = this.demonstrateAutonomousOptimization();
     const categories = this.getOptimizationBreakdown();
 
