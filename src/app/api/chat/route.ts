@@ -74,9 +74,9 @@ export async function POST(req: Request) {
         response = `❌ Error checking wallet details: ${error instanceof Error ? error.message : "Unknown error"}`;
       }
     } 
-    else if (userMessage.includes("send") && userMessage.includes("token")) {
+    else if (userMessage.includes("send") && (userMessage.includes("eth") || userMessage.includes("token"))) {
       // Extract amount and address from user message
-      const amountMatch = userMessage.match(/(\d+\.?\d*)\s*(eth|ether)/i);
+      const amountMatch = userMessage.match(/send\s+(\d+\.?\d*)\s*(eth|ether)/i);
       const addressMatch = userMessage.match(/0x[a-fA-F0-9]{40}/);
       
       if (amountMatch && addressMatch) {
@@ -107,7 +107,34 @@ export async function POST(req: Request) {
       response = `🔗 **Smart Contract Interaction:**\n\n✅ AgentKit is ready for contract interactions!\n\n🔧 **Status:** AgentKit is initialized and connected\n🌐 **Network:** ${process.env.NETWORK_ID || "base-sepolia"}\n\n📋 **To interact with contracts, provide:**\n1. Contract address\n2. Function to call\n3. Parameters\n\n💡 **Example:** "Call function 'transfer' on contract 0x... with parameters..."\n\n🚀 **Ready for:** Real smart contract calls!`;
     }
     else if (userMessage.includes("defi") || userMessage.includes("swap") || userMessage.includes("liquidity")) {
-      response = `🔄 **DeFi Operations:**\n\n✅ AgentKit is ready for DeFi operations!\n\n🔧 **Status:** AgentKit is initialized and connected\n🌐 **Network:** ${process.env.NETWORK_ID || "base-sepolia"}\n\n📋 **Available DeFi operations:**\n- Token swaps\n- Adding/removing liquidity\n- Staking\n- Yield farming\n\n💡 **What DeFi operation would you like to perform?**\n\n🚀 **Ready for:** Real DeFi transactions!`;
+      // Check if it's a specific swap command
+      const swapMatch = userMessage.match(/swap\s+(\d+\.?\d*)\s*(\w+)\s+to\s+(\w+)/i);
+      
+      if (swapMatch) {
+        try {
+          const [, amount, fromToken, toToken] = swapMatch;
+          
+          const actions = agentKit.getActions();
+          const swapAction = actions.find(action => action.name === "swapTokens");
+          
+          if (swapAction) {
+            const result = await swapAction.invoke({
+              fromToken: fromToken.toUpperCase(),
+              toToken: toToken.toUpperCase(),
+              amount: amount,
+              slippage: 0.5
+            });
+            response = `🔄 **Token Swap Executed:**\n\n${result}\n\n✅ Successfully initiated swap!`;
+          } else {
+            response = `❌ Swap action not found. Available actions: ${actions.map(a => a.name).join(", ")}`;
+          }
+        } catch (error) {
+          console.error("Swap error:", error);
+          response = `❌ Error executing swap: ${error instanceof Error ? error.message : "Unknown error"}`;
+        }
+      } else {
+        response = `🔄 **DeFi Operations:**\n\n✅ AgentKit is ready for DeFi operations!\n\n🔧 **Status:** AgentKit is initialized and connected\n🌐 **Network:** ${process.env.NETWORK_ID || "base-sepolia"}\n\n📋 **Available DeFi operations:**\n- Token swaps\n- Adding/removing liquidity\n- Staking\n- Yield farming\n\n💡 **To swap tokens, use:** "Swap 1 ETH to USDC" or "Swap 100 USDC to ETH"\n\n🚀 **Ready for:** Real DeFi transactions!`;
+      }
     }
     else if (userMessage.includes("wallet") || userMessage.includes("address")) {
       try {
@@ -143,7 +170,7 @@ export async function POST(req: Request) {
           response = `❌ Error checking wallet details: ${error instanceof Error ? error.message : "Unknown error"}`;
         }
       } else {
-        response = `🤖 **Onchain AI Assistant Ready!**\n\n✅ **AgentKit Status:** Connected and initialized\n🌐 **Network:** ${process.env.NETWORK_ID || "base-sepolia"}\n🔑 **API Keys:** Configured\n\nI can help you with:\n\n💰 **Check Balance** - "Check my balance" or "whats my balance"\n📤 **Send Tokens** - "Send 0.1 ETH to [address]"\n🔗 **Smart Contracts** - "Interact with contract [address]"\n🔄 **DeFi Operations** - "Swap tokens" or "Add liquidity"\n🏦 **Wallet Info** - "Show my wallet address"\n\nWhat would you like to do?`;
+        response = `🤖 **Onchain AI Assistant Ready!**\n\n✅ **AgentKit Status:** Connected and initialized\n🌐 **Network:** ${process.env.NETWORK_ID || "base-sepolia"}\n🔑 **API Keys:** Configured\n\nI can help you with:\n\n💰 **Check Balance** - "Check my balance" or "whats my balance"\n📤 **Send Tokens** - "Send 0.1 ETH to [address]"\n🔄 **Token Swaps** - "Swap 1 ETH to USDC" or "Swap 100 USDC to ETH"\n🔗 **Smart Contracts** - "Interact with contract [address]"\n🏦 **Wallet Info** - "Show my wallet address"\n\n**Real Blockchain Operations:** All transactions are executed on the actual blockchain!\n\nWhat would you like to do?`;
       }
     }
 
