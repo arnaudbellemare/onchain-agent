@@ -196,18 +196,18 @@ export default function EnterpriseOptimizationDemo() {
                   <h3 className="text-lg font-semibold text-red-800 mb-4">Traditional Method</h3>
                   <p className="text-red-700 mb-2">{granular.traditionalMethod}</p>
                   <div className="space-y-2">
-                    <p><strong>Cost per call:</strong> ${granular.costPerCall}</p>
-                    <p><strong>Monthly calls:</strong> {granular.monthlyCalls.toLocaleString()}</p>
-                    <p><strong>Total cost:</strong> <span className="text-xl font-bold">${granular.traditionalCost.toLocaleString()}</span></p>
+                    <p className="text-gray-900"><strong>Cost per call:</strong> ${granular.costPerCall}</p>
+                    <p className="text-gray-900"><strong>Monthly calls:</strong> {granular.monthlyCalls.toLocaleString()}</p>
+                    <p className="text-gray-900"><strong>Total cost:</strong> <span className="text-xl font-bold">${granular.traditionalCost.toLocaleString()}</span></p>
                   </div>
                 </div>
                 <div className="p-6 bg-green-50 rounded-lg">
                   <h3 className="text-lg font-semibold text-green-800 mb-4">x402 Method</h3>
                   <p className="text-green-700 mb-2">{granular.x402Method}</p>
                   <div className="space-y-2">
-                    <p><strong>Cost per call:</strong> ${(granular.costPerCall * 0.7).toFixed(3)} (30% discount)</p>
-                    <p><strong>Monthly calls:</strong> {granular.monthlyCalls.toLocaleString()}</p>
-                    <p><strong>Total cost:</strong> <span className="text-xl font-bold">${granular.x402Cost.toLocaleString()}</span></p>
+                    <p className="text-gray-900"><strong>Cost per call:</strong> ${(granular.costPerCall * 0.7).toFixed(3)} (30% discount)</p>
+                    <p className="text-gray-900"><strong>Monthly calls:</strong> {granular.monthlyCalls.toLocaleString()}</p>
+                    <p className="text-gray-900"><strong>Total cost:</strong> <span className="text-xl font-bold">${granular.x402Cost.toLocaleString()}</span></p>
                   </div>
                 </div>
               </div>
@@ -226,11 +226,11 @@ export default function EnterpriseOptimizationDemo() {
                   <div key={index} className="p-6 bg-gray-50 rounded-lg">
                     <h3 className="text-lg font-semibold text-gray-900 mb-3">{category.category}</h3>
                     <div className="space-y-2">
-                      <p><strong>Current:</strong> ${category.currentCost.toLocaleString()}</p>
-                      <p><strong>Method:</strong> {category.optimizationMethod}</p>
-                      <p><strong>Savings:</strong> <span className="text-green-600 font-bold">${category.savings.toLocaleString()}</span></p>
-                      <p><strong>% Reduction:</strong> <span className="text-blue-600 font-bold">{category.savingsPercent}%</span></p>
-                      <p><strong>Automated:</strong> {category.automation ? '✅ Yes' : '❌ No'}</p>
+                      <p className="text-gray-900"><strong>Current:</strong> ${category.currentCost.toLocaleString()}</p>
+                      <p className="text-gray-900"><strong>Method:</strong> {category.optimizationMethod}</p>
+                      <p className="text-gray-900"><strong>Savings:</strong> <span className="text-green-600 font-bold">${category.savings.toLocaleString()}</span></p>
+                      <p className="text-gray-900"><strong>% Reduction:</strong> <span className="text-blue-600 font-bold">{category.savingsPercent}%</span></p>
+                      <p className="text-gray-900"><strong>Automated:</strong> {category.automation ? '✅ Yes' : '❌ No'}</p>
                     </div>
                   </div>
                 ))}
