@@ -6,6 +6,7 @@ import X402OptimizationCycle from './X402OptimizationCycle';
 import X402APIIntegration from './X402APIIntegration';
 import X402UseCaseShowcase from './X402UseCaseShowcase';
 import BusinessIntegrationWidget from './BusinessIntegrationWidget';
+import RealTimeCostMonitoring from './RealTimeCostMonitoring';
 
 interface Service {
   id: string;
@@ -20,7 +21,7 @@ interface Service {
 
 export default function WhatWeOffer() {
   const [selectedService, setSelectedService] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'services' | 'roi' | 'cycle' | 'examples' | 'integration'>('services');
+  const [activeTab, setActiveTab] = useState<'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring'>('services');
 
   const services: Service[] = [
     {
@@ -136,11 +137,12 @@ export default function WhatWeOffer() {
             { id: 'roi', label: 'ROI Calculator', icon: '💰' },
             { id: 'cycle', label: 'Optimization Cycle', icon: '🔄' },
             { id: 'examples', label: 'x402 Examples', icon: '⚡' },
-            { id: 'integration', label: 'Integration Tools', icon: '🔧' }
+            { id: 'integration', label: 'Integration Tools', icon: '🔧' },
+            { id: 'monitoring', label: 'Cost Monitoring', icon: '📊' }
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as 'services' | 'roi' | 'cycle' | 'examples' | 'integration')}
+              onClick={() => setActiveTab(tab.id as 'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring')}
               className={`px-6 py-3 rounded-lg font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-blue-600 text-white shadow-lg'
@@ -312,6 +314,11 @@ export default function WhatWeOffer() {
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Business Integration Tools</h2>
           <BusinessIntegrationWidget />
         </div>
+      )}
+
+      {/* Real-time Cost Monitoring Tab */}
+      {activeTab === 'monitoring' && (
+        <RealTimeCostMonitoring />
       )}
     </div>
   );
