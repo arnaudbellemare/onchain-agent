@@ -5,6 +5,8 @@ import WalletConnection from "@/components/WalletConnection";
 import TransactionModal from "@/components/TransactionModal";
 import Notification from "@/components/Notification";
 import AIDashboard from "@/components/AIDashboard";
+import AICommerceDashboard from "@/components/AICommerceDashboard";
+import EnterprisePartnershipDashboard from "@/components/EnterprisePartnershipDashboard";
 import EmployeeManagement from "@/components/EmployeeManagement";
 
 interface PortfolioData {
@@ -123,26 +125,26 @@ export default function Home() {
     {
       id: "x402-api",
       title: "x402 API Payments",
-      description: "Autonomous AI payments for API access and services",
+      description: "Partnership-focused API cost optimization with existing providers",
       icon: "",
       color: "from-cyan-500 to-blue-600",
-      action: () => setMessage("Set up x402 protocol for autonomous API payments. Configure AI agents to pay $0.001 per API call using USDC on Base network.")
+      action: () => setMessage("Set up x402 protocol for API cost optimization. Partner with OpenAI, Stripe, and AWS to reduce enterprise API costs by 20-40% through micropayment efficiency.")
     },
     {
       id: "micropayments",
-      title: "Micropayment Services",
-      description: "Pay-per-query and autonomous resource purchasing",
+      title: "GPU Cost Optimization",
+      description: "AI workload cost reduction through x402 automation",
       icon: "",
       color: "from-emerald-500 to-teal-600",
-      action: () => setMessage("Enable micropayment services for AI agents. Set up pay-per-query data access, autonomous tool purchasing, and machine-to-machine commerce.")
+      action: () => setMessage("Optimize GPU costs for AI workloads. Partner with AWS, GCP, and Azure to reduce GPU costs by 25-30% through x402 automation and intelligent load balancing.")
     },
     {
       id: "commerce-scheme",
-      title: "Commerce Scheme (Refunds/Escrow)",
-      description: "CDP-facilitated refunds and escrow flows for e-commerce",
+      title: "Enterprise Integration Platform",
+      description: "Partnership-focused integration with existing enterprise systems",
       icon: "",
       color: "from-indigo-500 to-indigo-600",
-      action: () => setMessage("Set up commerce scheme with CDP-facilitated refunds and escrow flows. Configure automated refund processing, dispute resolution, and secure escrow services for e-commerce transactions.")
+      action: () => setMessage("Set up enterprise integration platform. Partner with existing systems like Stripe, Salesforce, and AWS to enhance rather than replace, providing cost optimization and AI automation layers.")
     },
     {
       id: "ai-chat",
@@ -262,6 +264,26 @@ export default function Home() {
                   }`}
                 >
                   Dashboard
+                </button>
+                <button
+                  onClick={() => setActiveTab("ai-commerce")}
+                  className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
+                    activeTab === "ai-commerce" 
+                      ? "text-blue-600 bg-blue-50" 
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  }`}
+                >
+                  AI Commerce
+                </button>
+                <button
+                  onClick={() => setActiveTab("enterprise-partnerships")}
+                  className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
+                    activeTab === "enterprise-partnerships" 
+                      ? "text-blue-600 bg-blue-50" 
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  }`}
+                >
+                  Enterprise Partnerships
                 </button>
                 <button
                   onClick={() => setActiveTab("employees")}
@@ -865,6 +887,14 @@ export default function Home() {
 
         {activeTab === "ai-dashboard" && (
           <AIDashboard />
+        )}
+
+        {activeTab === "ai-commerce" && (
+          <AICommerceDashboard />
+        )}
+
+        {activeTab === "enterprise-partnerships" && (
+          <EnterprisePartnershipDashboard />
         )}
 
         {activeTab === "employees" && (
