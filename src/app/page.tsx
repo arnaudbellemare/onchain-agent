@@ -206,65 +206,58 @@ export default function Home() {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Header */}
       <header className="backdrop-blur-xl bg-black/20 border-b border-white/10">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex justify-between items-center h-20">
+        <div className="max-w-7xl mx-auto px-8">
+          <div className="flex justify-between items-center h-24">
             <div className="flex items-center space-x-8">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">A</span>
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                  <span className="text-white font-bold text-xl">AI</span>
                 </div>
-                <h1 className="text-2xl font-light text-white">AgentKit</h1>
+                <div>
+                  <h1 className="text-3xl font-bold text-white tracking-tight">Onchain Agent</h1>
+                  <p className="text-gray-300 font-medium">AI-Powered Business Payments</p>
+                </div>
               </div>
-              <nav className="hidden md:flex space-x-8">
+              <nav className="hidden lg:flex space-x-2">
                 <button
                   onClick={() => setActiveTab("home")}
-                  className={`text-sm font-medium transition-all duration-200 ${
+                  className={`text-base font-semibold transition-all duration-200 px-6 py-3 rounded-xl ${
                     activeTab === "home" 
-                      ? "text-white" 
-                      : "text-gray-400 hover:text-white"
+                      ? "text-white bg-white/10 shadow-lg" 
+                      : "text-gray-300 hover:text-white hover:bg-white/5"
                   }`}
                 >
-                  Home
+                  Start Building
                 </button>
                 <button
                   onClick={() => setActiveTab("ai")}
-                  className={`text-sm font-medium transition-all duration-200 ${
+                  className={`text-base font-semibold transition-all duration-200 px-6 py-3 rounded-xl ${
                     activeTab === "ai" 
-                      ? "text-white" 
-                      : "text-gray-400 hover:text-white"
+                      ? "text-white bg-white/10 shadow-lg" 
+                      : "text-gray-300 hover:text-white hover:bg-white/5"
                   }`}
                 >
                   AI Assistant
                 </button>
                 <button
                   onClick={() => setActiveTab("ai-dashboard")}
-                  className={`text-sm font-medium transition-all duration-200 ${
+                  className={`text-base font-semibold transition-all duration-200 px-6 py-3 rounded-xl ${
                     activeTab === "ai-dashboard" 
-                      ? "text-white" 
-                      : "text-gray-400 hover:text-white"
+                      ? "text-white bg-white/10 shadow-lg" 
+                      : "text-gray-300 hover:text-white hover:bg-white/5"
                   }`}
                 >
                   Dashboard
                 </button>
                 <button
-                  onClick={() => setActiveTab("guide")}
-                  className={`text-sm font-medium transition-all duration-200 ${
-                    activeTab === "guide" 
-                      ? "text-white" 
-                      : "text-gray-400 hover:text-white"
-                  }`}
-                >
-                  How to Use
-                </button>
-                <button
                   onClick={() => setActiveTab("employees")}
-                  className={`text-sm font-medium transition-all duration-200 ${
+                  className={`text-base font-semibold transition-all duration-200 px-6 py-3 rounded-xl ${
                     activeTab === "employees" 
-                      ? "text-white" 
-                      : "text-gray-400 hover:text-white"
+                      ? "text-white bg-white/10 shadow-lg" 
+                      : "text-gray-300 hover:text-white hover:bg-white/5"
                   }`}
                 >
                   Employees
@@ -277,144 +270,191 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-8 py-16">
         {activeTab === "home" && (
-          <div className="space-y-12">
+          <div className="space-y-20">
             {/* Hero Section */}
-            <div className="text-center space-y-6">
-              <h1 className="text-4xl font-light text-white leading-tight">
-                Business Payments
-                <span className="block text-blue-400">Simplified</span>
-              </h1>
-              <p className="text-lg text-gray-400 max-w-xl mx-auto">
-                AI-powered payroll, vendor payments, and expense management.
-              </p>
+            <div className="text-center space-y-8">
+              <div className="space-y-6">
+                <h1 className="text-6xl md:text-7xl font-bold text-white leading-tight tracking-tight">
+                  Business Payments
+                  <span className="block bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    Reimagined
+                  </span>
+                </h1>
+                <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed font-medium">
+                  Transform your business operations with AI-powered payroll, vendor payments, and expense management. 
+                  Built for the future of autonomous commerce.
+                </p>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-8">
+                <button
+                  onClick={() => setActiveTab("employees")}
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-200 hover:scale-105 shadow-xl"
+                >
+                  Start Building
+                </button>
+                <button
+                  onClick={() => setActiveTab("ai")}
+                  className="bg-white/10 hover:bg-white/20 backdrop-blur-xl text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-200 border border-white/20"
+                >
+                  Explore AI
+                </button>
+              </div>
             </div>
 
             {/* Value Propositions */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Reduce Manual Finance Labor */}
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
-                    <span className="text-white text-xl">⚡</span>
-                  </div>
-                  <h3 className="text-xl font-medium text-white">Reduce Manual Finance Labor</h3>
-                </div>
-                <p className="text-gray-300 leading-relaxed mb-4">
-                  Fewer repetitive tasks for finance teams: invoice matching, scheduling, 
-                  approvals, and reconciliations.
+            <div className="space-y-16">
+              <div className="text-center space-y-4">
+                <h2 className="text-4xl font-bold text-white">Why Choose Onchain Agent</h2>
+                <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                  Built for modern businesses that demand efficiency, security, and innovation
                 </p>
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2 text-sm text-gray-400">
-                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                    <span>Automated invoice matching & reconciliation</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-400">
-                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                    <span>Smart scheduling & approval workflows</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-400">
-                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                    <span>24/7 operations - agent never sleeps</span>
-                  </div>
-                </div>
               </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Reduce Manual Finance Labor */}
+                <div className="group bg-gradient-to-br from-green-500/10 to-emerald-600/10 backdrop-blur-xl border border-green-500/20 rounded-3xl p-10 hover:border-green-400/40 transition-all duration-300 hover:scale-105">
+                  <div className="space-y-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                          <div className="w-4 h-4 bg-green-500 rounded-full animate-pulse"></div>
+                        </div>
+                      </div>
+                      <h3 className="text-2xl font-bold text-white">Reduce Manual Finance Labor</h3>
+                    </div>
+                    <p className="text-gray-300 text-lg leading-relaxed">
+                      Eliminate repetitive tasks for finance teams with intelligent automation for 
+                      invoice matching, scheduling, approvals, and reconciliations.
+                    </p>
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3 text-gray-300">
+                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                        <span className="font-medium">Automated invoice processing</span>
+                      </div>
+                      <div className="flex items-center space-x-3 text-gray-300">
+                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                        <span className="font-medium">Smart payment scheduling</span>
+                      </div>
+                      <div className="flex items-center space-x-3 text-gray-300">
+                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                        <span className="font-medium">24/7 autonomous operations</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-              {/* Advanced Workflow Automation */}
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
-                    <span className="text-white text-xl">🔧</span>
+                {/* Advanced Workflow Automation */}
+                <div className="group bg-gradient-to-br from-purple-500/10 to-pink-600/10 backdrop-blur-xl border border-purple-500/20 rounded-3xl p-10 hover:border-purple-400/40 transition-all duration-300 hover:scale-105">
+                  <div className="space-y-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                          <div className="w-4 h-4 bg-purple-500 rounded-full animate-spin"></div>
+                        </div>
+                      </div>
+                      <h3 className="text-2xl font-bold text-white">Advanced Workflow Automation</h3>
+                    </div>
+                    <p className="text-gray-300 text-lg leading-relaxed">
+                      Multi-platform orchestration across ACH, wire, card, and banking APIs with 
+                      programmable approvals and custom business logic.
+                    </p>
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3 text-gray-300">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                        <span className="font-medium">Multi-platform orchestration</span>
+                      </div>
+                      <div className="flex items-center space-x-3 text-gray-300">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                        <span className="font-medium">Programmable business logic</span>
+                      </div>
+                      <div className="flex items-center space-x-3 text-gray-300">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                        <span className="font-medium">Smart approval thresholds</span>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-medium text-white">Advanced Workflow Automation</h3>
                 </div>
-                <p className="text-gray-300 leading-relaxed mb-4">
-                  Multi-platform orchestration across ACH, wire, card, and banking APIs. 
-                  Programmable approvals: &ldquo;Auto-pay marketing spend &lt; $1k, flag anything else for review.&rdquo;
-                </p>
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2 text-sm text-gray-400">
-                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-                    <span>Multi-platform orchestration</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-400">
-                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-                    <span>Programmable business logic</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-400">
-                    <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-                    <span>Smart approval thresholds</span>
-                  </div>
-                </div>
-              </div>
 
-              {/* Smarter Financial Decision-Making */}
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center">
-                    <span className="text-white text-xl">🧠</span>
+                {/* Smarter Financial Decision-Making */}
+                <div className="group bg-gradient-to-br from-blue-500/10 to-cyan-600/10 backdrop-blur-xl border border-blue-500/20 rounded-3xl p-10 hover:border-blue-400/40 transition-all duration-300 hover:scale-105">
+                  <div className="space-y-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                          <div className="w-4 h-4 bg-blue-500 rounded-full animate-bounce"></div>
+                        </div>
+                      </div>
+                      <h3 className="text-2xl font-bold text-white">Smarter Financial Decision-Making</h3>
+                    </div>
+                    <p className="text-gray-300 text-lg leading-relaxed">
+                      AI-powered cash flow forecasting, optimal payment timings for discounts, 
+                      tax optimization, and dynamic rail/FX optimization.
+                    </p>
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3 text-gray-300">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                        <span className="font-medium">Predictive cash flow insights</span>
+                      </div>
+                      <div className="flex items-center space-x-3 text-gray-300">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                        <span className="font-medium">Dynamic rail & FX optimization</span>
+                      </div>
+                      <div className="flex items-center space-x-3 text-gray-300">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                        <span className="font-medium">Tax optimization & spend analysis</span>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-medium text-white">Smarter Financial Decision-Making</h3>
                 </div>
-                <p className="text-gray-300 leading-relaxed mb-4">
-                  AI-powered cash flow forecasting, optimal payment timings for discounts, 
-                  tax optimization, and dynamic rail/FX optimization.
-                </p>
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2 text-sm text-gray-400">
-                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                    <span>Predictive cash flow insights</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-400">
-                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                    <span>Dynamic rail & FX optimization</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-400">
-                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                    <span>Tax optimization & spend analysis</span>
-                  </div>
-                </div>
-              </div>
 
-              {/* Enhanced Security & Compliance */}
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-600 rounded-xl flex items-center justify-center">
-                    <span className="text-white text-xl">🔒</span>
-                  </div>
-                  <h3 className="text-xl font-medium text-white">Enhanced Security & Compliance</h3>
-                </div>
-                <p className="text-gray-300 leading-relaxed mb-4">
-                  Auditable, transparent payments with built-in logging, approval enforcement, 
-                  and anomaly detection. SOC 2, GDPR, and public company ready.
-                </p>
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2 text-sm text-gray-400">
-                    <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
-                    <span>Built-in audit trails & logging</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-400">
-                    <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
-                    <span>Anomaly detection & fraud prevention</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-400">
-                    <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
-                    <span>SOC 2, GDPR, public company compliance</span>
+                {/* Enhanced Security & Compliance */}
+                <div className="group bg-gradient-to-br from-orange-500/10 to-red-600/10 backdrop-blur-xl border border-orange-500/20 rounded-3xl p-10 hover:border-orange-400/40 transition-all duration-300 hover:scale-105">
+                  <div className="space-y-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                          <div className="w-4 h-4 bg-orange-500 rounded-full animate-pulse"></div>
+                        </div>
+                      </div>
+                      <h3 className="text-2xl font-bold text-white">Enhanced Security & Compliance</h3>
+                    </div>
+                    <p className="text-gray-300 text-lg leading-relaxed">
+                      Auditable, transparent payments with built-in logging, approval enforcement, 
+                      and anomaly detection. SOC 2, GDPR, and public company ready.
+                    </p>
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3 text-gray-300">
+                        <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                        <span className="font-medium">Built-in audit trails & logging</span>
+                      </div>
+                      <div className="flex items-center space-x-3 text-gray-300">
+                        <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                        <span className="font-medium">Anomaly detection & fraud prevention</span>
+                      </div>
+                      <div className="flex items-center space-x-3 text-gray-300">
+                        <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                        <span className="font-medium">SOC 2, GDPR, public company compliance</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* x402 Autonomous AI Commerce */}
-            <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-light text-white mb-4">x402 Autonomous AI Commerce</h2>
-                <p className="text-gray-300 text-lg max-w-3xl mx-auto">
+            <div className="space-y-16">
+              <div className="text-center space-y-4">
+                <h2 className="text-4xl font-bold text-white">x402 Autonomous AI Commerce</h2>
+                <p className="text-xl text-gray-300 max-w-3xl mx-auto">
                   Powered by x402 protocol - enabling AI agents to autonomously pay for API access, 
                   digital services, and content using instant USDC payments over HTTP.
                 </p>
               </div>
+              
+              <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 backdrop-blur-xl border border-cyan-500/20 rounded-3xl p-12">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -493,23 +533,45 @@ export default function Home() {
             </div>
 
             {/* Business Actions Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {businessActions.map((action) => (
-                <button
-                  key={action.id}
-                  onClick={action.action}
-                  className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 text-left transition-all duration-200 hover:bg-white/10 hover:border-white/20"
-                >
-                  <div className="text-2xl mb-3">{action.icon}</div>
-                  <h3 className="text-lg font-medium text-white mb-2">{action.title}</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">{action.description}</p>
-                </button>
-              ))}
+            <div className="space-y-16">
+              <div className="text-center space-y-4">
+                <h2 className="text-4xl font-bold text-white">Start Building Today</h2>
+                <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                  Choose your business automation path and begin transforming your operations
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {businessActions.map((action) => (
+                  <button
+                    key={action.id}
+                    onClick={action.action}
+                    className="group bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 text-left transition-all duration-300 hover:scale-105 hover:border-white/40 hover:shadow-2xl"
+                  >
+                    <div className="space-y-6">
+                      <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+                        <span className="text-white text-2xl">{action.icon}</span>
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">{action.title}</h3>
+                        <p className="text-gray-300 leading-relaxed">{action.description}</p>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Competitive Advantage */}
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-              <h2 className="text-2xl font-light text-white mb-6 text-center">Why AgentKit Beats Mainstream Platforms</h2>
+            <div className="space-y-16">
+              <div className="text-center space-y-4">
+                <h2 className="text-4xl font-bold text-white">Why AgentKit Beats Mainstream Platforms</h2>
+                <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                  Built for the future of autonomous business operations
+                </p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-12">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -523,11 +585,11 @@ export default function Home() {
                     <li>• Basic reporting</li>
                     <li>• Single rail focus</li>
                   </ul>
-                </div>
+                      </div>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <span className="text-white text-2xl">✅</span>
-                  </div>
+                      </div>
                   <h3 className="text-lg font-medium text-white mb-2">AgentKit + AI</h3>
                   <ul className="text-sm text-gray-400 space-y-1">
                     <li>• Fully customizable workflows</li>
@@ -536,11 +598,11 @@ export default function Home() {
                     <li>• Predictive analytics</li>
                     <li>• Unified control center</li>
                   </ul>
-                </div>
+                    </div>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <span className="text-white text-2xl">📈</span>
-                  </div>
+                    </div>
                   <h3 className="text-lg font-medium text-white mb-2">The Result</h3>
                   <ul className="text-sm text-gray-400 space-y-1">
                     <li>• 90% less manual work</li>
@@ -549,13 +611,21 @@ export default function Home() {
                     <li>• Real-time insights</li>
                     <li>• Future-proof architecture</li>
                   </ul>
-                </div>
-              </div>
-            </div>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
 
             {/* Portfolio Overview */}
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-              <h2 className="text-2xl font-light text-white mb-6">Treasury Overview</h2>
+            <div className="space-y-16">
+              <div className="text-center space-y-4">
+                <h2 className="text-4xl font-bold text-white">Treasury Overview</h2>
+                <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                  Real-time view of your business treasury and payment capabilities
+                </p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-12">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
                   <div className="text-3xl font-light text-white mb-1">{portfolioData?.totalValue}</div>
@@ -570,7 +640,9 @@ export default function Home() {
                   <div className="text-sm text-gray-400">Active Assets</div>
                 </div>
               </div>
+              </div>
             </div>
+          </div>
           </div>
         )}
 
@@ -587,11 +659,16 @@ export default function Home() {
         )}
 
         {activeTab === "ai" && (
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-light text-white mb-2">AI Financial Assistant</h2>
-                <p className="text-gray-400 mb-4">Ask me to handle your business payments, payroll, or any financial task</p>
+          <div className="max-w-5xl mx-auto">
+            <div className="space-y-16">
+              <div className="text-center space-y-4">
+                <h2 className="text-4xl font-bold text-white">AI Financial Assistant</h2>
+                <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                  Ask me to handle your business payments, payroll, or any financial task
+                </p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-12">
                 <div className="flex flex-wrap justify-center gap-2">
                   <span className="px-3 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full border border-blue-500/30">Multi-rail optimization</span>
                   <span className="px-3 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full border border-purple-500/30">Custom workflows</span>
@@ -621,7 +698,7 @@ export default function Home() {
                   type="text"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Try: 'Pay all employees their monthly salary' or 'Approve all travel expenses under $500'"
+                  placeholder="Try: &ldquo;Pay all employees their monthly salary&rdquo; or &ldquo;Approve all travel expenses under $500&rdquo;"
                   className="flex-1 p-4 rounded-xl bg-white/5 backdrop-blur-xl text-white border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200"
                   disabled={loading}
                 />
@@ -633,6 +710,7 @@ export default function Home() {
                   {loading ? "..." : "Send"}
                 </button>
               </form>
+              </div>
             </div>
           </div>
         )}
@@ -646,10 +724,17 @@ export default function Home() {
         )}
 
         {activeTab === "guide" && (
-          <div className="max-w-4xl mx-auto space-y-8">
+          <div className="max-w-6xl mx-auto space-y-20">
             {/* Getting Started */}
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-              <h2 className="text-3xl font-light text-white mb-6">🚀 Getting Started</h2>
+            <div className="space-y-16">
+              <div className="text-center space-y-4">
+                <h2 className="text-4xl font-bold text-white">Getting Started</h2>
+                <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                  Follow these steps to begin transforming your business operations
+                </p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-12">
               <div className="space-y-4">
                 <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
@@ -679,11 +764,19 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+              </div>
             </div>
 
             {/* AI Commands */}
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-              <h2 className="text-3xl font-light text-white mb-6">🤖 AI Commands & Prompts</h2>
+            <div className="space-y-16">
+              <div className="text-center space-y-4">
+                <h2 className="text-4xl font-bold text-white">AI Commands & Prompts</h2>
+                <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                  Master the AI assistant with these powerful commands
+                </p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-12">
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Basic Commands */}
@@ -724,11 +817,19 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+              </div>
             </div>
 
             {/* Advanced Features */}
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-              <h2 className="text-3xl font-light text-white mb-6">⚡ Advanced Features</h2>
+            <div className="space-y-16">
+              <div className="text-center space-y-4">
+                <h2 className="text-4xl font-bold text-white">Advanced Features</h2>
+                <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                  Unlock the full potential of autonomous business operations
+                </p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-12">
               
               <div className="space-y-6">
                 {/* x402 Protocol */}
@@ -761,12 +862,19 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+              </div>
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-              <h2 className="text-3xl font-light text-white mb-6">🎯 Quick Actions</h2>
-              <p className="text-gray-300 mb-6">Click these buttons on the home page for instant setup:</p>
+            <div className="space-y-16">
+              <div className="text-center space-y-4">
+                <h2 className="text-4xl font-bold text-white">Quick Actions</h2>
+                <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                  Click these buttons on the home page for instant setup
+                </p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-12">
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="bg-gradient-to-r from-blue-500/10 to-blue-600/10 p-4 rounded-lg border border-blue-500/20">
@@ -800,15 +908,20 @@ export default function Home() {
                   <p className="text-gray-400 text-sm">Natural language control</p>
                 </div>
               </div>
+              </div>
             </div>
 
             {/* Support */}
-            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-xl border border-white/10 rounded-2xl p-8 text-center">
-              <h2 className="text-3xl font-light text-white mb-4">💡 Need Help?</h2>
-              <p className="text-gray-300 mb-6">
-                Start with simple commands and gradually explore advanced features. 
-                The AI assistant is designed to understand natural language - just describe what you want to do!
-              </p>
+            <div className="space-y-16">
+              <div className="text-center space-y-4">
+                <h2 className="text-4xl font-bold text-white">Need Help?</h2>
+                <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                  Start with simple commands and gradually explore advanced features. 
+                  The AI assistant is designed to understand natural language - just describe what you want to do!
+                </p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 backdrop-blur-xl border border-blue-500/20 rounded-3xl p-12 text-center">
               <div className="flex flex-wrap justify-center gap-4">
                 <button
                   onClick={() => setActiveTab("ai")}
@@ -822,6 +935,7 @@ export default function Home() {
                 >
                   Explore Features
                 </button>
+              </div>
               </div>
             </div>
           </div>
