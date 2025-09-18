@@ -28,7 +28,7 @@ export default function WhatWeOffer() {
       id: 'payment',
       title: 'Payment Integration',
       description: 'Enhance Stripe/PayPal with x402 protocol for 20-30% cost reduction',
-      icon: '💳',
+      icon: 'payment',
       costReduction: '20-30%',
       howItWorks: [
         'Replace subscription fees with pay-per-transaction x402 micropayments',
@@ -43,7 +43,7 @@ export default function WhatWeOffer() {
       id: 'ai-api',
       title: 'AI API Optimization',
       description: 'Optimize OpenAI/Anthropic costs with x402 micropayments',
-      icon: '🤖',
+      icon: 'ai',
       costReduction: '30-50%',
       howItWorks: [
         'Pay per API call instead of monthly subscriptions',
@@ -58,7 +58,7 @@ export default function WhatWeOffer() {
       id: 'gpu',
       title: 'GPU Cost Reduction',
       description: 'Automate AWS/GCP GPU costs with AgentKit optimization',
-      icon: '🖥️',
+      icon: 'gpu',
       costReduction: '40-60%',
       howItWorks: [
         'AI automatically scales GPU usage based on demand',
@@ -73,7 +73,7 @@ export default function WhatWeOffer() {
       id: 'data-api',
       title: 'Data API Optimization',
       description: 'Reduce data service costs with smart caching and routing',
-      icon: '📊',
+      icon: 'data',
       costReduction: '25-40%',
       howItWorks: [
         'Intelligent caching reduces API calls by 70%',
@@ -88,7 +88,7 @@ export default function WhatWeOffer() {
       id: 'infrastructure',
       title: 'Infrastructure Automation',
       description: 'Automate cloud costs with intelligent resource management',
-      icon: '☁️',
+      icon: 'cloud',
       costReduction: '35-50%',
       howItWorks: [
         'AI automatically rightsizes cloud resources',
@@ -103,7 +103,7 @@ export default function WhatWeOffer() {
       id: 'workflow',
       title: 'Workflow Automation',
       description: 'Automate business processes with AI-powered workflows',
-      icon: '🔄',
+      icon: 'workflow',
       costReduction: '50-70%',
       howItWorks: [
         'AI automates repetitive business processes',
@@ -117,6 +117,60 @@ export default function WhatWeOffer() {
   ];
 
   const selectedServiceData = services.find(s => s.id === selectedService);
+
+  const renderServiceIcon = (iconType: string) => {
+    const iconProps = {
+      className: "w-6 h-6 text-white",
+      fill: "none",
+      stroke: "currentColor",
+      viewBox: "0 0 24 24"
+    };
+
+    switch (iconType) {
+      case 'payment':
+        return (
+          <svg {...iconProps}>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+          </svg>
+        );
+      case 'ai':
+        return (
+          <svg {...iconProps}>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+        );
+      case 'gpu':
+        return (
+          <svg {...iconProps}>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+          </svg>
+        );
+      case 'data':
+        return (
+          <svg {...iconProps}>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+        );
+      case 'cloud':
+        return (
+          <svg {...iconProps}>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+          </svg>
+        );
+      case 'workflow':
+        return (
+          <svg {...iconProps}>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        );
+      default:
+        return (
+          <svg {...iconProps}>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        );
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto p-8">
@@ -171,7 +225,9 @@ export default function WhatWeOffer() {
             }`}
           >
             <div className="text-center">
-              <div className="text-4xl mb-4">{service.icon}</div>
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl mb-6 flex items-center justify-center mx-auto">
+                {renderServiceIcon(service.icon)}
+              </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">{service.title}</h3>
               <p className="text-gray-900 mb-4">{service.description}</p>
               <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
@@ -186,7 +242,9 @@ export default function WhatWeOffer() {
       {selectedServiceData && (
         <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
           <div className="text-center mb-8">
-            <div className="text-5xl mb-4">{selectedServiceData.icon}</div>
+            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl mb-6 flex items-center justify-center mx-auto">
+              {renderServiceIcon(selectedServiceData.icon)}
+            </div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">{selectedServiceData.title}</h2>
             <p className="text-xl text-gray-900 mb-4">{selectedServiceData.description}</p>
             <div className="bg-green-100 text-green-800 px-6 py-3 rounded-full text-lg font-bold inline-block">
