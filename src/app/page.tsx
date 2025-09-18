@@ -74,19 +74,19 @@ export default function Home() {
   const businessActions: BusinessAction[] = [
     {
       id: "payroll",
-      title: "Set-and-Forget Payroll",
-      description: "Automate monthly salary payments across all rails",
+      title: "AI-Powered Payroll",
+      description: "Seamless payroll automation with commerce integration",
       icon: "",
       color: "from-blue-500 to-blue-600",
-      action: () => setMessage("Set up automated payroll for all 25 employees with multi-rail optimization. Auto-pay salaries on the 1st of each month using the most cost-effective rail (ACH for domestic, USDC for international).")
+      action: () => setMessage("Set up AI-powered payroll with seamless commerce integration. Automate salary payments with intelligent routing, tax optimization, and real-time compliance monitoring across all payment rails.")
     },
     {
       id: "vendors",
-      title: "Smart Vendor Payments",
-      description: "AI-optimized invoice processing and payment routing",
+      title: "Commerce Vendor Integration",
+      description: "Seamless vendor payment workflows with commerce sync",
       icon: "",
       color: "from-green-500 to-green-600",
-      action: () => setMessage("Process all pending vendor invoices with AI-powered matching and optimal payment routing. Auto-pay invoices under $1,000, flag larger amounts for approval.")
+      action: () => setMessage("Set up seamless vendor payment integration with your commerce platform. AI-powered invoice matching, automated payment routing, and real-time inventory sync for complete commerce workflow automation.")
     },
     {
       id: "expenses",
@@ -295,7 +295,7 @@ export default function Home() {
                 </h1>
                 <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                   Transform your business operations with AI-powered payroll, vendor payments, and expense management. 
-                  Built for the future of autonomous commerce.
+                  Seamlessly integrated commerce workflows with autonomous AI decision-making.
                 </p>
               </div>
               
@@ -450,6 +450,64 @@ export default function Home() {
                         <span className="text-sm">SOC 2, GDPR, public company compliance</span>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* AI Commerce Integration */}
+            <div className="space-y-16">
+              <div className="text-center space-y-4">
+                <h2 className="text-3xl font-semibold text-gray-900">Seamless AI Commerce Integration</h2>
+                <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                  Built-in AI layer that seamlessly connects with your existing commerce infrastructure. 
+                  Every feature is designed for integrated workflows and autonomous decision-making.
+                </p>
+              </div>
+              
+              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-12">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <div className="w-6 h-6 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <div className="w-3 h-3 bg-white rounded-sm"></div>
+                      </div>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">AI-Powered Workflows</h3>
+                    <ul className="text-sm text-gray-600 space-y-2">
+                      <li>• Intelligent payment routing</li>
+                      <li>• Automated approval chains</li>
+                      <li>• Smart fraud detection</li>
+                      <li>• Predictive cash flow management</li>
+                    </ul>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <div className="w-6 h-6 bg-green-600 rounded-lg flex items-center justify-center">
+                        <div className="w-3 h-3 bg-white rounded-sm"></div>
+                      </div>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Commerce Integration</h3>
+                    <ul className="text-sm text-gray-600 space-y-2">
+                      <li>• E-commerce platform APIs</li>
+                      <li>• Payment gateway connections</li>
+                      <li>• Inventory management sync</li>
+                      <li>• Multi-channel commerce support</li>
+                    </ul>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <div className="w-6 h-6 bg-purple-600 rounded-lg flex items-center justify-center">
+                        <div className="w-3 h-3 bg-white rounded-sm"></div>
+                      </div>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Autonomous Operations</h3>
+                    <ul className="text-sm text-gray-600 space-y-2">
+                      <li>• Self-executing business logic</li>
+                      <li>• Real-time decision making</li>
+                      <li>• Continuous optimization</li>
+                      <li>• 24/7 commerce operations</li>
+                    </ul>
                   </div>
                 </div>
               </div>
