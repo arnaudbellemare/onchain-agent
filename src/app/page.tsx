@@ -7,6 +7,7 @@ import TradingInterface from "@/components/TradingInterface";
 import Sidebar from "@/components/Sidebar";
 import TransactionModal from "@/components/TransactionModal";
 import Notification from "@/components/Notification";
+import WalletConnection from "@/components/WalletConnection";
 
 interface PortfolioData {
   totalBalance: string;
@@ -179,6 +180,7 @@ export default function Home() {
                 Base Sepolia
               </div>
               <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+              <WalletConnection />
             </div>
           </div>
         </div>
