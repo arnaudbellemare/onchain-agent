@@ -7,6 +7,7 @@ import X402APIIntegration from './X402APIIntegration';
 import X402UseCaseShowcase from './X402UseCaseShowcase';
 import BusinessIntegrationWidget from './BusinessIntegrationWidget';
 import RealTimeCostMonitoring from './RealTimeCostMonitoring';
+import CostReductionExplanation from './CostReductionExplanation';
 
 interface Service {
   id: string;
@@ -21,7 +22,7 @@ interface Service {
 
 export default function WhatWeOffer() {
   const [selectedService, setSelectedService] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring'>('services');
+  const [activeTab, setActiveTab] = useState<'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring' | 'explanation'>('services');
 
   const services: Service[] = [
     {
@@ -192,11 +193,12 @@ export default function WhatWeOffer() {
             { id: 'cycle', label: 'Optimization Cycle', icon: '🔄' },
             { id: 'examples', label: 'x402 Examples', icon: '⚡' },
             { id: 'integration', label: 'Integration Tools', icon: '🔧' },
-            { id: 'monitoring', label: 'Cost Monitoring', icon: '📊' }
+            { id: 'monitoring', label: 'Cost Monitoring', icon: '📊' },
+            { id: 'explanation', label: 'How We Save', icon: '💡' }
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as 'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring')}
+              onClick={() => setActiveTab(tab.id as 'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring' | 'explanation')}
               className={`px-6 py-3 rounded-lg font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-blue-600 text-white shadow-lg'
@@ -377,6 +379,11 @@ export default function WhatWeOffer() {
       {/* Real-time Cost Monitoring Tab */}
       {activeTab === 'monitoring' && (
         <RealTimeCostMonitoring />
+      )}
+
+      {/* Cost Reduction Explanation Tab */}
+      {activeTab === 'explanation' && (
+        <CostReductionExplanation />
       )}
     </div>
   );
