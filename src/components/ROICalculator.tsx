@@ -62,7 +62,7 @@ export default function ROICalculator() {
               type="number"
               value={monthlyAPICalls}
               onChange={(e) => setMonthlyAPICalls(Number(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
               placeholder="100000"
             />
           </div>
@@ -76,7 +76,7 @@ export default function ROICalculator() {
               step="0.001"
               value={currentCostPerCall}
               onChange={(e) => setCurrentCostPerCall(Number(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
               placeholder="0.03"
             />
           </div>
@@ -89,7 +89,7 @@ export default function ROICalculator() {
               type="number"
               value={yourFeePercent}
               onChange={(e) => setYourFeePercent(Number(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
               placeholder="25"
             />
           </div>
@@ -102,7 +102,7 @@ export default function ROICalculator() {
               type="number"
               value={implementationCost}
               onChange={(e) => setImplementationCost(Number(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
               placeholder="25000"
             />
           </div>

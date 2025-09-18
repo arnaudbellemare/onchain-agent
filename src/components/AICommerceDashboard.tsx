@@ -6,6 +6,7 @@ import { approvalWorkflowEngine } from '@/lib/approvalWorkflows';
 import { predictiveAnalyticsEngine } from '@/lib/predictiveAnalytics';
 import { ecommerceIntegrationManager } from '@/lib/ecommerceIntegrations';
 import { autonomousOperationsEngine } from '@/lib/autonomousOperations';
+import EmployeeManagement from './EmployeeManagement';
 
 interface DashboardMetrics {
   fraudDetection: {
@@ -151,7 +152,8 @@ export default function AICommerceDashboard() {
           { id: 'approvals', label: 'Approval Workflows' },
           { id: 'analytics', label: 'Predictive Analytics' },
           { id: 'ecommerce', label: 'E-commerce' },
-          { id: 'autonomous', label: 'Autonomous Ops' }
+          { id: 'autonomous', label: 'Autonomous Ops' },
+          { id: 'employees', label: 'Employees' }
         ].map((tab) => (
           <button
             key={tab.id}
@@ -456,6 +458,11 @@ export default function AICommerceDashboard() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Employees Tab */}
+      {activeTab === 'employees' && (
+        <EmployeeManagement />
       )}
     </div>
   );

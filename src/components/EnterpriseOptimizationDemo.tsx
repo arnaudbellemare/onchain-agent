@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import ROICalculator from './ROICalculator';
 
 interface OptimizationData {
   breakdown: {
@@ -41,7 +42,7 @@ interface OptimizationData {
 export default function EnterpriseOptimizationDemo() {
   const [data, setData] = useState<OptimizationData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'overview' | 'breakdown' | 'autonomous' | 'integration'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'breakdown' | 'autonomous' | 'integration' | 'roi'>('overview');
 
   useEffect(() => {
     fetchOptimizationData();
@@ -108,11 +109,12 @@ export default function EnterpriseOptimizationDemo() {
             { id: 'overview', label: '📊 Overview', icon: '📊' },
             { id: 'breakdown', label: '💰 Cost Breakdown', icon: '💰' },
             { id: 'autonomous', label: '🤖 Autonomous', icon: '🤖' },
-            { id: 'integration', label: '🔗 Integration', icon: '🔗' }
+            { id: 'integration', label: '🔗 Integration', icon: '🔗' },
+            { id: 'roi', label: '📈 ROI Calculator', icon: '📈' }
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as 'overview' | 'breakdown' | 'autonomous' | 'integration')}
+              onClick={() => setActiveTab(tab.id as 'overview' | 'breakdown' | 'autonomous' | 'integration' | 'roi')}
               className={`px-6 py-3 m-2 rounded-lg font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-blue-600 text-white shadow-lg'
@@ -342,6 +344,11 @@ export default function EnterpriseOptimizationDemo() {
               </div>
             </div>
           </div>
+        )}
+
+        {/* ROI Calculator Tab */}
+        {activeTab === 'roi' && (
+          <ROICalculator />
         )}
       </div>
     </div>
