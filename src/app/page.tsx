@@ -221,11 +221,14 @@ export default function Home() {
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center space-x-8">
               <div className="flex items-center space-x-4">
-                <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-semibold text-lg">AI</span>
+                <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center border-2 border-white">
+                  <div className="flex items-center justify-center">
+                    <div className="w-4 h-4 bg-white rounded-sm transform rotate-45 mr-1"></div>
+                    <span className="text-white font-bold text-xs">NOVA</span>
+                  </div>
                 </div>
                 <div>
-                  <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Onchain Agent</h1>
+                  <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">NOVA Agent</h1>
                   <p className="text-gray-500 text-sm">AI-Powered Business Payments</p>
                 </div>
               </div>
@@ -283,11 +286,11 @@ export default function Home() {
           <div className="space-y-20">
             {/* Hero Section */}
             <div className="text-center space-y-12">
-              <div className="space-y-8">
+          <div className="space-y-8">
                 <h1 className="text-5xl md:text-6xl font-light text-gray-900 leading-tight tracking-tight">
-                  Business Payments
+                  NOVA Agent
                   <span className="block text-blue-600 font-medium">
-                    Simplified
+                    Business Payments Simplified
                   </span>
                 </h1>
                 <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
@@ -660,7 +663,7 @@ export default function Home() {
                     <div className="w-6 h-6 bg-red-600 rounded-lg flex items-center justify-center">
                       <div className="w-3 h-3 bg-white rounded-sm"></div>
                     </div>
-                  </div>
+                      </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Traditional Platforms</h3>
                   <ul className="text-sm text-gray-600 space-y-1">
                     <li>• Rigid, one-size-fits-all</li>
@@ -669,7 +672,7 @@ export default function Home() {
                     <li>• Basic reporting</li>
                     <li>• Single rail focus</li>
                   </ul>
-                </div>
+                      </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-4">
                     <div className="w-6 h-6 bg-green-600 rounded-lg flex items-center justify-center">
@@ -729,8 +732,8 @@ export default function Home() {
                 </div>
               </div>
               </div>
+              </div>
             </div>
-          </div>
           </div>
         )}
 
@@ -798,8 +801,8 @@ export default function Home() {
                   {loading ? "..." : "Send"}
                 </button>
               </form>
-              </div>
             </div>
+          </div>
         )}
 
         {activeTab === "ai-dashboard" && (

@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Onchain AI Agent - Professional Crypto Portfolio Manager",
-  description: "Professional-grade crypto portfolio management with AI assistance. Send, swap, and manage your digital assets with ease.",
+  title: "NOVA Agent - AI-Powered Business Payments",
+  description: "Transform your business operations with AI-powered payroll, vendor payments, and expense management. Built for the future of autonomous commerce.",
 };
 
 export default function RootLayout({
