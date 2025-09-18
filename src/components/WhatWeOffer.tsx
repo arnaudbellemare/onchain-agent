@@ -9,6 +9,7 @@ import BusinessIntegrationWidget from './BusinessIntegrationWidget';
 import RealTimeCostMonitoring from './RealTimeCostMonitoring';
 import CostReductionExplanation from './CostReductionExplanation';
 import RealX402Wrapper from './RealX402Wrapper';
+import GEPAOptimizationDemo from './GEPAOptimizationDemo';
 
 interface Service {
   id: string;
@@ -23,7 +24,7 @@ interface Service {
 
 export default function WhatWeOffer() {
   const [selectedService, setSelectedService] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring' | 'explanation' | 'universal' | 'real-wrapper'>('services');
+  const [activeTab, setActiveTab] = useState<'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring' | 'explanation' | 'universal' | 'real-wrapper' | 'gepa-optimization'>('services');
 
   const services: Service[] = [
     {
@@ -130,6 +131,21 @@ export default function WhatWeOffer() {
       ],
       realExample: 'SaaS company: $8,000/month API subscriptions → $3,200/month with x402 compatibility = $4,800/month savings',
       savings: '$57,600/year'
+    },
+    {
+      id: 'gepa-evolution',
+      title: 'GEPA Evolution Engine',
+      description: 'Evolve your payment logic using genetic algorithms for 25-45% better optimization',
+      icon: 'evolution',
+      costReduction: '25-45%',
+      howItWorks: [
+        'Genetic evolution of payment optimization prompts and logic',
+        'Autonomous improvement of micropayment decision trees',
+        'Continuous evolution based on real transaction data',
+        'Self-optimizing cost reduction algorithms'
+      ],
+      realExample: 'Payment logic evolves from 20% to 45% cost reduction through genetic algorithms',
+      savings: 'Self-Improving'
     }
   ];
 
@@ -186,6 +202,14 @@ export default function WhatWeOffer() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
           </svg>
         );
+      case 'evolution':
+        return (
+          <svg {...iconProps}>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.5 0 2.91.37 4.15 1.02" />
+          </svg>
+        );
       default:
         return (
           <svg {...iconProps}>
@@ -218,11 +242,12 @@ export default function WhatWeOffer() {
             { id: 'monitoring', label: 'Cost Monitoring', icon: '📊' },
             { id: 'explanation', label: 'How We Save', icon: '💡' },
             { id: 'universal', label: 'Universal API Optimization', icon: '🌐' },
-            { id: 'real-wrapper', label: 'Real x402 Wrapper', icon: '⚡' }
+            { id: 'real-wrapper', label: 'Real x402 Wrapper', icon: '⚡' },
+    { id: 'gepa-optimization', label: 'GEPA Evolution', icon: '🧬' }
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as 'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring' | 'explanation' | 'universal' | 'real-wrapper')}
+              onClick={() => setActiveTab(tab.id as 'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring' | 'explanation' | 'universal' | 'real-wrapper' | 'gepa-optimization')}
               className={`px-6 py-3 rounded-lg font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-blue-600 text-white shadow-lg'
@@ -510,9 +535,13 @@ export default function WhatWeOffer() {
       )}
 
       {/* Real x402 Wrapper Tab */}
-      {activeTab === 'real-wrapper' && (
-        <RealX402Wrapper />
-      )}
+        {activeTab === 'real-wrapper' && (
+          <RealX402Wrapper />
+        )}
+
+        {activeTab === 'gepa-optimization' && (
+          <GEPAOptimizationDemo />
+        )}
     </div>
   );
 }
