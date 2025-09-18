@@ -5,6 +5,7 @@ import WalletConnection from "@/components/WalletConnection";
 import TransactionModal from "@/components/TransactionModal";
 import Notification from "@/components/Notification";
 import AIDashboard from "@/components/AIDashboard";
+import EmployeeManagement from "@/components/EmployeeManagement";
 
 interface PortfolioData {
   totalBalance: string;
@@ -257,6 +258,16 @@ export default function Home() {
                   }`}
                 >
                   How to Use
+                </button>
+                <button
+                  onClick={() => setActiveTab("employees")}
+                  className={`text-sm font-medium transition-all duration-200 ${
+                    activeTab === "employees" 
+                      ? "text-white" 
+                      : "text-gray-400 hover:text-white"
+                  }`}
+                >
+                  Employees
                 </button>
               </nav>
             </div>
@@ -640,6 +651,10 @@ export default function Home() {
 
         {activeTab === "ai-dashboard" && (
           <AIDashboard />
+        )}
+
+        {activeTab === "employees" && (
+          <EmployeeManagement />
         )}
 
         {activeTab === "guide" && (
