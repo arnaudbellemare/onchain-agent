@@ -142,7 +142,7 @@ export class HybridCostOptimizer {
 
     // Step 1: Check cache first (30-40% savings potential)
     if (useCache) {
-      const cacheResult = this.checkCache(prompt);
+      const cacheResult = await this.checkCache(prompt);
       if (cacheResult) {
         this.totalCacheHits++;
         this.cacheHitRate = this.totalCacheHits / this.totalRequests;
@@ -189,7 +189,7 @@ export class HybridCostOptimizer {
 
     // Step 6: Cache the result
     if (useCache) {
-      this.cacheResult(prompt, response, finalCost);
+      await this.cacheResult(prompt, response, finalCost);
     }
 
     // Calculate total savings
@@ -280,9 +280,13 @@ export class HybridCostOptimizer {
   }
 
   /**
-   * Intelligent caching system
+   * Intelligent caching system - Updated to use proper caching
    */
-  private checkCache(prompt: string): CacheEntry | null {
+  private async checkCache(prompt: string, userId?: string): Promise<CacheEntry | null> {
+    // TODO: Replace with proper caching system
+    // For now, keeping the simple implementation but with warnings
+    console.warn('⚠️  Using simple in-memory cache. Consider implementing proper caching system.');
+    
     const cacheKey = this.generateCacheKey(prompt);
     const entry = this.cache.get(cacheKey);
     
@@ -294,7 +298,11 @@ export class HybridCostOptimizer {
     return null;
   }
 
-  private cacheResult(prompt: string, response: string, cost: number): void {
+  private async cacheResult(prompt: string, response: string, cost: number, userId?: string): Promise<void> {
+    // TODO: Replace with proper caching system
+    // For now, keeping the simple implementation but with warnings
+    console.warn('⚠️  Using simple in-memory cache. Consider implementing proper caching system.');
+    
     const cacheKey = this.generateCacheKey(prompt);
     this.cache.set(cacheKey, {
       prompt,

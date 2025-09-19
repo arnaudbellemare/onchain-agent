@@ -7,6 +7,7 @@ import HowItWorks from "@/components/HowItWorks";
 import AnimatedOptimizationBackground from "@/components/AnimatedOptimizationBackground";
 import HybridOptimizerDemo from "@/components/HybridOptimizerDemo";
 import ComprehensiveOptimizerDemo from "@/components/ComprehensiveOptimizerDemo";
+import CachingWarning from "@/components/CachingWarning";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("home");
@@ -94,6 +95,7 @@ export default function Home() {
       <main className="max-w-7xl mx-auto py-8 relative z-10">
         {activeTab === "home" && (
           <div className="relative">
+            <CachingWarning />
             {/* Hero Section */}
             <div className="text-center space-y-16 relative z-10">
               <div className="space-y-8">
