@@ -17,7 +17,7 @@ export default function APIKeysPage() {
 
     setLoading(true);
     try {
-      const response = await fetch('/api/v1/keys', {
+      const response = await fetch('/api/v1/keys/initial', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -31,15 +31,15 @@ export default function APIKeysPage() {
       const result = await response.json();
       
       if (result.success) {
-        setGeneratedKey(result.data);
+        setGeneratedKey(result.key);
         setNewKeyName('');
         loadAPIKeys(); // Refresh the list
       } else {
-        alert('Failed to generate API key: ' + result.error);
+        alert('Failed to generate API key: ' + (result.error || result.message));
       }
     } catch (error) {
       console.error('Error generating API key:', error);
-      alert('Failed to generate API key');
+      alert('Failed to generate API key: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
     setLoading(false);
   };
