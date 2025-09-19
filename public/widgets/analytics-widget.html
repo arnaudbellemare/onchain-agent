@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cost Optimization Widget</title>
+    <style>
+        .analytics-widget {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .analytics-widget.dark {
+            background: #1f2937;
+            border-color: #374151;
+            color: #ffffff;
+        }
+        
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .widget-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .widget-status {
+            font-size: 11px;
+            color: #6b7280;
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .dark .widget-status {
+            color: #9ca3af;
+            background: #374151;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #6b7280;
+            margin: 4px 0 0 0;
+        }
+        
+        .dark .stat-label {
+            color: #9ca3af;
+        }
+        
+        .stat-value.primary {
+            color: #2563eb;
+        }
+        
+        .stat-value.success {
+            color: #059669;
+        }
+        
+        .provider-breakdown {
+            margin-bottom: 16px;
+        }
+        
+        .provider-title {
+            font-size: 13px;
+            font-weight: 500;
+            margin: 0 0 8px 0;
+        }
+        
+        .provider-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            font-size: 11px;
+        }
+        
+        .provider-name {
+            text-transform: capitalize;
+            color: #6b7280;
+        }
+        
+        .dark .provider-name {
+            color: #9ca3af;
+        }
+        
+        .provider-stats {
+            text-align: right;
+        }
+        
+        .rate-limit {
+            padding-top: 12px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+        }
+        
+        .dark .rate-limit {
+            border-top-color: #374151;
+        }
+        
+        .rate-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .rate-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #059669;
+        }
+        
+        .rate-dot.limited {
+            background: #dc2626;
+        }
+        
+        .widget-footer {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+        }
+        
+        .dark .widget-footer {
+            border-top-color: #374151;
+        }
+        
+        .footer-link {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #6b7280;
+        }
+        
+        .error {
+            padding: 16px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 6px;
+            color: #dc2626;
+            font-size: 12px;
+        }
+        
+        .dark .error {
+            background: #7f1d1d;
+            border-color: #991b1b;
+        }
+        
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #e5e7eb;
+            border-top: 2px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="analytics-widget" class="analytics-widget">
+        <div class="loading">
+            <div class="spinner"></div>
+            <span style="margin-left: 8px;">Loading analytics...</span>
+        </div>
+    </div>
+
+    <script>
+        class AnalyticsWidget {
+            constructor(config) {
+                this.apiKey = config.apiKey;
+                this.keyId = config.keyId;
+                this.baseUrl = config.baseUrl || 'https://your-domain.com/api/v1';
+                this.theme = config.theme || 'light';
+                this.refreshInterval = config.refreshInterval || 30;
+                this.showProviderBreakdown = config.showProviderBreakdown !== false;
+                this.showRateLimit = config.showRateLimit !== false;
+                
+                this.init();
+            }
+            
+            init() {
+                this.loadAnalytics();
+                
+                if (this.refreshInterval > 0) {
+                    setInterval(() => {
+                        this.loadAnalytics();
+                    }, this.refreshInterval * 1000);
+                }
+            }
+            
+            async loadAnalytics() {
+                try {
+                    const response = await fetch(
+                        `${this.baseUrl}/keys?action=analytics&keyId=${this.keyId}&timeframe=day`,
+                        {
+                            headers: {
+                                'X-API-Key': this.apiKey
+                            }
+                        }
+                    );
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to load analytics');
+                    }
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.renderAnalytics(result.data);
+                    } else {
+                        throw new Error(result.error || 'Failed to load analytics');
+                    }
+                } catch (error) {
+                    this.renderError(error.message);
+                }
+            }
+            
+            renderAnalytics(data) {
+                const widget = document.getElementById('analytics-widget');
+                const isDark = this.theme === 'dark';
+                
+                if (isDark) {
+                    widget.classList.add('dark');
+                }
+                
+                const providerBreakdown = this.showProviderBreakdown && Object.keys(data.providerBreakdown).length > 0
+                    ? `
+                        <div class="provider-breakdown">
+                            <h4 class="provider-title">Provider Usage</h4>
+                            ${Object.entries(data.providerBreakdown).map(([provider, stats]) => `
+                                <div class="provider-item">
+                                    <span class="provider-name">${provider}</span>
+                                    <div class="provider-stats">
+                                        <div>${stats.calls} calls</div>
+                                        <div style="color: #059669;">$${stats.saved.toFixed(2)} saved</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : '';
+                
+                const rateLimit = this.showRateLimit
+                    ? `
+                        <div class="rate-limit">
+                            <span>Rate Limit</span>
+                            <div class="rate-indicator">
+                                <div class="rate-dot ${data.rateLimit.allowed ? '' : 'limited'}"></div>
+                                <span>${data.rateLimit.remaining} remaining</span>
+                            </div>
+                        </div>
+                    ` : '';
+                
+                widget.innerHTML = `
+                    <div class="widget-header">
+                        <h3 class="widget-title">AI Cost Optimization</h3>
+                        <div class="widget-status">Live • Updates every ${this.refreshInterval}s</div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value primary">${data.summary.totalCalls.toLocaleString()}</div>
+                            <div class="stat-label">Total Calls</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value success">$${data.summary.totalSaved.toFixed(2)}</div>
+                            <div class="stat-label">Total Saved</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">$${data.summary.totalCost.toFixed(2)}</div>
+                            <div class="stat-label">Total Cost</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value success">${data.summary.savingsPercentage.toFixed(1)}%</div>
+                            <div class="stat-label">Savings Rate</div>
+                        </div>
+                    </div>
+                    
+                    ${providerBreakdown}
+                    
+                    ${rateLimit}
+                    
+                    <div class="widget-footer">
+                        <span>Powered by OnChain Agent</span>
+                        <a href="https://your-domain.com/dashboard" target="_blank" class="footer-link">
+                            View Full Dashboard →
+                        </a>
+                    </div>
+                `;
+            }
+            
+            renderError(message) {
+                const widget = document.getElementById('analytics-widget');
+                widget.innerHTML = `
+                    <div class="error">
+                        ⚠️ Error loading analytics: ${message}
+                    </div>
+                `;
+            }
+        }
+        
+        // Initialize the widget when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configuration - replace with your actual values
+            const config = {
+                apiKey: 'oa_your_api_key_here',  // Replace with your API key
+                keyId: 'your_key_id_here',       // Replace with your key ID
+                baseUrl: 'https://your-domain.com/api/v1',
+                theme: 'light',                  // 'light' or 'dark'
+                refreshInterval: 30,             // seconds
+                showProviderBreakdown: true,
+                showRateLimit: true
+            };
+            
+            new AnalyticsWidget(config);
+        });
+    </script>
+</body>
+</html>
