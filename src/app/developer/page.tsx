@@ -197,11 +197,14 @@ export default function DeveloperPage() {
                   <div className="bg-blue-50 p-6 rounded-lg">
                     <h3 className="text-xl font-semibold mb-4 text-blue-900">Step 1: Get Your API Key</h3>
                     <p className="text-blue-800 mb-4">
-                      Visit the main dashboard to generate your API key for production use.
+                      Generate your API key for accessing the OnChain Agent API.
                     </p>
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                      Get API Key
-                    </button>
+                    <a 
+                      href="/api-keys" 
+                      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 inline-block"
+                    >
+                      Generate API Key
+                    </a>
                   </div>
 
                   <div className="bg-green-50 p-6 rounded-lg">
