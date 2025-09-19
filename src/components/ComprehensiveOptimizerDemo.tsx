@@ -99,6 +99,59 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
     }
   };
 
+  const runHybridOptimization = async (prompt: string) => {
+    setIsRunning(true);
+    
+    try {
+      const response = await fetch('/api/hybrid-optimizer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt,
+          maxTokens: 500,
+          useX402: true
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data) {
+        // Create a mock comprehensive result from hybrid data
+        const hybridResult: ComprehensiveOptimizationResult = {
+          originalCost: data.originalCost,
+          optimizedCost: data.optimizedCost,
+          savings: data.savings,
+          savingsPercentage: (data.savings / data.originalCost) * 100,
+          optimizationMethods: ['hybrid_optimization', 'provider_switching', 'caching'],
+          response: data.details,
+          metrics: {
+            capoOptimization: 0,
+            agentkitOptimization: 0,
+            x402Savings: 0,
+            hybridOptimization: data.savings,
+            totalOptimization: data.savings
+          },
+          pipeline: {
+            step1_capo: { prompt: '', tokens: 0, cost: 0 },
+            step2_agentkit: { routing: 'hybrid', cost: 0 },
+            step3_x402: { payment: 'simulated', cost: 0 },
+            step4_hybrid: { caching: true, provider: 'hybrid', cost: data.optimizedCost }
+          },
+          processingTime: 150,
+          totalProcessingTime: 150,
+          timestamp: new Date().toISOString()
+        };
+        
+        setResults(prev => [hybridResult, ...prev]);
+        await fetchStats();
+      }
+    } catch (error) {
+      console.error('Hybrid optimization failed:', error);
+    } finally {
+      setIsRunning(false);
+    }
+  };
+
   const fetchStats = async () => {
     try {
       const response = await fetch('/api/comprehensive-optimizer?action=stats');
@@ -125,7 +178,7 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
         <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
           Comprehensive Cost Optimizer
         </h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+        <p className="text-xl text-gray-800 max-w-3xl mx-auto">
           CAPO + AgentKit + x402 + Hybrid Techniques = Maximum Cost Effectiveness
         </p>
         <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4 max-w-4xl mx-auto">
@@ -201,7 +254,7 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
           className={`pb-2 px-1 border-b-2 font-medium text-sm ${
             activeTab === 'demo'
               ? 'border-blue-500 text-blue-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
+              : 'border-transparent text-gray-800 hover:text-gray-900'
           }`}
         >
           Live Demo
@@ -211,7 +264,7 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
           className={`pb-2 px-1 border-b-2 font-medium text-sm ${
             activeTab === 'comparison'
               ? 'border-blue-500 text-blue-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
+              : 'border-transparent text-gray-800 hover:text-gray-900'
           }`}
         >
           Approach Comparison
@@ -221,7 +274,7 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
           className={`pb-2 px-1 border-b-2 font-medium text-sm ${
             activeTab === 'stats'
               ? 'border-blue-500 text-blue-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700'
+              : 'border-transparent text-gray-800 hover:text-gray-900'
           }`}
         >
           Statistics
@@ -236,7 +289,7 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-800 mb-2">
                   Enter your prompt:
                 </label>
                 <textarea
@@ -248,13 +301,21 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
                 />
               </div>
               
-              <div className="flex gap-4">
+              <div className="flex gap-4 flex-wrap">
                 <button
                   onClick={() => runOptimization(currentPrompt)}
                   disabled={isRunning || !currentPrompt.trim()}
                   className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isRunning ? 'Optimizing...' : 'Run Comprehensive Optimization'}
+                </button>
+                
+                <button
+                  onClick={() => runHybridOptimization(currentPrompt)}
+                  disabled={isRunning || !currentPrompt.trim()}
+                  className="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isRunning ? 'Running...' : 'Test Hybrid Optimizer Only'}
                 </button>
                 
                 <button
@@ -291,34 +352,34 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <h4 className="font-semibold text-gray-700 mb-2">Cost Breakdown</h4>
+                      <h4 className="font-semibold text-gray-800 mb-2">Cost Breakdown</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Original Cost:</span>
+                          <span className="text-gray-800">Original Cost:</span>
                           <span className="font-semibold text-red-600">{formatCurrency(result.originalCost)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Optimized Cost:</span>
+                          <span className="text-gray-800">Optimized Cost:</span>
                           <span className="font-semibold text-green-600">{formatCurrency(result.optimizedCost)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Total Savings:</span>
+                          <span className="text-gray-800">Total Savings:</span>
                           <span className="font-semibold text-blue-600">{formatCurrency(result.savings)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Processing Time:</span>
-                          <span className="font-semibold text-gray-600">{result.totalProcessingTime}ms</span>
+                          <span className="text-gray-800">Processing Time:</span>
+                          <span className="font-semibold text-gray-800">{result.totalProcessingTime}ms</span>
                         </div>
                       </div>
                     </div>
                     
                     <div>
-                      <h4 className="font-semibold text-gray-700 mb-2">Optimization Methods</h4>
+                      <h4 className="font-semibold text-gray-800 mb-2">Optimization Methods</h4>
                       <div className="space-y-2">
                         {result.optimizationMethods.map((method, i) => (
                           <div key={i} className="flex items-center">
                             <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
-                            <span className="text-sm text-gray-600 capitalize">
+                            <span className="text-sm text-gray-800 capitalize">
                               {method.replace('_', ' ')}
                             </span>
                           </div>
@@ -328,7 +389,7 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
                   </div>
                   
                   <div className="mt-4 pt-4 border-t">
-                    <h4 className="font-semibold text-gray-700 mb-2">Pipeline Breakdown</h4>
+                    <h4 className="font-semibold text-gray-800 mb-2">Pipeline Breakdown</h4>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
                       <div className="bg-purple-50 p-3 rounded-lg">
                         <div className="font-semibold text-purple-800">Step 1: CAPO</div>
@@ -364,18 +425,18 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
         <div className="space-y-6">
           <div className="bg-white rounded-lg border border-gray-200 p-6">
             <h2 className="text-xl font-semibold mb-4">Approach Comparison</h2>
-            <p className="text-gray-600 mb-4">Compare different optimization approaches to see the impact of each technique.</p>
+            <p className="text-gray-800 mb-4">Compare different optimization approaches to see the impact of each technique.</p>
             
             {comparison.length > 0 && (
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Approach</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cost</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Savings</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Methods</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">Approach</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">Cost</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">Savings</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">Methods</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">Time</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -384,10 +445,10 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {item.approach}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                           {formatCurrency(item.cost)}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                             item.savings > 50 ? 'bg-green-100 text-green-800' :
                             item.savings > 30 ? 'bg-blue-100 text-blue-800' :
@@ -397,10 +458,10 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
                             {formatPercentage(item.savings)}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                           {item.methods}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                           {item.processingTime}ms
                         </td>
                       </tr>
@@ -421,15 +482,15 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
                 <div className="text-3xl font-bold text-purple-600">{stats.totalOptimizations}</div>
-                <div className="text-sm text-gray-500">Total Optimizations</div>
+                <div className="text-sm text-gray-800">Total Optimizations</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-blue-600">{formatCurrency(stats.totalSavings)}</div>
-                <div className="text-sm text-gray-500">Total Savings</div>
+                <div className="text-sm text-gray-800">Total Savings</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-600">{formatCurrency(stats.averageSavings)}</div>
-                <div className="text-sm text-gray-500">Average Savings</div>
+                <div className="text-sm text-gray-800">Average Savings</div>
               </div>
             </div>
           </div>
@@ -439,11 +500,11 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
               <h3 className="font-semibold text-purple-800 mb-2">CAPO Statistics</h3>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Optimizations:</span>
+                  <span className="text-gray-800">Optimizations:</span>
                   <span className="font-semibold">{stats.capoStats.count}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Avg Reduction:</span>
+                  <span className="text-gray-800">Avg Reduction:</span>
                   <span className="font-semibold">{formatPercentage(stats.capoStats.averageReduction)}</span>
                 </div>
               </div>
@@ -453,11 +514,11 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
               <h3 className="font-semibold text-blue-800 mb-2">AgentKit Statistics</h3>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Routings:</span>
+                  <span className="text-gray-800">Routings:</span>
                   <span className="font-semibold">{stats.agentkitStats.count}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Avg Reliability:</span>
+                  <span className="text-gray-800">Avg Reliability:</span>
                   <span className="font-semibold">{formatPercentage(stats.agentkitStats.averageReliability * 100)}</span>
                 </div>
               </div>
@@ -467,15 +528,15 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
               <h3 className="font-semibold text-green-800 mb-2">x402 Statistics</h3>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Payments:</span>
+                  <span className="text-gray-800">Payments:</span>
                   <span className="font-semibold">{stats.x402Stats.count}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Total Gas Cost:</span>
+                  <span className="text-gray-800">Total Gas Cost:</span>
                   <span className="font-semibold">{formatCurrency(stats.x402Stats.totalGasCost)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Total Savings:</span>
+                  <span className="text-gray-800">Total Savings:</span>
                   <span className="font-semibold">{formatCurrency(stats.x402Stats.totalSavings)}</span>
                 </div>
               </div>

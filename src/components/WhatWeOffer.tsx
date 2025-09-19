@@ -1,15 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import ROICalculator from './ROICalculator';
 import X402OptimizationCycle from './X402OptimizationCycle';
-import X402APIIntegration from './X402APIIntegration';
 import X402UseCaseShowcase from './X402UseCaseShowcase';
-import BusinessIntegrationWidget from './BusinessIntegrationWidget';
 import RealTimeCostMonitoring from './RealTimeCostMonitoring';
 import CostReductionExplanation from './CostReductionExplanation';
-import RealX402Wrapper from './RealX402Wrapper';
-import GEPAOptimizationDemo from './GEPAOptimizationDemo';
 
 interface Service {
   id: string;
@@ -24,7 +19,7 @@ interface Service {
 
 export default function WhatWeOffer() {
   const [selectedService, setSelectedService] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring' | 'explanation' | 'universal' | 'real-wrapper' | 'gepa-optimization'>('services');
+  const [activeTab, setActiveTab] = useState<'services' | 'cycle' | 'examples' | 'monitoring' | 'explanation' | 'universal'>('services');
 
   const services: Service[] = [
     {
@@ -132,21 +127,6 @@ export default function WhatWeOffer() {
       realExample: 'SaaS company: $8,000/month API subscriptions → $3,200/month with x402 compatibility = $4,800/month savings',
       savings: '$57,600/year'
     },
-    {
-      id: 'gepa-evolution',
-      title: 'GEPA Evolution Engine',
-      description: 'Evolve your payment logic using genetic algorithms for 25-45% better optimization',
-      icon: 'evolution',
-      costReduction: '25-45%',
-      howItWorks: [
-        'Genetic evolution of payment optimization prompts and logic',
-        'Autonomous improvement of micropayment decision trees',
-        'Continuous evolution based on real transaction data',
-        'Self-optimizing cost reduction algorithms'
-      ],
-      realExample: 'Payment logic evolves from 20% to 45% cost reduction through genetic algorithms',
-      savings: 'Self-Improving'
-    }
   ];
 
   const selectedServiceData = services.find(s => s.id === selectedService);
@@ -202,14 +182,6 @@ export default function WhatWeOffer() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
           </svg>
         );
-      case 'evolution':
-        return (
-          <svg {...iconProps}>
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.5 0 2.91.37 4.15 1.02" />
-          </svg>
-        );
       default:
         return (
           <svg {...iconProps}>
@@ -222,10 +194,10 @@ export default function WhatWeOffer() {
   return (
     <div className="max-w-7xl mx-auto p-8">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}>
           What We Can Do For You
         </h1>
-        <p className="text-xl text-gray-900 max-w-4xl mx-auto">
+        <p className="text-xl text-gray-900 max-w-4xl mx-auto" style={{ fontFamily: 'SF Pro Text, -apple-system, BlinkMacSystemFont, sans-serif' }}>
           We reduce your business costs by 20-70% using autonomous optimization, x402 protocol micropayments, and AI automation. We make any API x402-compatible and provide pay-per-use access to all services.
         </p>
       </div>
@@ -235,19 +207,15 @@ export default function WhatWeOffer() {
         <div className="bg-gray-100 p-1 rounded-lg">
           {[
             { id: 'services', label: 'Our Services', icon: '🎯' },
-            { id: 'roi', label: 'ROI Calculator', icon: '💰' },
             { id: 'cycle', label: 'Optimization Cycle', icon: '🔄' },
             { id: 'examples', label: 'x402 Examples', icon: '⚡' },
-            { id: 'integration', label: 'Integration Tools', icon: '🔧' },
             { id: 'monitoring', label: 'Cost Monitoring', icon: '📊' },
             { id: 'explanation', label: 'How We Save', icon: '💡' },
-            { id: 'universal', label: 'Universal API Optimization', icon: '🌐' },
-            { id: 'real-wrapper', label: 'Real x402 Wrapper', icon: '⚡' },
-    { id: 'gepa-optimization', label: 'GEPA Evolution', icon: '🧬' }
+            { id: 'universal', label: 'Universal API Optimization', icon: '🌐' }
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as 'services' | 'roi' | 'cycle' | 'examples' | 'integration' | 'monitoring' | 'explanation' | 'universal' | 'real-wrapper' | 'gepa-optimization')}
+              onClick={() => setActiveTab(tab.id as 'services' | 'cycle' | 'examples' | 'monitoring' | 'explanation' | 'universal')}
               className={`px-6 py-3 rounded-lg font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-blue-600 text-white shadow-lg'
@@ -279,8 +247,8 @@ export default function WhatWeOffer() {
               <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl mb-6 flex items-center justify-center mx-auto">
                 {renderServiceIcon(service.icon)}
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{service.title}</h3>
-              <p className="text-gray-900 mb-4">{service.description}</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}>{service.title}</h3>
+              <p className="text-gray-900 mb-4" style={{ fontFamily: 'SF Pro Text, -apple-system, BlinkMacSystemFont, sans-serif' }}>{service.description}</p>
               <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
                 {service.costReduction} Cost Reduction
               </div>
@@ -296,8 +264,8 @@ export default function WhatWeOffer() {
             <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl mb-6 flex items-center justify-center mx-auto">
               {renderServiceIcon(selectedServiceData.icon)}
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">{selectedServiceData.title}</h2>
-            <p className="text-xl text-gray-900 mb-4">{selectedServiceData.description}</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}>{selectedServiceData.title}</h2>
+            <p className="text-xl text-gray-900 mb-4" style={{ fontFamily: 'SF Pro Text, -apple-system, BlinkMacSystemFont, sans-serif' }}>{selectedServiceData.description}</p>
             <div className="bg-green-100 text-green-800 px-6 py-3 rounded-full text-lg font-bold inline-block">
               {selectedServiceData.costReduction} Cost Reduction
             </div>
@@ -306,14 +274,14 @@ export default function WhatWeOffer() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* How It Works */}
             <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">How We Do This in Reality</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-6" style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}>How We Do This in Reality</h3>
               <div className="space-y-4">
                 {selectedServiceData.howItWorks.map((step, index) => (
                   <div key={index} className="flex items-start">
                     <div className="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm mr-4 mt-1">
                       {index + 1}
                     </div>
-                    <p className="text-gray-900">{step}</p>
+                    <p className="text-gray-900" style={{ fontFamily: 'SF Pro Text, -apple-system, BlinkMacSystemFont, sans-serif' }}>{step}</p>
                   </div>
                 ))}
               </div>
@@ -321,9 +289,9 @@ export default function WhatWeOffer() {
 
             {/* Real Example */}
             <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Real Example</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-6" style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}>Real Example</h3>
               <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <p className="text-gray-900 mb-4 font-medium">{selectedServiceData.realExample}</p>
+                <p className="text-gray-900 mb-4 font-medium" style={{ fontFamily: 'SF Pro Text, -apple-system, BlinkMacSystemFont, sans-serif' }}>{selectedServiceData.realExample}</p>
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                   <div className="text-center">
                     <div className="text-3xl font-bold text-green-600 mb-2">
@@ -386,13 +354,6 @@ export default function WhatWeOffer() {
         </>
       )}
 
-      {/* ROI Calculator Tab */}
-      {activeTab === 'roi' && (
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">ROI Calculator</h2>
-          <ROICalculator />
-        </div>
-      )}
 
       {/* Optimization Cycle Tab */}
       {activeTab === 'cycle' && (
@@ -406,24 +367,12 @@ export default function WhatWeOffer() {
       {activeTab === 'examples' && (
         <div className="space-y-8">
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">x402 Protocol API Integration</h2>
-            <X402APIIntegration />
-          </div>
-          
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">x402 Use Cases Showcase</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center" style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}>x402 Use Cases Showcase</h2>
             <X402UseCaseShowcase />
           </div>
         </div>
       )}
 
-      {/* Integration Tools Tab */}
-      {activeTab === 'integration' && (
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Business Integration Tools</h2>
-          <BusinessIntegrationWidget />
-        </div>
-      )}
 
       {/* Real-time Cost Monitoring Tab */}
       {activeTab === 'monitoring' && (
@@ -534,14 +483,6 @@ export default function WhatWeOffer() {
         </div>
       )}
 
-      {/* Real x402 Wrapper Tab */}
-        {activeTab === 'real-wrapper' && (
-          <RealX402Wrapper />
-        )}
-
-        {activeTab === 'gepa-optimization' && (
-          <GEPAOptimizationDemo />
-        )}
     </div>
   );
 }
