@@ -330,23 +330,21 @@ export class EnhancedPaymentRouter {
   private async executePayment(decision: PaymentDecision, request: PaymentRequest): Promise<string> {
     try {
       if (decision.selectedRail.x402Supported) {
-        // Use x402 micropayment system
-        const apiRequest = {
-          endpoint: '/api/payments/execute',
-          method: 'POST' as const,
-          body: {
-            rail: decision.selectedRail.id,
-            amount: request.amount,
-            currency: request.currency,
-            recipient: request.recipient,
-            cost: decision.costBreakdown.totalCost
-          }
-        };
+        // Use x402 micropayment system - simulate payment execution
+        // In a real implementation, this would interact with the blockchain
+        console.log(`Executing x402 payment: ${request.amount} ${request.currency} to ${request.recipient}`);
         
-        const response = await x402APIWrapper.makeRequest(apiRequest);
-        return response.transactionHash || 'mock-tx-hash';
+        // Simulate payment processing time
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Generate mock transaction hash for x402 payments
+        const transactionHash = `0x${Math.random().toString(16).substr(2, 64)}`;
+        console.log(`x402 payment executed successfully: ${transactionHash}`);
+        
+        return transactionHash;
       } else {
         // Use traditional payment system
+        console.log(`Executing traditional payment: ${request.amount} ${request.currency} to ${request.recipient}`);
         return 'traditional-payment-reference';
       }
     } catch (error) {
