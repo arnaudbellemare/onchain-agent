@@ -1,36 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// Simple in-memory storage for demo purposes
-// In production, this would use a proper database
-const apiKeys = new Map<string, {
-  key: string;
-  name: string;
-  createdAt: string;
-  lastUsed: string | null;
-  usage: {
-    calls: number;
-    totalCost: number;
-    totalSaved: number;
-  };
-  permissions: string[];
-}>();
-
-// Generate a secure API key
-function generateAPIKey(): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = 'oa_'; // onchain-agent prefix
-  
-  for (let i = 0; i < 32; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  
-  return result;
-}
-
-// Validate API key format
-function validateAPIKeyFormat(key: string): boolean {
-  return key.startsWith('oa_') && key.length === 35;
-}
+import { 
+  createAPIKey, 
+  validateAndGetAPIKey, 
+  listAPIKeys, 
+  deleteAPIKey, 
+  getAPIKeyData,
+  getAPIKeyAnalytics,
+  auditAPIKeySecurity,
+  checkRateLimit,
+  updateAPIKeyUsage as updateSecureAPIKeyUsage
+} from '@/lib/secureApiKeys';
 
 // Create a new API key
 export async function POST(req: NextRequest) {
@@ -45,35 +24,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const apiKey = generateAPIKey();
-    const keyId = Date.now().toString();
-
-    apiKeys.set(keyId, {
-      key: apiKey,
-      name,
-      createdAt: new Date().toISOString(),
-      lastUsed: null,
-      usage: {
-        calls: 0,
-        totalCost: 0,
-        totalSaved: 0
-      },
-      permissions
-    });
+    const { id, key, data } = createAPIKey(name, permissions);
 
     return NextResponse.json({
       success: true,
       data: {
-        id: keyId,
-        key: apiKey,
-        name,
-        createdAt: new Date().toISOString(),
-        permissions
+        id,
+        key,
+        name: data.name,
+        createdAt: data.createdAt,
+        permissions: data.permissions,
+        rateLimit: data.rateLimit
       },
       message: 'API key created successfully. Save this key securely - it will not be shown again.'
     });
 
   } catch (error) {
+    console.error('API key creation error:', error);
     return NextResponse.json(
       { error: 'Failed to create API key' },
       { status: 500 }
@@ -84,15 +51,40 @@ export async function POST(req: NextRequest) {
 // List API keys (without showing the actual keys)
 export async function GET(req: NextRequest) {
   try {
-    const keys = Array.from(apiKeys.entries()).map(([id, data]) => ({
-      id,
-      name: data.name,
-      createdAt: data.createdAt,
-      lastUsed: data.lastUsed,
-      usage: data.usage,
-      permissions: data.permissions,
-      keyPreview: data.key.substring(0, 8) + '...' + data.key.substring(data.key.length - 4)
-    }));
+    const url = new URL(req.url);
+    const action = url.searchParams.get('action');
+    const keyId = url.searchParams.get('keyId');
+    const timeframe = url.searchParams.get('timeframe') as 'hour' | 'day' | 'week' | 'month' || 'day';
+
+    if (action === 'analytics' && keyId) {
+      const analytics = getAPIKeyAnalytics(keyId, timeframe);
+      if (!analytics) {
+        return NextResponse.json(
+          { error: 'API key not found' },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json({
+        success: true,
+        data: analytics
+      });
+    }
+
+    if (action === 'audit' && keyId) {
+      const audit = auditAPIKeySecurity(keyId);
+      if (!audit) {
+        return NextResponse.json(
+          { error: 'API key not found' },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json({
+        success: true,
+        data: audit
+      });
+    }
+
+    const keys = listAPIKeys();
 
     return NextResponse.json({
       success: true,
@@ -103,6 +95,7 @@ export async function GET(req: NextRequest) {
     });
 
   } catch (error) {
+    console.error('API keys listing error:', error);
     return NextResponse.json(
       { error: 'Failed to list API keys' },
       { status: 500 }
@@ -123,14 +116,13 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    if (!apiKeys.has(keyId)) {
+    const success = deleteAPIKey(keyId);
+    if (!success) {
       return NextResponse.json(
         { error: 'API key not found' },
         { status: 404 }
       );
     }
-
-    apiKeys.delete(keyId);
 
     return NextResponse.json({
       success: true,
@@ -138,6 +130,7 @@ export async function DELETE(req: NextRequest) {
     });
 
   } catch (error) {
+    console.error('API key deletion error:', error);
     return NextResponse.json(
       { error: 'Failed to delete API key' },
       { status: 500 }
@@ -146,42 +139,17 @@ export async function DELETE(req: NextRequest) {
 }
 
 // Validate an API key (used by other endpoints)
-export function validateAPIKey(key: string): boolean {
-  if (!validateAPIKeyFormat(key)) {
-    return false;
-  }
-
-  // Check if key exists in our storage
-  for (const [, data] of apiKeys) {
-    if (data.key === key) {
-      // Update last used timestamp
-      data.lastUsed = new Date().toISOString();
-      data.usage.calls++;
-      return true;
-    }
-  }
-
-  return false;
+export function validateAPIKey(key: string, clientIP?: string, userAgent?: string): any {
+  return validateAndGetAPIKey(key, clientIP, userAgent);
 }
 
 // Get API key usage stats
-export function getAPIKeyUsage(key: string): any {
-  for (const [, data] of apiKeys) {
-    if (data.key === key) {
-      return data.usage;
-    }
-  }
-  return null;
+export function getAPIKeyUsage(keyId: string): any {
+  const data = getAPIKeyData(keyId);
+  return data ? data.usage : null;
 }
 
 // Update API key usage (called by other endpoints after successful requests)
-export function updateAPIKeyUsage(key: string, cost: number, saved: number) {
-  for (const [, data] of apiKeys) {
-    if (data.key === key) {
-      data.usage.totalCost += cost;
-      data.usage.totalSaved += saved;
-      data.lastUsed = new Date().toISOString();
-      break;
-    }
-  }
+export function updateAPIKeyUsage(keyId: string, endpoint: string, cost: number, saved: number, provider: string): boolean {
+  return updateSecureAPIKeyUsage(keyId, endpoint, cost, saved, provider);
 }

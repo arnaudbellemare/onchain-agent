@@ -17,6 +17,16 @@ import { NextRequest, NextResponse } from 'next/server';
  */
 
 import { validateAPIKey, getAPIKeyUsage, updateAPIKeyUsage } from './keys/route';
+import { checkRateLimit } from '@/lib/secureApiKeys';
+import { 
+  addSecurityHeaders, 
+  checkIPRateLimit, 
+  validateRequestSize, 
+  sanitizeInput, 
+  validateAPIKeySecurity,
+  logSecurityEvent,
+  getClientIP
+} from '@/lib/security';
 
 // Standard API response format
 function createResponse(data: any, success: boolean = true, error?: string) {
@@ -32,6 +42,27 @@ function createResponse(data: any, success: boolean = true, error?: string) {
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const action = url.searchParams.get('action') || 'info';
+
+  // Security checks
+  const clientIP = getClientIP(req);
+  const userAgent = req.headers.get('user-agent') || 'unknown';
+  
+  // Check IP-based rate limiting
+  const ipRateLimit = checkIPRateLimit(req);
+  if (!ipRateLimit.allowed) {
+    logSecurityEvent('rate_limit_exceeded', {
+      ip: clientIP,
+      userAgent,
+      endpoint: 'GET /api/v1',
+      timestamp: new Date().toISOString()
+    });
+    
+    const response = NextResponse.json(
+      createResponse(null, false, 'Rate limit exceeded. Try again later.'),
+      { status: 429 }
+    );
+    return addSecurityHeaders(response);
+  }
 
   // Get API key from headers
   const apiKey = req.headers.get('X-API-Key') || req.headers.get('x-api-key');
@@ -206,25 +237,40 @@ result = response.json()`
       );
     }
 
-    // Mock analytics data - in production this would come from database
+    // Get real analytics from API key usage
+    let analytics = null;
+    if (apiKey) {
+      const keyData = validateAPIKey(apiKey, clientIP, userAgent);
+      if (keyData) {
+        analytics = getAPIKeyUsage(keyData.id);
+      }
+    }
+
+    // Fallback to mock data if no API key or analytics available
+    if (!analytics) {
+      analytics = {
+        totalSpent: 0.45,
+        totalSaved: 0.23,
+        savingsPercentage: 33.8,
+        totalCalls: 156,
+        averageCostPerCall: 0.0029,
+        optimizationHistory: [
+          { date: '2024-01-15', saved: 0.05, calls: 23 },
+          { date: '2024-01-14', saved: 0.08, calls: 31 },
+          { date: '2024-01-13', saved: 0.03, calls: 19 },
+          { date: '2024-01-12', saved: 0.07, calls: 28 }
+        ],
+        providerUsage: {
+          openai: { calls: 89, cost: 0.28, savings: 0.12 },
+          anthropic: { calls: 45, cost: 0.12, savings: 0.08 },
+          perplexity: { calls: 22, cost: 0.05, savings: 0.03 }
+        }
+      };
+    }
+
     return NextResponse.json(createResponse({
       walletAddress,
-      totalSpent: 0.45,
-      totalSaved: 0.23,
-      savingsPercentage: 33.8,
-      totalCalls: 156,
-      averageCostPerCall: 0.0029,
-      optimizationHistory: [
-        { date: '2024-01-15', saved: 0.05, calls: 23 },
-        { date: '2024-01-14', saved: 0.08, calls: 31 },
-        { date: '2024-01-13', saved: 0.03, calls: 19 },
-        { date: '2024-01-12', saved: 0.07, calls: 28 }
-      ],
-      providerUsage: {
-        openai: { calls: 89, cost: 0.28, savings: 0.12 },
-        anthropic: { calls: 45, cost: 0.12, savings: 0.08 },
-        perplexity: { calls: 22, cost: 0.05, savings: 0.03 }
-      }
+      ...analytics
     }));
   }
 
@@ -235,29 +281,142 @@ result = response.json()`
 }
 
 export async function POST(req: NextRequest) {
+  // Security checks
+  const clientIP = getClientIP(req);
+  const userAgent = req.headers.get('user-agent') || 'unknown';
+  
   try {
+    
+    // Check request size
+    if (!validateRequestSize(req, 10 * 1024 * 1024)) { // 10MB limit
+      const response = NextResponse.json(
+        createResponse(null, false, 'Request too large'),
+        { status: 413 }
+      );
+      return addSecurityHeaders(response);
+    }
+    
+    // Check IP-based rate limiting
+    const ipRateLimit = checkIPRateLimit(req);
+    if (!ipRateLimit.allowed) {
+      logSecurityEvent('rate_limit_exceeded', {
+        ip: clientIP,
+        userAgent,
+        endpoint: 'POST /api/v1',
+        timestamp: new Date().toISOString()
+      });
+      
+      const response = NextResponse.json(
+        createResponse(null, false, 'Rate limit exceeded. Try again later.'),
+        { status: 429 }
+      );
+      return addSecurityHeaders(response);
+    }
+
     const body = await req.json();
-    const { action, ...data } = body;
+    const { action, ...data } = sanitizeInput(body);
 
     // Get API key from headers
     const apiKey = req.headers.get('X-API-Key') || req.headers.get('x-api-key');
     
-    if (!apiKey || !validateAPIKey(apiKey)) {
-      return NextResponse.json(
-        createResponse(null, false, 'Invalid or missing API key. Get your API key from the dashboard.'),
+    if (!apiKey) {
+      logSecurityEvent('invalid_api_key', {
+        ip: clientIP,
+        userAgent,
+        endpoint: 'POST /api/v1',
+        timestamp: new Date().toISOString()
+      });
+      
+      const response = NextResponse.json(
+        createResponse(null, false, 'API key is required. Get your API key from /api-keys'),
         { status: 401 }
       );
+      return addSecurityHeaders(response);
     }
+
+    // Validate API key security
+    const keySecurity = validateAPIKeySecurity(apiKey, req);
+    if (!keySecurity.valid) {
+      logSecurityEvent('invalid_api_key', {
+        ip: clientIP,
+        userAgent,
+        apiKey: apiKey.substring(0, 8) + '...',
+        endpoint: 'POST /api/v1',
+        timestamp: new Date().toISOString()
+      });
+      
+      const response = NextResponse.json(
+        createResponse(null, false, keySecurity.reason || 'Invalid API key'),
+        { status: 401 }
+      );
+      return addSecurityHeaders(response);
+    }
+
+    const keyData = validateAPIKey(apiKey, clientIP, userAgent);
+    if (!keyData) {
+      logSecurityEvent('invalid_api_key', {
+        ip: clientIP,
+        userAgent,
+        apiKey: apiKey.substring(0, 8) + '...',
+        endpoint: 'POST /api/v1',
+        timestamp: new Date().toISOString()
+      });
+      
+      const response = NextResponse.json(
+        createResponse(null, false, 'Invalid API key. Please check your key or generate a new one.'),
+        { status: 401 }
+      );
+      return addSecurityHeaders(response);
+    }
+
+    // Check rate limits
+    const rateLimit = checkRateLimit(keyData.id);
+    if (!rateLimit.allowed) {
+      logSecurityEvent('rate_limit_exceeded', {
+        ip: clientIP,
+        userAgent,
+        apiKey: apiKey.substring(0, 8) + '...',
+        endpoint: 'POST /api/v1',
+        timestamp: new Date().toISOString()
+      });
+      
+      const response = NextResponse.json(
+        createResponse(null, false, `Rate limit exceeded. Try again after ${rateLimit.resetTime}`),
+        { status: 429, headers: { 'Retry-After': '3600' } }
+      );
+      return addSecurityHeaders(response);
+    }
+
+    let result: any;
+    let endpoint = '';
+    let cost = 0;
+    let saved = 0;
+    let provider = '';
 
     switch (action) {
       case 'optimize':
-        return await handleOptimize(data);
+        result = await handleOptimize(data);
+        endpoint = 'optimize';
+        cost = result.data?.optimizedCost || 0;
+        saved = result.data?.savings || 0;
+        provider = result.data?.recommendedProvider || 'unknown';
+        break;
       
       case 'chat':
-        return await handleChat(data);
+        result = await handleChat(data);
+        endpoint = 'chat';
+        cost = result.data?.cost || 0;
+        saved = 0; // Chat doesn't have savings tracking yet
+        provider = result.data?.provider || 'unknown';
+        break;
       
       case 'wallet':
-        return await handleWallet(data);
+        result = await handleWallet(data);
+        endpoint = 'wallet';
+        cost = 0;
+        saved = 0;
+        provider = 'wallet';
+        break;
       
       default:
         return NextResponse.json(
@@ -265,11 +424,37 @@ export async function POST(req: NextRequest) {
           { status: 400 }
         );
     }
+
+    // Update API key usage statistics
+    if (result.success && endpoint) {
+      updateAPIKeyUsage(keyData.id, endpoint, cost, saved, provider);
+      
+      // Log successful request
+      logSecurityEvent('success', {
+        ip: clientIP,
+        userAgent,
+        apiKey: apiKey.substring(0, 8) + '...',
+        endpoint: `POST /api/v1 - ${endpoint}`,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    // Add security headers to response
+    const response = NextResponse.json(result);
+    return addSecurityHeaders(response);
   } catch (error) {
-    return NextResponse.json(
+    logSecurityEvent('suspicious_request', {
+      ip: clientIP,
+      userAgent,
+      endpoint: 'POST /api/v1',
+      timestamp: new Date().toISOString()
+    });
+    
+    const response = NextResponse.json(
       createResponse(null, false, 'Invalid request format'),
       { status: 400 }
     );
+    return addSecurityHeaders(response);
   }
 }
 
