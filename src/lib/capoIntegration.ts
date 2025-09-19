@@ -1,7 +1,11 @@
 // CAPO (Cost-Aware Prompt Optimization) Integration
 // Based on the paper: "CAPO: Cost-Aware Prompt Optimization" (arXiv:2504.16005)
+// Now uses real LLM evaluations and official CAPO algorithm
 import { costAwareOptimizer } from './costAwareOptimizer';
 import { RealLLMPromptOptimizer, RealLLMManager } from './realLLMIntegration';
+import { RealCAPOOptimizer, realCAPOOptimizer } from './realCAPO';
+import { StatisticalTests, RacingManager } from './statisticalTests';
+import { RealDatasets, DatasetEvaluator } from './realDatasets';
 
 interface PaymentRequest {
   amount: number;
@@ -62,11 +66,13 @@ export class CAPOOptimizer {
   private paretoFront: CAPOIndividual[] = [];
   private llmOptimizer: RealLLMPromptOptimizer;
   private llmManager: RealLLMManager;
+  private racingManager: RacingManager;
 
   constructor(config: Partial<CAPOConfig> = {}) {
     this.config = { ...DEFAULT_CAPO_CONFIG, ...config };
     this.llmOptimizer = new RealLLMPromptOptimizer();
     this.llmManager = new RealLLMManager();
+    this.racingManager = new RacingManager(this.config.budget);
   }
 
   // Initialize population from task description
@@ -405,6 +411,49 @@ export class CAPOOptimizer {
   // Get LLM manager for external access
   getLLMManager(): RealLLMManager {
     return this.llmManager;
+  }
+
+  /**
+   * Use real CAPO implementation with actual LLM evaluations
+   */
+  async optimizeWithRealCAPO(
+    taskDescription: string,
+    datasetName: string = 'financial_decisions',
+    config?: Partial<any>
+  ): Promise<any> {
+    console.log('CAPO: Using real CAPO implementation with actual LLM evaluations');
+    
+    // Initialize real CAPO optimizer
+    const realCAPO = new RealCAPOOptimizer(config);
+    
+    // Initialize with dataset
+    await realCAPO.initialize(taskDescription, datasetName);
+    
+    // Run optimization
+    const result = await realCAPO.optimize();
+    
+    console.log('CAPO: Real optimization completed', {
+      accuracy: result.finalAccuracy,
+      costReduction: result.costReduction,
+      lengthReduction: result.lengthReduction,
+      evaluations: result.totalEvaluations
+    });
+    
+    return result;
+  }
+
+  /**
+   * Get available datasets for evaluation
+   */
+  getAvailableDatasets(): string[] {
+    return RealDatasets.getAvailableDatasets();
+  }
+
+  /**
+   * Get racing statistics
+   */
+  getRacingStats(): Record<string, any> {
+    return this.racingManager?.getRacingStats() || {};
   }
 }
 
