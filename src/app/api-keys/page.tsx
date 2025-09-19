@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function APIKeysPage() {
   const [apiKeys, setApiKeys] = useState<any[]>([]);
@@ -46,6 +46,9 @@ export default function APIKeysPage() {
 
   // Load existing API keys
   const loadAPIKeys = async () => {
+    // Only run in browser environment
+    if (typeof window === 'undefined') return;
+    
     try {
       const response = await fetch('/api/v1/keys');
       const result = await response.json();
@@ -87,9 +90,9 @@ export default function APIKeysPage() {
   };
 
   // Load API keys on component mount
-  useState(() => {
+  useEffect(() => {
     loadAPIKeys();
-  });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
