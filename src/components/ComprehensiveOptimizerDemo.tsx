@@ -99,58 +99,6 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
     }
   };
 
-  const runHybridOptimization = async (prompt: string) => {
-    setIsRunning(true);
-    
-    try {
-      const response = await fetch('/api/hybrid-optimizer', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prompt,
-          maxTokens: 500,
-          useX402: true
-        })
-      });
-
-      const data = await response.json();
-      
-      if (data) {
-        // Create a mock comprehensive result from hybrid data
-        const hybridResult: ComprehensiveOptimizationResult = {
-          originalCost: data.originalCost,
-          optimizedCost: data.optimizedCost,
-          savings: data.savings,
-          savingsPercentage: (data.savings / data.originalCost) * 100,
-          optimizationMethods: ['hybrid_optimization', 'provider_switching', 'caching'],
-          response: data.details,
-          metrics: {
-            capoOptimization: 0,
-            agentkitOptimization: 0,
-            x402Savings: 0,
-            hybridOptimization: data.savings,
-            totalOptimization: data.savings
-          },
-          pipeline: {
-            step1_capo: { prompt: '', tokens: 0, cost: 0 },
-            step2_agentkit: { routing: 'hybrid', cost: 0 },
-            step3_x402: { payment: 'simulated', cost: 0 },
-            step4_hybrid: { caching: true, provider: 'hybrid', cost: data.optimizedCost }
-          },
-          processingTime: 150,
-          totalProcessingTime: 150,
-          timestamp: new Date().toISOString()
-        };
-        
-        setResults(prev => [hybridResult, ...prev]);
-        await fetchStats();
-      }
-    } catch (error) {
-      console.error('Hybrid optimization failed:', error);
-    } finally {
-      setIsRunning(false);
-    }
-  };
 
   const fetchStats = async () => {
     try {
@@ -308,14 +256,6 @@ const ComprehensiveOptimizerDemo: React.FC = () => {
                   className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isRunning ? 'Optimizing...' : 'Run Comprehensive Optimization'}
-                </button>
-                
-                <button
-                  onClick={() => runHybridOptimization(currentPrompt)}
-                  disabled={isRunning || !currentPrompt.trim()}
-                  className="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isRunning ? 'Running...' : 'Test Hybrid Optimizer Only'}
                 </button>
                 
                 <button

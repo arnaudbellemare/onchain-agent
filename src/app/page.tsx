@@ -83,6 +83,18 @@ export default function Home() {
                 >
                   Comprehensive
                 </button>
+                <a
+                  href="/api-docs"
+                  className="text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg text-gray-800 hover:text-gray-900 hover:bg-gray-50"
+                >
+                  API Docs
+                </a>
+                <a
+                  href="/developer"
+                  className="text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg text-gray-800 hover:text-gray-900 hover:bg-gray-50"
+                >
+                  Developer
+                </a>
               </nav>
               
               <WalletConnection />
