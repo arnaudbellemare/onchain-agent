@@ -115,52 +115,7 @@ async function runIntelligentOptimization(
   };
 
   try {
-    // 1. GEPA Optimization (Genetic Evolution of Prompts and Agents)
-    console.log('Running GEPA optimization...');
-    const gepaResult = await costAwareOptimizer.optimize(50);
-    results.gepa_optimization = {
-      evolved_prompt: gepaResult.evolvedPrompt,
-      accuracy: gepaResult.accuracy,
-      cost_reduction: gepaResult.costReduction,
-      total_cost: gepaResult.totalCost,
-      optimization_score: gepaResult.optimizationScore
-    };
-    results.optimization_pipeline.push('GEPA');
-    results.final_optimized_prompt = gepaResult.evolvedPrompt;
-
-    // 2. CAPO Optimization (Cost-Aware Prompt Optimization)
-    console.log('Running CAPO optimization...');
-    const testCases = [
-      { amount: 50, urgency: 'low' as const, type: 'vendor_payment' as const, currency: 'USD', recipient: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6' },
-      { amount: 500, urgency: 'medium' as const, type: 'payroll' as const, currency: 'USD', recipient: '0x8ba1f109551bD432803012645Hac136c' },
-      { amount: 5000, urgency: 'high' as const, type: 'invoice' as const, currency: 'USD', recipient: 'company-invoice-account' }
-    ];
-    
-    const capoResult = await capoOptimizer.optimize(prompt, testCases);
-    results.capo_optimization = {
-      best_prompt: capoResult.bestPrompt,
-      final_accuracy: capoResult.finalAccuracy,
-      cost_reduction: capoResult.costReduction,
-      length_reduction: capoResult.lengthReduction,
-      total_evaluations: capoResult.totalEvaluations,
-      pareto_front_size: capoResult.paretoFront.length
-    };
-    results.optimization_pipeline.push('CAPO');
-    results.final_optimized_prompt = capoResult.bestPrompt;
-
-    // 3. DSPy Optimization (Deep Structured Prompt Optimization)
-    console.log('Running DSPy optimization...');
-    const dspyOptimizer = new RealDSPyOptimizer();
-    const dspyRouter = new RealDSPyPaymentRouter();
-    const dspyOptimization = await dspyOptimizer.optimizeModule(dspyRouter, []);
-    results.dspy_optimization = {
-      cost_reduction: dspyOptimization.optimization_metrics.cost_reduction,
-      accuracy_improvement: dspyOptimization.optimization_metrics.accuracy_improvement,
-      total_optimization_cost: dspyOptimization.optimization_metrics.total_optimization_cost
-    };
-    results.optimization_pipeline.push('DSPy');
-
-    // 4. LLM Optimization (Real LLM Integration)
+    // 1. LLM Optimization (Real LLM Integration) - Get baseline
     console.log('Running LLM optimization...');
     const llmOptimizer = new RealLLMPromptOptimizer();
     const llmOptimization = await llmOptimizer.optimizePrompt(prompt, options.optimization_type as 'cost' | 'accuracy' | 'length');
@@ -172,6 +127,56 @@ async function runIntelligentOptimization(
     };
     results.optimization_pipeline.push('LLM');
     results.final_optimized_prompt = llmOptimization.optimized_prompt;
+
+    // 2. DSPy Optimization (Deep Structured Prompt Optimization) - Use LLM results as examples
+    console.log('Running DSPy optimization...');
+    const dspyOptimizer = new RealDSPyOptimizer();
+    const dspyRouter = new RealDSPyPaymentRouter();
+    const dspyExamples = [{
+      input: prompt,
+      output: llmOptimization.optimized_prompt,
+      cost: llmOptimization.optimization_metrics.cost_reduction
+    }];
+    const dspyOptimization = await dspyOptimizer.optimizeModule(dspyRouter, dspyExamples);
+    results.dspy_optimization = {
+      cost_reduction: dspyOptimization.optimization_metrics.cost_reduction,
+      accuracy_improvement: dspyOptimization.optimization_metrics.accuracy_improvement,
+      total_optimization_cost: dspyOptimization.optimization_metrics.total_optimization_cost
+    };
+    results.optimization_pipeline.push('DSPy');
+
+    // 3. CAPO Optimization (Cost-Aware Prompt Optimization) - Use DSPy results
+    console.log('Running CAPO optimization...');
+    const testCases = [
+      { amount: 50, urgency: 'low' as const, type: 'vendor_payment' as const, currency: 'USD', recipient: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6' },
+      { amount: 500, urgency: 'medium' as const, type: 'payroll' as const, currency: 'USD', recipient: '0x8ba1f109551bD432803012645Hac136c' },
+      { amount: 5000, urgency: 'high' as const, type: 'invoice' as const, currency: 'USD', recipient: 'company-invoice-account' }
+    ];
+    
+    const capoResult = await capoOptimizer.optimize(results.final_optimized_prompt, testCases);
+    results.capo_optimization = {
+      best_prompt: capoResult.bestPrompt,
+      final_accuracy: capoResult.finalAccuracy,
+      cost_reduction: capoResult.costReduction,
+      length_reduction: capoResult.lengthReduction,
+      total_evaluations: capoResult.totalEvaluations,
+      pareto_front_size: capoResult.paretoFront.length
+    };
+    results.optimization_pipeline.push('CAPO');
+    results.final_optimized_prompt = capoResult.bestPrompt;
+
+    // 4. GEPA Optimization (Genetic Evolution of Prompts and Agents) - Evolve best prompts
+    console.log('Running GEPA optimization...');
+    const gepaResult = await costAwareOptimizer.optimize(50);
+    results.gepa_optimization = {
+      evolved_prompt: gepaResult.evolvedPrompt,
+      accuracy: gepaResult.accuracy,
+      cost_reduction: gepaResult.costReduction,
+      total_cost: gepaResult.totalCost,
+      optimization_score: gepaResult.optimizationScore
+    };
+    results.optimization_pipeline.push('GEPA');
+    results.final_optimized_prompt = gepaResult.evolvedPrompt;
 
     // 5. Enhanced Payment Router (AgentKit Integration)
     console.log('Running Enhanced Payment Router...');
@@ -291,7 +296,7 @@ export async function GET(req: NextRequest) {
               'Total: 40-70% cost reduction with intelligent optimization'
             ],
             optimization_pipeline: [
-              'GEPA → CAPO → DSPy → LLM → AgentKit → X402 → Blockchain'
+              'LLM → DSPy → CAPO → GEPA → AgentKit → X402 → Blockchain'
             ],
             development_time: '6-8 weeks',
             infrastructure_cost: '$200-300/month',
