@@ -322,7 +322,7 @@ chat_result = client.chat(
 )
 
 print(f"AI Response: {chat_result['data']['message']}")
-print(f"Cost: ${chat_result['data']['cost']:.4f}")`}
+print(f"Cost: \${chat_result['data']['cost']:.4f}")`}
                     </pre>
                   </div>
 
@@ -358,7 +358,7 @@ curl -X POST "https://your-domain.com/api/v1" \\
                   <div className="border rounded-lg p-6">
                     <h3 className="text-xl font-semibold mb-4">Real-world Integration Example</h3>
                     <p className="text-gray-600 mb-4">
-                      Here's how to integrate cost optimization into your existing AI application:
+                      Here&apos;s how to integrate cost optimization into your existing AI application:
                     </p>
                     <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto">
 {`// Replace direct OpenAI calls with cost-optimized routing
@@ -435,7 +435,7 @@ console.log(\`Saved \${aiResponse.savingsPercentage}% compared to direct API cal
                       <div className="flex items-center justify-between p-3 bg-white rounded-lg">
                         <div>
                           <p className="font-medium">Daily spending limit reached</p>
-                          <p className="text-sm text-gray-500">You've spent $50 today</p>
+                          <p className="text-sm text-gray-500">You&apos;ve spent $50 today</p>
                         </div>
                         <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">
                           Warning
@@ -467,7 +467,7 @@ console.log(\`Saved \${aiResponse.savingsPercentage}% compared to direct API cal
                       <div>
                         <h4 className="font-semibold">API Key Invalid</h4>
                         <p className="text-sm text-blue-800">
-                          Make sure you're using the correct API key from your dashboard. 
+                          Make sure you&apos;re using the correct API key from your dashboard. 
                           Check that there are no extra spaces or characters.
                         </p>
                       </div>
