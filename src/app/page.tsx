@@ -7,6 +7,9 @@ import HowItWorks from "@/components/HowItWorks";
 import AnimatedOptimizationBackground from "@/components/AnimatedOptimizationBackground";
 import CostAwareOptimizationDemo from "@/components/CostAwareOptimizationDemo";
 import GEPAX402IntegrationDemo from "@/components/GEPAX402IntegrationDemo";
+import CAPOX402Demo from "@/components/CAPOX402Demo";
+import HybridOptimizerDemo from "@/components/HybridOptimizerDemo";
+import ComprehensiveOptimizerDemo from "@/components/ComprehensiveOptimizerDemo";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("home");
@@ -81,6 +84,36 @@ export default function Home() {
                   }`}
                 >
                   GEPA + x402
+                </button>
+                <button
+                  onClick={() => setActiveTab("capo-x402")}
+                  className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
+                    activeTab === "capo-x402" 
+                      ? "text-blue-600 bg-blue-50" 
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  }`}
+                >
+                  CAPO x x402
+                </button>
+                <button
+                  onClick={() => setActiveTab("hybrid")}
+                  className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
+                    activeTab === "hybrid" 
+                      ? "text-blue-600 bg-blue-50" 
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  }`}
+                >
+                  Hybrid Optimizer
+                </button>
+                <button
+                  onClick={() => setActiveTab("comprehensive")}
+                  className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
+                    activeTab === "comprehensive" 
+                      ? "text-blue-600 bg-blue-50" 
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  }`}
+                >
+                  Comprehensive
                 </button>
               </nav>
               
@@ -260,6 +293,18 @@ export default function Home() {
 
         {activeTab === "gepa-x402" && (
           <GEPAX402IntegrationDemo />
+        )}
+
+        {activeTab === "capo-x402" && (
+          <CAPOX402Demo />
+        )}
+
+        {activeTab === "hybrid" && (
+          <HybridOptimizerDemo />
+        )}
+
+        {activeTab === "comprehensive" && (
+          <ComprehensiveOptimizerDemo />
         )}
       </main>
     </div>
