@@ -1,6 +1,7 @@
 // CAPO (Cost-Aware Prompt Optimization) Integration
 // Based on the paper: "CAPO: Cost-Aware Prompt Optimization" (arXiv:2504.16005)
 import { costAwareOptimizer } from './costAwareOptimizer';
+import { RealLLMPromptOptimizer, RealLLMManager } from './realLLMIntegration';
 
 interface PaymentRequest {
   amount: number;
@@ -59,13 +60,17 @@ export class CAPOOptimizer {
   private generationCount: number = 0;
   private evaluationCount: number = 0;
   private paretoFront: CAPOIndividual[] = [];
+  private llmOptimizer: RealLLMPromptOptimizer;
+  private llmManager: RealLLMManager;
 
   constructor(config: Partial<CAPOConfig> = {}) {
     this.config = { ...DEFAULT_CAPO_CONFIG, ...config };
+    this.llmOptimizer = new RealLLMPromptOptimizer();
+    this.llmManager = new RealLLMManager();
   }
 
   // Initialize population from task description
-  initializePopulation(taskDescription: string): void {
+  async initializePopulation(taskDescription: string): Promise<void> {
     this.population = [];
     
     // Generate diverse initial population
@@ -78,7 +83,7 @@ export class CAPOOptimizer {
     ];
 
     for (let i = 0; i < this.config.populationSize; i++) {
-      const prompt = this.mutatePrompt(basePrompts[i % basePrompts.length]);
+      const prompt = await this.mutatePrompt(basePrompts[i % basePrompts.length]);
       this.population.push({
         prompt,
         accuracy: 0,
@@ -92,23 +97,33 @@ export class CAPOOptimizer {
     console.log(`CAPO: Initialized population of ${this.population.length} individuals`);
   }
 
-  // CAPO mutation operators (using LLM-inspired mutations)
-  mutatePrompt(prompt: string): string {
+  // CAPO mutation operators (using real LLM mutations)
+  async mutatePrompt(prompt: string): Promise<string> {
     const mutations = [
+      // Real LLM-based optimization
+      async () => {
+        try {
+          const result = await this.llmOptimizer.optimizePrompt(prompt, 'cost');
+          return result.optimized_prompt;
+        } catch (error) {
+          console.warn('LLM optimization failed, falling back to rule-based:', error);
+          return this.reduceLength(prompt);
+        }
+      },
       // Length reduction mutation
-      () => this.reduceLength(prompt),
+      () => Promise.resolve(this.reduceLength(prompt)),
       // Cost awareness mutation
-      () => this.addCostAwareness(prompt),
+      () => Promise.resolve(this.addCostAwareness(prompt)),
       // Instruction optimization mutation
-      () => this.optimizeInstructions(prompt),
+      () => Promise.resolve(this.optimizeInstructions(prompt)),
       // Synonym replacement mutation
-      () => this.replaceSynonyms(prompt),
+      () => Promise.resolve(this.replaceSynonyms(prompt)),
       // Structure simplification mutation
-      () => this.simplifyStructure(prompt)
+      () => Promise.resolve(this.simplifyStructure(prompt))
     ];
 
     const mutation = mutations[Math.floor(Math.random() * mutations.length)];
-    return mutation();
+    return await mutation();
   }
 
   // Length reduction mutation
@@ -272,7 +287,7 @@ export class CAPOOptimizer {
   async optimize(taskDescription: string, testCases: PaymentRequest[]): Promise<CAPOResult> {
     console.log(`CAPO: Starting optimization with budget ${this.config.budget}`);
     
-    this.initializePopulation(taskDescription);
+    await this.initializePopulation(taskDescription);
     
     while (this.evaluationCount < this.config.budget) {
       // Evaluate current population
@@ -290,7 +305,7 @@ export class CAPOOptimizer {
       
       for (const parent of parents) {
         // Create offspring through mutation
-        const mutatedPrompt = this.mutatePrompt(parent.prompt);
+        const mutatedPrompt = await this.mutatePrompt(parent.prompt);
         offspring.push({
           prompt: mutatedPrompt,
           accuracy: 0,
@@ -380,6 +395,16 @@ export class CAPOOptimizer {
         config: this.config
       }
     }, null, 2);
+  }
+
+  // Get LLM cost analytics
+  getLLMCostAnalytics(): any {
+    return this.llmManager.getCostAnalytics();
+  }
+
+  // Get LLM manager for external access
+  getLLMManager(): RealLLMManager {
+    return this.llmManager;
   }
 }
 

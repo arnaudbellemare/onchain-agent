@@ -3,6 +3,7 @@ import { createPublicClient, createWalletClient, http, parseEther, formatEther, 
 import { baseSepolia, base } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 import { config } from './config';
+import { RealBlockchainService, RealX402Protocol, RealBlockchainAnalytics } from './realBlockchainIntegration';
 
 // USDC contract addresses
 const USDC_CONTRACT_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'; // Base mainnet

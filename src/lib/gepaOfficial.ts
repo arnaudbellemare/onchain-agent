@@ -5,19 +5,9 @@
  */
 
 import { CostAwareOptimizer } from './costAwareOptimizer';
+import { RealDSPyPaymentRouter, RealDSPyChainOfThought, DSPyModule, DSPyTrace } from './realDSPyIntegration';
 
-// DSPy-style interfaces (simulating official DSPy integration)
-interface DSPyModule {
-  forward(input: unknown): Promise<unknown>;
-  parameters(): unknown[];
-}
-
-interface DSPyTrace {
-  tokens_in: number;
-  tokens_out: number;
-  inference_seconds: number;
-  cost_usd: number;
-}
+// DSPyTrace interface is now imported from realDSPyIntegration
 
 interface DSPyExample {
   input: string;
@@ -113,35 +103,18 @@ export class GEPAOfficial {
    * Create a PaymentRouter module with given prompt
    */
   private createPaymentRouterModule(prompt: string): DSPyModule {
-    const dspyModule = {
+    // Use real DSPy PaymentRouter instead of simulated module
+    const realPaymentRouter = new RealDSPyPaymentRouter();
+    
+    // Create a wrapper that uses the real DSPy module
+    return {
       forward: async (input: unknown) => {
-        // Simulate DSPy ChainOfThought execution
-        const startTime = Date.now();
-        const result = await this.simulatePaymentRouting(prompt, input);
-        const endTime = Date.now();
-        
-        // Create trace for cost calculation
-        const resultData = result as { reasoning: string };
-        const trace: DSPyTrace = {
-          tokens_in: Math.ceil(prompt.length / 4) + Math.ceil(JSON.stringify(input).length / 4),
-          tokens_out: Math.ceil(resultData.reasoning.length / 4),
-          inference_seconds: (endTime - startTime) / 1000,
-          cost_usd: 0 // Will be calculated
-        };
-
-        // Calculate real cost
-        const costMetrics = this.costOptimizer.calculateCostMetrics(
-          trace.tokens_in, 
-          trace.tokens_out, 
-          trace.inference_seconds
-        );
-        trace.cost_usd = costMetrics.totalCostUSD;
-
-        return { ...(result as Record<string, unknown>), trace };
+        const result = await realPaymentRouter.forward(input);
+        return result;
       },
-      parameters: () => [prompt]
+      parameters: () => realPaymentRouter.parameters(),
+      named_parameters: () => realPaymentRouter.named_parameters()
     };
-    return dspyModule;
   }
 
   /**
@@ -225,7 +198,9 @@ export class GEPAOfficial {
         tokens_in: totalTraces.reduce((sum, t) => sum + t.tokens_in, 0),
         tokens_out: totalTraces.reduce((sum, t) => sum + t.tokens_out, 0),
         inference_seconds: totalTraces.reduce((sum, t) => sum + t.inference_seconds, 0),
-        cost_usd: avgCost
+        cost_usd: avgCost,
+        model_used: 'gpt-4',
+        timestamp: Date.now()
       }
     };
   }
