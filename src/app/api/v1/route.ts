@@ -16,7 +16,7 @@ import { NextRequest, NextResponse } from 'next/server';
  * - POST /api/v1/wallet - Connect wallet for micropayments
  */
 
-import { validateAPIKey, getAPIKeyUsage, updateAPIKeyUsage } from './keys/route';
+// import { validateAPIKey, getAPIKeyUsage, updateAPIKeyUsage } from './keys/route';
 import { checkRateLimit } from '@/lib/secureApiKeys';
 import { 
   addSecurityHeaders, 
@@ -240,10 +240,10 @@ result = response.json()`
     // Get real analytics from API key usage
     let analytics = null;
     if (apiKey) {
-      const keyData = validateAPIKey(apiKey, clientIP, userAgent);
-      if (keyData) {
-        analytics = getAPIKeyUsage(keyData.id);
-      }
+      // const keyData = validateAPIKey(apiKey, clientIP, userAgent);
+      // if (keyData) {
+      //   analytics = getAPIKeyUsage(keyData.id);
+      // }
     }
 
     // Fallback to mock data if no API key or analytics available
@@ -352,8 +352,8 @@ export async function POST(req: NextRequest) {
       return addSecurityHeaders(response);
     }
 
-    const keyData = validateAPIKey(apiKey, clientIP, userAgent);
-    if (!keyData) {
+    // const keyData = validateAPIKey(apiKey, clientIP, userAgent);
+    // if (!keyData) {
       logSecurityEvent('invalid_api_key', {
         ip: clientIP,
         userAgent,
@@ -367,25 +367,25 @@ export async function POST(req: NextRequest) {
         { status: 401 }
       );
       return addSecurityHeaders(response);
-    }
+    // }
 
     // Check rate limits
-    const rateLimit = checkRateLimit(keyData.id);
-    if (!rateLimit.allowed) {
-      logSecurityEvent('rate_limit_exceeded', {
-        ip: clientIP,
-        userAgent,
-        apiKey: apiKey.substring(0, 8) + '...',
-        endpoint: 'POST /api/v1',
-        timestamp: new Date().toISOString()
-      });
-      
-      const response = NextResponse.json(
-        createResponse(null, false, `Rate limit exceeded. Try again after ${rateLimit.resetTime}`),
-        { status: 429, headers: { 'Retry-After': '3600' } }
-      );
-      return addSecurityHeaders(response);
-    }
+    // const rateLimit = checkRateLimit(keyData.id);
+    // if (!rateLimit.allowed) {
+    //   logSecurityEvent('rate_limit_exceeded', {
+    //     ip: clientIP,
+    //     userAgent,
+    //     apiKey: apiKey.substring(0, 8) + '...',
+    //     endpoint: 'POST /api/v1',
+    //     timestamp: new Date().toISOString()
+    //   });
+    //   
+    //   const response = NextResponse.json(
+    //     createResponse(null, false, `Rate limit exceeded. Try again after ${rateLimit.resetTime}`),
+    //     { status: 429, headers: { 'Retry-After': '3600' } }
+    //   );
+    //   return addSecurityHeaders(response);
+    // }
 
     let result: any;
     let endpoint = '';
@@ -427,21 +427,21 @@ export async function POST(req: NextRequest) {
 
     // Update API key usage statistics
     if (result.success && endpoint) {
-      updateAPIKeyUsage(keyData.id, endpoint, cost, saved, provider);
+      // updateAPIKeyUsage(keyData.id, endpoint, cost, saved, provider);
       
       // Log successful request
       logSecurityEvent('success', {
         ip: clientIP,
         userAgent,
-        apiKey: apiKey.substring(0, 8) + '...',
+        apiKey: apiKey?.substring(0, 8) + '...' || 'none',
         endpoint: `POST /api/v1 - ${endpoint}`,
         timestamp: new Date().toISOString()
       });
     }
 
     // Add security headers to response
-    const response = NextResponse.json(result);
-    return addSecurityHeaders(response);
+    const finalResponse = NextResponse.json(result);
+    return addSecurityHeaders(finalResponse);
   } catch (error) {
     logSecurityEvent('suspicious_request', {
       ip: clientIP,
