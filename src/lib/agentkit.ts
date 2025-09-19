@@ -47,19 +47,17 @@ export async function initializeAgentKit() {
           }
         },
         {
-          name: "swapTokens",
-          description: "Swap tokens on DEX",
+          name: "sendUSDC",
+          description: "Send USDC tokens",
           invoke: async (args: Record<string, unknown> = {}) => {
-            const { fromToken, toToken, amount, slippage } = args as { 
-              fromToken: string; 
-              toToken: string; 
+            const { to, amount } = args as { 
+              to: string; 
               amount: string; 
-              slippage?: number 
             };
-            if (!fromToken || !toToken || !amount) {
-              throw new Error("Missing required parameters: fromToken, toToken, and amount");
+            if (!to || !amount) {
+              throw new Error("Missing required parameters: to and amount");
             }
-            return await blockchainService.swapTokens(fromToken, toToken, amount, slippage);
+            return await blockchainService.sendUSDC(to, amount);
           }
         },
         {

@@ -295,10 +295,10 @@ export default function GEPAX402IntegrationDemo() {
                     <div className="flex justify-between items-start">
                       <div className="text-sm">
                         <div className="font-medium text-gray-900">
-                          ${test.request.amount} {test.request.type} - {test.request.urgency} urgency
+                          ${(test.request.amount as number)} {(test.request.type as string)} - {(test.request.urgency as string)} urgency
                         </div>
                         <div className="text-gray-600">
-                          Recipient: {test.request.recipient}
+                          Recipient: {(test.request.recipient as string)}
                         </div>
                       </div>
                       <div className={`text-sm font-medium ${

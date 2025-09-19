@@ -125,8 +125,8 @@ export async function POST(request: NextRequest) {
       evolved_config: {
         config_id: configId,
         deployed: export_config,
-        performance_metrics: evolvedConfig.performance_metrics,
-        cost_reduction: evolvedConfig.cost_reduction
+        performance_metrics: (evolvedConfig as any).performance_metrics,
+        cost_reduction: (evolvedConfig as any).cost_reduction
       },
       x402_integration: x402Results,
       cost_tracing: {
@@ -161,7 +161,7 @@ export async function POST(request: NextRequest) {
 /**
  * Test x402 micropayments with evolved configuration
  */
-async function testX402Integration(configId: string, evolvedConfig: any): Promise<any> {
+async function testX402Integration(configId: string, _evolvedConfig: unknown): Promise<unknown> {
   try {
     const testPaymentRequests = [
       {
@@ -198,7 +198,7 @@ async function testX402Integration(configId: string, evolvedConfig: any): Promis
       } catch (error) {
         x402Results.push({
           request: paymentRequest,
-          error: error.message,
+          error: error instanceof Error ? error.message : 'Unknown error',
           success: false
         });
       }

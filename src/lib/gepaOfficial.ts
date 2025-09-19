@@ -8,8 +8,8 @@ import { CostAwareOptimizer } from './costAwareOptimizer';
 
 // DSPy-style interfaces (simulating official DSPy integration)
 interface DSPyModule {
-  forward(input: any): Promise<any>;
-  parameters(): any[];
+  forward(input: unknown): Promise<unknown>;
+  parameters(): unknown[];
 }
 
 interface DSPyTrace {
@@ -85,7 +85,7 @@ export class GEPAOfficial {
   /**
    * Initialize population with diverse PaymentRouter modules
    */
-  private initializePopulation(): GEPAIndividual[] {
+  private async initializePopulation(): Promise<GEPAIndividual[]> {
     const population: GEPAIndividual[] = [];
     
     // Create diverse initial prompts for PaymentRouter
@@ -102,7 +102,7 @@ export class GEPAOfficial {
 
     for (let i = 0; i < this.config.population_size; i++) {
       const module = this.createPaymentRouterModule(initialPrompts[i]);
-      const individual = this.evaluateIndividual(module);
+      const individual = await this.evaluateIndividual(module);
       population.push(individual);
     }
 
@@ -113,17 +113,18 @@ export class GEPAOfficial {
    * Create a PaymentRouter module with given prompt
    */
   private createPaymentRouterModule(prompt: string): DSPyModule {
-    return {
-      forward: async (input: any) => {
+    const dspyModule = {
+      forward: async (input: unknown) => {
         // Simulate DSPy ChainOfThought execution
         const startTime = Date.now();
         const result = await this.simulatePaymentRouting(prompt, input);
         const endTime = Date.now();
         
         // Create trace for cost calculation
+        const resultData = result as { reasoning: string };
         const trace: DSPyTrace = {
           tokens_in: Math.ceil(prompt.length / 4) + Math.ceil(JSON.stringify(input).length / 4),
-          tokens_out: Math.ceil(result.reasoning.length / 4),
+          tokens_out: Math.ceil(resultData.reasoning.length / 4),
           inference_seconds: (endTime - startTime) / 1000,
           cost_usd: 0 // Will be calculated
         };
@@ -136,17 +137,19 @@ export class GEPAOfficial {
         );
         trace.cost_usd = costMetrics.totalCostUSD;
 
-        return { ...result, trace };
+        return { ...(result as Record<string, unknown>), trace };
       },
       parameters: () => [prompt]
     };
+    return dspyModule;
   }
 
   /**
    * Simulate payment routing with evolved prompt
    */
-  private async simulatePaymentRouting(prompt: string, input: any): Promise<any> {
-    const { amount, urgency, type } = input.transaction_details;
+  private async simulatePaymentRouting(prompt: string, input: unknown): Promise<unknown> {
+    const inputData = input as { transaction_details: { amount: number; urgency: string; type: string } };
+    const { amount, urgency, type } = inputData.transaction_details;
     
     // Evolved prompt logic - more concise and cost-focused
     let decision = 'USDC';
@@ -184,7 +187,7 @@ export class GEPAOfficial {
   /**
    * Evaluate individual using Pareto optimization
    */
-  private evaluateIndividual(module: DSPyModule): GEPAIndividual {
+  private async evaluateIndividual(module: DSPyModule): Promise<GEPAIndividual> {
     const testCases = [
       { transaction_details: { amount: 50, urgency: 'low', type: 'vendor_payment' } },
       { transaction_details: { amount: 500, urgency: 'medium', type: 'payroll' } },
@@ -193,13 +196,14 @@ export class GEPAOfficial {
 
     let totalAccuracy = 0;
     let totalCost = 0;
-    let totalTraces: DSPyTrace[] = [];
+    const totalTraces: DSPyTrace[] = [];
 
     // Evaluate on test cases
     for (const testCase of testCases) {
-      const result = module.forward(testCase);
-      totalTraces.push(result.trace);
-      totalCost += result.trace.cost_usd;
+      const result = await module.forward(testCase);
+      const resultData = result as { trace: DSPyTrace };
+      totalTraces.push(resultData.trace);
+      totalCost += resultData.trace.cost_usd;
       
       // Calculate accuracy based on optimal rail selection
       const accuracy = this.calculateAccuracy(testCase, result);
@@ -210,7 +214,7 @@ export class GEPAOfficial {
     const avgCost = totalCost / testCases.length;
     
     // Calculate fitness using Pareto optimization
-    const fitness = this.calculateFitness(avgAccuracy, avgCost, module.parameters()[0]);
+    const fitness = this.calculateFitness(avgAccuracy, avgCost, module.parameters()[0] as string);
 
     return {
       module,
@@ -229,9 +233,11 @@ export class GEPAOfficial {
   /**
    * Calculate accuracy based on optimal rail selection
    */
-  private calculateAccuracy(testCase: any, result: any): number {
-    const { amount, urgency } = testCase.transaction_details;
-    const { selected_rail } = result;
+  private calculateAccuracy(testCase: unknown, result: unknown): number {
+    const testData = testCase as { transaction_details: { amount: number; urgency: string } };
+    const resultData = result as { selected_rail: string };
+    const { amount, urgency } = testData.transaction_details;
+    const { selected_rail } = resultData;
     
     // Optimal rail selection logic
     let optimalRail = 'ACH';
@@ -263,7 +269,7 @@ export class GEPAOfficial {
   /**
    * Evolve population using GEPA mutation-reflection loop
    */
-  private evolvePopulation(population: GEPAIndividual[]): GEPAIndividual[] {
+  private async evolvePopulation(population: GEPAIndividual[]): Promise<GEPAIndividual[]> {
     const newPopulation: GEPAIndividual[] = [];
     
     // Keep top performers (elitism)
@@ -275,7 +281,7 @@ export class GEPAOfficial {
     while (newPopulation.length < this.config.population_size) {
       const parent = this.selectParent(population);
       const child = this.mutateAndReflect(parent);
-      const evaluatedChild = this.evaluateIndividual(child.module);
+      const evaluatedChild = await this.evaluateIndividual(child.module);
       newPopulation.push(evaluatedChild);
     }
 
@@ -301,7 +307,7 @@ export class GEPAOfficial {
    * Mutate and reflect on parent to create child
    */
   private mutateAndReflect(parent: GEPAIndividual): { module: DSPyModule } {
-    const currentPrompt = parent.module.parameters()[0];
+    const currentPrompt = parent.module.parameters()[0] as string;
     
     // GEPA-style reflection: analyze what makes parent successful
     const reflection = this.reflectOnSuccess(parent);
@@ -324,10 +330,10 @@ export class GEPAOfficial {
     if (individual.cost < 0.005) {
       insights.push('low_cost');
     }
-    if (individual.module.parameters()[0].length < 80) {
+    if ((individual.module.parameters()[0] as string).length < 80) {
       insights.push('concise');
     }
-    if (individual.module.parameters()[0].includes('cost')) {
+    if ((individual.module.parameters()[0] as string).includes('cost')) {
       insights.push('cost_focused');
     }
     
@@ -383,11 +389,11 @@ export class GEPAOfficial {
   /**
    * Main GEPA optimization loop
    */
-  async optimize(examples: DSPyExample[] = []): Promise<GEPAResult> {
+  async optimize(_examples: DSPyExample[] = []): Promise<GEPAResult> {
     console.log(`Starting GEPA optimization with budget: ${this.config.budget}`);
     
     // Initialize population
-    this.population = this.initializePopulation();
+    this.population = await this.initializePopulation();
     let generation = 0;
     let evaluations = 0;
     
@@ -413,12 +419,12 @@ export class GEPAOfficial {
       console.log(`Generation ${generation}: Best fitness=${currentBest.fitness.toFixed(4)}, Avg cost=$${avgCost.toFixed(6)}, Cost reduction=${costReduction.toFixed(1)}%`);
       
       // Evolve population
-      this.population = this.evolvePopulation(this.population);
+      this.population = await this.evolvePopulation(this.population);
       evaluations += this.config.population_size;
       
       // Early stopping if converged
-      if (generation > 5 && this.evolutionHistory.slice(-3).every(h => 
-        Math.abs(h.best_fitness - currentBest.fitness) < 0.001)) {
+      if (generation > 5 && this.evolutionHistory.slice(-3).every(_h => 
+        Math.abs(_h.best_fitness - currentBest.fitness) < 0.001)) {
         console.log('GEPA converged early');
         break;
       }
@@ -462,9 +468,9 @@ export class GEPAOfficial {
   /**
    * Export evolved configuration for AgentKit deployment
    */
-  exportEvolvedConfig(result: GEPAResult): any {
+  exportEvolvedConfig(result: GEPAResult): unknown {
     const best = result.best_individual;
-    const prompt = best.module.parameters()[0];
+    const prompt = best.module.parameters()[0] as string;
     
     return {
       evolved_prompt: prompt,
