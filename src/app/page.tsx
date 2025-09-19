@@ -5,9 +5,6 @@ import WalletConnection from "@/components/WalletConnection";
 import WhatWeOffer from "@/components/WhatWeOffer";
 import HowItWorks from "@/components/HowItWorks";
 import AnimatedOptimizationBackground from "@/components/AnimatedOptimizationBackground";
-import CostAwareOptimizationDemo from "@/components/CostAwareOptimizationDemo";
-import GEPAX402IntegrationDemo from "@/components/GEPAX402IntegrationDemo";
-import CAPOX402Demo from "@/components/CAPOX402Demo";
 import HybridOptimizerDemo from "@/components/HybridOptimizerDemo";
 import ComprehensiveOptimizerDemo from "@/components/ComprehensiveOptimizerDemo";
 
@@ -40,7 +37,7 @@ export default function Home() {
                   className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
                     activeTab === "home" 
                       ? "text-blue-600 bg-blue-50" 
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                      : "text-gray-800 hover:text-gray-900 hover:bg-gray-50"
                   }`}
                 >
                   Home
@@ -50,7 +47,7 @@ export default function Home() {
                   className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
                     activeTab === "what-we-offer" 
                       ? "text-blue-600 bg-blue-50" 
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                      : "text-gray-800 hover:text-gray-900 hover:bg-gray-50"
                   }`}
                 >
                   What We Offer
@@ -60,47 +57,17 @@ export default function Home() {
                   className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
                     activeTab === "how-it-works" 
                       ? "text-blue-600 bg-blue-50" 
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                      : "text-gray-800 hover:text-gray-900 hover:bg-gray-50"
                   }`}
                 >
                   How It Works
-                </button>
-                <button
-                  onClick={() => setActiveTab("optimization")}
-                  className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
-                    activeTab === "optimization" 
-                      ? "text-blue-600 bg-blue-50" 
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                  }`}
-                >
-                  Cost Optimization
-                </button>
-                <button
-                  onClick={() => setActiveTab("gepa-x402")}
-                  className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
-                    activeTab === "gepa-x402" 
-                      ? "text-blue-600 bg-blue-50" 
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                  }`}
-                >
-                  GEPA + x402
-                </button>
-                <button
-                  onClick={() => setActiveTab("capo-x402")}
-                  className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
-                    activeTab === "capo-x402" 
-                      ? "text-blue-600 bg-blue-50" 
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                  }`}
-                >
-                  CAPO x x402
                 </button>
                 <button
                   onClick={() => setActiveTab("hybrid")}
                   className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
                     activeTab === "hybrid" 
                       ? "text-blue-600 bg-blue-50" 
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                      : "text-gray-800 hover:text-gray-900 hover:bg-gray-50"
                   }`}
                 >
                   Hybrid Optimizer
@@ -110,7 +77,7 @@ export default function Home() {
                   className={`text-sm font-medium transition-all duration-200 px-4 py-2 rounded-lg ${
                     activeTab === "comprehensive" 
                       ? "text-blue-600 bg-blue-50" 
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                      : "text-gray-800 hover:text-gray-900 hover:bg-gray-50"
                   }`}
                 >
                   Comprehensive
@@ -137,7 +104,7 @@ export default function Home() {
                       20-70%
                     </span>
                   </h1>
-                  <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+                  <p className="text-xl text-gray-800 max-w-4xl mx-auto leading-relaxed">
                     Advanced x402 protocol micropayments and AI automation deliver unprecedented cost savings across API infrastructure, cloud computing, and payment processing.
                   </p>
                 </div>
@@ -152,9 +119,9 @@ export default function Home() {
                         </svg>
                       </div>
                       <h3 className="text-xl font-semibold text-gray-900 mb-3">Payment Integration</h3>
-                      <p className="text-gray-600 mb-4 leading-relaxed">Eliminate subscription overhead with intelligent micropayment routing</p>
+                      <p className="text-gray-800 mb-4 leading-relaxed">Eliminate subscription overhead with intelligent micropayment routing</p>
                       <div className="text-3xl font-bold text-green-600">$7,200</div>
-                      <div className="text-sm text-gray-500">annual savings</div>
+                      <div className="text-sm text-gray-700">annual savings</div>
                     </div>
                   </div>
                   
@@ -166,9 +133,9 @@ export default function Home() {
                         </svg>
                       </div>
                       <h3 className="text-xl font-semibold text-gray-900 mb-3">AI API Optimization</h3>
-                      <p className="text-gray-600 mb-4 leading-relaxed">Dynamic provider switching and intelligent caching reduce API costs</p>
+                      <p className="text-gray-800 mb-4 leading-relaxed">Dynamic provider switching and intelligent caching reduce API costs</p>
                       <div className="text-3xl font-bold text-green-600">$30,000</div>
-                      <div className="text-sm text-gray-500">annual savings</div>
+                      <div className="text-sm text-gray-700">annual savings</div>
                     </div>
                   </div>
                   
@@ -180,9 +147,9 @@ export default function Home() {
                         </svg>
                       </div>
                       <h3 className="text-xl font-semibold text-gray-900 mb-3">GPU Cost Reduction</h3>
-                      <p className="text-gray-600 mb-4 leading-relaxed">Autonomous scaling and spot instance optimization</p>
+                      <p className="text-gray-800 mb-4 leading-relaxed">Autonomous scaling and spot instance optimization</p>
                       <div className="text-3xl font-bold text-green-600">$57,600</div>
-                      <div className="text-sm text-gray-500">annual savings</div>
+                      <div className="text-sm text-gray-700">annual savings</div>
                     </div>
                   </div>
                 </div>
@@ -201,7 +168,7 @@ export default function Home() {
                       </div>
                       <h3 className="text-xl font-semibold text-gray-900">x402 Protocol</h3>
                     </div>
-                    <ul className="space-y-3 text-gray-700">
+                    <ul className="space-y-3 text-gray-800">
                       <li className="flex items-start">
                         <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                         <span>Pay-per-use micropayments eliminate subscription overhead</span>
@@ -230,7 +197,7 @@ export default function Home() {
                       </div>
                       <h3 className="text-xl font-semibold text-gray-900">AgentKit Automation</h3>
                     </div>
-                    <ul className="space-y-3 text-gray-700">
+                    <ul className="space-y-3 text-gray-800">
                       <li className="flex items-start">
                         <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                         <span>Autonomous resource scaling based on real-time demand</span>
@@ -256,7 +223,7 @@ export default function Home() {
               <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-3xl p-12 text-white">
                 <div className="max-w-3xl mx-auto text-center space-y-6">
                   <h2 className="text-3xl font-light">Ready to Transform Your Infrastructure?</h2>
-                  <p className="text-xl text-gray-300 leading-relaxed">
+                  <p className="text-xl text-gray-100 leading-relaxed">
                     Join forward-thinking businesses already saving thousands with intelligent cost optimization
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
@@ -287,17 +254,6 @@ export default function Home() {
           <HowItWorks />
         )}
 
-        {activeTab === "optimization" && (
-          <CostAwareOptimizationDemo />
-        )}
-
-        {activeTab === "gepa-x402" && (
-          <GEPAX402IntegrationDemo />
-        )}
-
-        {activeTab === "capo-x402" && (
-          <CAPOX402Demo />
-        )}
 
         {activeTab === "hybrid" && (
           <HybridOptimizerDemo />
