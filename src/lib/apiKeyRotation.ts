@@ -76,20 +76,29 @@ class APIKeyRotationService {
       // Check cache first
       let keyData = await cache.get(cacheKey);
       if (!keyData) {
-        // Check database
-        const query = `
-          SELECT ak.*, u.email, u.name, u.is_active as user_active
-          FROM api_keys ak
-          JOIN users u ON ak.user_id = u.id
-          WHERE ak.key_hash = $1 AND ak.is_active = true
-        `;
+        // Check database if enabled
+        const databaseEnabled = process.env.DATABASE_ENABLED !== 'false';
+        
+        if (databaseEnabled) {
+          try {
+            const query = `
+              SELECT ak.*, u.email, u.name, u.is_active as user_active
+              FROM api_keys ak
+              JOIN users u ON ak.user_id = u.id
+              WHERE ak.key_hash = $1 AND ak.is_active = true
+            `;
 
-        const result = await database.query(query, [keyHash]);
-        keyData = result.rows[0];
+            const result = await database.query(query, [keyHash]);
+            keyData = result.rows[0];
 
-        if (keyData) {
-          // Cache for 24 hours
-          await cache.set(cacheKey, keyData, cacheTTL.apiKey);
+            if (keyData) {
+              // Cache for 24 hours
+              await cache.set(cacheKey, keyData, cacheTTL.apiKey);
+            }
+          } catch (error) {
+            console.error('Database verification error, using cache only:', error);
+            // Continue with cache-only verification
+          }
         }
       }
 
@@ -97,8 +106,8 @@ class APIKeyRotationService {
         return { valid: false };
       }
 
-      // Check if user is active
-      if (!keyData.user_active) {
+      // Check if user is active (skip this check for in-memory keys)
+      if (keyData.user_active === false) {
         return { valid: false };
       }
 
@@ -137,24 +146,54 @@ class APIKeyRotationService {
       ? new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000)
       : new Date(Date.now() + this.config.expirationDays * 24 * 60 * 60 * 1000);
 
-    const query = `
-      INSERT INTO api_keys (user_id, name, key_hash, permissions, expires_at)
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING id
-    `;
+    // Check if database is enabled
+    const databaseEnabled = process.env.DATABASE_ENABLED !== 'false';
+    
+    if (databaseEnabled) {
+      try {
+        const query = `
+          INSERT INTO api_keys (user_id, name, key_hash, permissions, expires_at)
+          VALUES ($1, $2, $3, $4, $5)
+          RETURNING id
+        `;
 
-    const result = await database.query(query, [
-      userId,
+        const result = await database.query(query, [
+          userId,
+          name,
+          keyHash,
+          JSON.stringify(permissions),
+          expiresAt,
+        ]);
+
+        const keyId = result.rows[0].id;
+
+        // Invalidate cache
+        await cache.delete(cacheKeys.apiKey(keyHash));
+
+        return { key: apiKey, keyId };
+      } catch (error) {
+        console.error('Database error, falling back to in-memory storage:', error);
+        // Fall through to in-memory storage
+      }
+    }
+
+    // In-memory storage fallback when database is disabled or fails
+    const keyId = `mem_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Store in memory cache with a longer TTL
+    const keyData = {
+      id: keyId,
+      user_id: userId,
       name,
-      keyHash,
-      JSON.stringify(permissions),
-      expiresAt,
-    ]);
+      key_hash: keyHash,
+      permissions,
+      expires_at: expiresAt,
+      created_at: new Date(),
+      is_active: true,
+    };
 
-    const keyId = result.rows[0].id;
-
-    // Invalidate cache
-    await cache.delete(cacheKeys.apiKey(keyHash));
+    // Cache for 30 days when using in-memory storage
+    await cache.set(cacheKeys.apiKey(keyHash), keyData, 30 * 24 * 60 * 60);
 
     return { key: apiKey, keyId };
   }
@@ -350,6 +389,16 @@ class APIKeyRotationService {
    */
   private async updateLastUsed(keyId: string): Promise<void> {
     try {
+      // Skip database update for in-memory keys
+      if (keyId.startsWith('mem_')) {
+        return;
+      }
+
+      const databaseEnabled = process.env.DATABASE_ENABLED !== 'false';
+      if (!databaseEnabled) {
+        return;
+      }
+
       const query = `
         UPDATE api_keys 
         SET last_used = CURRENT_TIMESTAMP 
