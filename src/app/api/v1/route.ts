@@ -637,7 +637,7 @@ async function handleOptimize(data: any) {
     
     let aiResponse;
     let provider = 'openai';
-    let actualPrompt = optimizedPrompt;
+    const actualPrompt = optimizedPrompt;
     
     // Step 3: Try OpenAI first, then Perplexity if OpenAI fails
     try {
