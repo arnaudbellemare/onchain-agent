@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     // For listing keys, we don't require an API key - this is for dashboard display
     if (action === 'list' || !apiKey) {
       // Get all keys from the simple manager (for demo purposes)
-      const allKeys = Array.from(simpleApiKeyManager.keys.values());
+      const allKeys = simpleApiKeyManager.getAllAPIKeys();
       
       // Sanitize keys (remove actual key values)
       const sanitizedKeys = allKeys.map(key => ({

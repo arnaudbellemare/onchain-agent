@@ -117,6 +117,13 @@ class SimpleAPIKeyManager {
   }
 
   /**
+   * Get all API keys (for admin/dashboard purposes)
+   */
+  getAllAPIKeys(): SimpleAPIKey[] {
+    return Array.from(this.keys.values());
+  }
+
+  /**
    * Get API key by ID
    */
   getAPIKeyById(keyId: string): SimpleAPIKey | null {
