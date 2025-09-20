@@ -540,8 +540,24 @@ async function handleOptimize(data: any) {
   try {
     console.log('[Optimize] Using real AI for prompt:', prompt.substring(0, 50) + '...');
     
-    // Use OpenAI for real AI processing
-    const aiResponse = await realAIImplementation.callOpenAI(prompt, 1000);
+    let aiResponse;
+    let provider = 'openai';
+    
+    // Try OpenAI first, then Perplexity if OpenAI fails
+    try {
+      aiResponse = await realAIImplementation.callOpenAI(prompt, 1000);
+      console.log('[Optimize] OpenAI success');
+    } catch (openaiError) {
+      console.log('[Optimize] OpenAI failed, trying Perplexity:', openaiError instanceof Error ? openaiError.message : 'Unknown error');
+      try {
+        aiResponse = await realAIImplementation.callPerplexity(prompt, 1000);
+        provider = 'perplexity';
+        console.log('[Optimize] Perplexity success');
+      } catch (perplexityError) {
+        console.error('[Optimize] Both OpenAI and Perplexity failed');
+        throw new Error(`Both AI providers failed. OpenAI: ${openaiError instanceof Error ? openaiError.message : 'Unknown error'}. Perplexity: ${perplexityError instanceof Error ? perplexityError.message : 'Unknown error'}`);
+      }
+    }
     
     // Calculate savings compared to direct API usage (simulate higher cost for direct usage)
     const directCost = aiResponse.actualCost * 1.5; // Assume 50% markup for direct usage
@@ -555,7 +571,7 @@ async function handleOptimize(data: any) {
         optimizedCost: aiResponse.actualCost,
         savings: savings,
         savingsPercentage: savingsPercentage,
-        recommendedProvider: 'openai',
+        recommendedProvider: provider,
         tokenEstimate: aiResponse.tokens,
         response: aiResponse.response,
         transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`, // Still mock for now
@@ -597,8 +613,24 @@ async function handleChat(data: any) {
   try {
     console.log('[Chat] Using real AI for message:', message.substring(0, 50) + '...');
     
-    // Use OpenAI for real AI processing
-    const aiResponse = await realAIImplementation.callOpenAI(message, 500);
+    let aiResponse;
+    let provider = 'openai';
+    
+    // Try OpenAI first, then Perplexity if OpenAI fails
+    try {
+      aiResponse = await realAIImplementation.callOpenAI(message, 500);
+      console.log('[Chat] OpenAI success');
+    } catch (openaiError) {
+      console.log('[Chat] OpenAI failed, trying Perplexity:', openaiError instanceof Error ? openaiError.message : 'Unknown error');
+      try {
+        aiResponse = await realAIImplementation.callPerplexity(message, 500);
+        provider = 'perplexity';
+        console.log('[Chat] Perplexity success');
+      } catch (perplexityError) {
+        console.error('[Chat] Both OpenAI and Perplexity failed');
+        throw new Error(`Both AI providers failed. OpenAI: ${openaiError instanceof Error ? openaiError.message : 'Unknown error'}. Perplexity: ${perplexityError instanceof Error ? perplexityError.message : 'Unknown error'}`);
+      }
+    }
     
     return {
       success: true,
@@ -606,7 +638,7 @@ async function handleChat(data: any) {
         message: aiResponse.response,
         originalMessage: message,
         cost: aiResponse.actualCost,
-        provider: 'openai',
+        provider: provider,
         responseTime: Math.floor(Math.random() * 2000) + 500, // Still mock for now
         transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`, // Still mock for now
         timestamp: new Date().toISOString(),
