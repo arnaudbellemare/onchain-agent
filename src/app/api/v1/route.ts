@@ -519,7 +519,7 @@ export async function POST(req: NextRequest) {
 
 // Handle optimization requests
 async function handleOptimize(data: any) {
-  const { prompt, provider, maxCost, walletAddress } = data;
+  const { prompt, provider, maxCost, walletAddress, businessModel = 'white-label' } = data;
 
   if (!prompt) {
     return {
@@ -539,6 +539,7 @@ async function handleOptimize(data: any) {
 
   try {
     console.log('[Optimize] Using real AI for prompt:', prompt.substring(0, 50) + '...');
+    console.log('[Optimize] Business model:', businessModel);
     
     let aiResponse;
     let provider = 'openai';
@@ -559,16 +560,32 @@ async function handleOptimize(data: any) {
       }
     }
     
-    // Calculate savings compared to direct API usage (simulate higher cost for direct usage)
-    const directCost = aiResponse.actualCost * 1.5; // Assume 50% markup for direct usage
-    const savings = directCost - aiResponse.actualCost;
-    const savingsPercentage = (savings / directCost) * 100;
+    // Calculate pricing based on business model
+    let originalCost, optimizedCost, savings, savingsPercentage, ourFee, netSavings;
+    
+    if (businessModel === 'white-label') {
+      // White-label: Customer pays our cost + markup
+      originalCost = aiResponse.actualCost * 1.5; // Assume 50% markup for direct usage
+      optimizedCost = aiResponse.actualCost * 1.1; // 10% markup for our service
+      savings = originalCost - optimizedCost;
+      savingsPercentage = (savings / originalCost) * 100;
+      ourFee = optimizedCost - aiResponse.actualCost;
+      netSavings = savings;
+    } else {
+      // BYOK: Customer pays their cost + our optimization fee
+      originalCost = aiResponse.actualCost * 1.5; // Assume 50% markup for direct usage
+      optimizedCost = aiResponse.actualCost * 1.08; // 8% optimization fee
+      savings = originalCost - optimizedCost;
+      savingsPercentage = (savings / originalCost) * 100;
+      ourFee = aiResponse.actualCost * 0.08; // 8% of actual cost
+      netSavings = savings - ourFee;
+    }
     
     return {
       success: true,
       data: {
-        originalCost: directCost,
-        optimizedCost: aiResponse.actualCost,
+        originalCost: originalCost,
+        optimizedCost: optimizedCost,
         savings: savings,
         savingsPercentage: savingsPercentage,
         recommendedProvider: provider,
@@ -577,7 +594,10 @@ async function handleOptimize(data: any) {
         transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`, // Still mock for now
         timestamp: new Date().toISOString(),
         realAI: true,
-        usage: aiResponse.usage
+        usage: aiResponse.usage,
+        businessModel: businessModel,
+        ourFee: ourFee,
+        netSavings: netSavings
       }
     };
   } catch (error) {
