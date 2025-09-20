@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateAPIKeySecurity } from '@/lib/security';
 import { addSecurityHeaders } from '@/lib/security';
+import { simpleApiKeyManager } from '@/lib/simpleApiKeyManager';
 
 interface ChatRequest {
   message: string;
@@ -30,9 +31,6 @@ interface ChatResponse {
 
 export async function POST(req: NextRequest) {
   try {
-    // Import simpleApiKeyManager once at the top
-    const { simpleApiKeyManager } = await import('@/lib/simpleApiKeyManager');
-    
     const body: ChatRequest = await req.json();
     const { message, walletAddress = '0x123456789', provider = 'openai', maxCost = 0.10 } = body;
 

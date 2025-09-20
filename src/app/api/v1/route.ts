@@ -27,6 +27,7 @@ import {
   logSecurityEvent,
   getClientIP
 } from '@/lib/security';
+import { simpleApiKeyManager } from '@/lib/simpleApiKeyManager';
 
 // Standard API response format
 function createResponse(data: any, success: boolean = true, error?: string) {
@@ -102,7 +103,6 @@ export async function GET(req: NextRequest) {
   }
 
   // Validate API key against database (actual key validation)
-  const { simpleApiKeyManager } = await import('@/lib/simpleApiKeyManager');
   const keyValidation = simpleApiKeyManager.validateAPIKey(apiKey);
   if (!keyValidation.valid || !keyValidation.keyData) {
     logSecurityEvent('invalid_api_key', {
@@ -406,7 +406,6 @@ export async function POST(req: NextRequest) {
     }
 
     // Validate API key against database (actual key validation)
-    const { simpleApiKeyManager } = await import('@/lib/simpleApiKeyManager');
     const keyValidation = simpleApiKeyManager.validateAPIKey(apiKey);
     if (!keyValidation.valid || !keyValidation.keyData) {
       logSecurityEvent('invalid_api_key', {
