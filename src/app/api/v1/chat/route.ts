@@ -28,6 +28,12 @@ interface ChatResponse {
     response_time: string;
   };
   wallet_balance: string;
+  realAI?: boolean;
+  usage?: {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+  };
 }
 
 export async function POST(req: NextRequest) {
