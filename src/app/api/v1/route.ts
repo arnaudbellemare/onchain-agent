@@ -50,38 +50,135 @@ const x402SDK = new X402SDK(x402Config);
 const agentKitIntegration = new AgentKitX402Integration(x402SDK);
 
 // REAL CAPO Algorithm - Based on https://github.com/finitearth/capo
+// Evolutionary approach with LLMs as operators, incorporating racing and multi-objective optimization
 async function realCAPOOptimization(prompt: string): Promise<string> {
-  console.log(`[CAPO] Starting real CAPO optimization for: "${prompt.substring(0, 50)}..."`);
+  console.log(`[CAPO] Starting REAL CAPO optimization for: "${prompt.substring(0, 50)}..."`);
   
-  // Import the real CAPO algorithm
-  const { RealCAPOAlgorithm } = await import('@/lib/realCAPOAlgorithm');
-  
-  // Initialize CAPO with task description
-  const taskDescription = "Optimize prompt for cost-efficiency while maintaining performance";
-  const capo = new RealCAPOAlgorithm({
-    populationSize: 10, // Smaller for faster execution
-    budget: 50, // Limited budget for demo
-    lengthPenalty: 0.2,
-    racingThreshold: 3,
-    paretoWeights: { performance: 0.5, length: 0.25, cost: 0.25 },
-    mutationRate: 0.3,
-    crossoverRate: 0.7,
-    maxGenerations: 20,
-    earlyStoppingPatience: 5
-  });
-  
-  // Initialize and run optimization
-  await capo.initialize(taskDescription, prompt);
-  const result = await capo.optimize();
-  
-  console.log(`[CAPO] Real CAPO optimization complete:`);
-  console.log(`  - Cost reduction: ${result.costReduction.toFixed(1)}%`);
-  console.log(`  - Performance improvement: ${result.performanceImprovement.toFixed(1)}%`);
-  console.log(`  - Length reduction: ${result.lengthReduction.toFixed(1)}%`);
-  console.log(`  - Total evaluations: ${result.totalEvaluations}`);
-  console.log(`  - Generations: ${result.iterations}`);
-  
-  return result.bestPrompt;
+  try {
+    // Import the real CAPO algorithm
+    const { RealCAPOAlgorithm } = await import('@/lib/realCAPOAlgorithm');
+    
+    // Initialize CAPO with task description - OPTIMIZED for production
+    const taskDescription = "Optimize prompt for cost-efficiency while maintaining performance";
+    const capo = new RealCAPOAlgorithm({
+      populationSize: 5, // Small but effective population
+      budget: 20, // Limited budget for production
+      lengthPenalty: 0.2,
+      racingThreshold: 2,
+      paretoWeights: { performance: 0.5, length: 0.25, cost: 0.25 },
+      mutationRate: 0.3,
+      crossoverRate: 0.7,
+      maxGenerations: 5, // Few generations for speed
+      earlyStoppingPatience: 2
+    });
+    
+    // Initialize and run optimization
+    await capo.initialize(taskDescription, prompt);
+    const result = await capo.optimize();
+    
+    console.log(`[CAPO] REAL CAPO optimization complete:`);
+    console.log(`  - Cost reduction: ${result.costReduction.toFixed(1)}%`);
+    console.log(`  - Performance improvement: ${result.performanceImprovement.toFixed(1)}%`);
+    console.log(`  - Length reduction: ${result.lengthReduction.toFixed(1)}%`);
+    console.log(`  - Total evaluations: ${result.totalEvaluations}`);
+    console.log(`  - Generations: ${result.iterations}`);
+    
+    return result.bestPrompt;
+  } catch (error) {
+    console.error(`[CAPO] Real CAPO failed, falling back to simple optimization:`, error);
+    
+    // Fallback to simple optimization if real CAPO fails
+    let optimized = prompt
+      .replace(/\b(please|kindly|would you|could you|can you|I would like|I want|I need|I would appreciate)\b/gi, '')
+      .replace(/\b(very|really|quite|rather|extremely|super|incredibly|amazingly|absolutely|completely|totally)\b/gi, '')
+      .replace(/\b(actually|basically|essentially|fundamentally|literally|honestly|frankly|obviously|clearly)\b/gi, '')
+      .replace(/\b(in order to|so that|in such a way that|for the purpose of)\b/gi, 'to')
+      .replace(/\b(due to the fact that|because of the fact that|owing to the fact that)\b/gi, 'because')
+      .replace(/\b(at this point in time|at the present time|currently|right now)\b/gi, 'now')
+      .replace(/\b(in the event that|in case|if it happens that)\b/gi, 'if')
+      .replace(/\b(prior to|before the time that|ahead of)\b/gi, 'before')
+      .replace(/\b(subsequent to|after the time that|following)\b/gi, 'after')
+      .replace(/\b(with regard to|in relation to|concerning|regarding|about)\b/gi, 'about')
+      .replace(/\b(in the near future|soon|shortly|before long)\b/gi, 'soon')
+      .replace(/\b(a large number of|many|numerous|plenty of)\b/gi, 'many')
+      .replace(/\b(a small number of|few|several|a couple of)\b/gi, 'few')
+      .replace(/\b(in the majority of cases|usually|typically|generally)\b/gi, 'usually')
+      .replace(/\b(in some cases|sometimes|occasionally|at times)\b/gi, 'sometimes')
+      .replace(/\b(it is important to note that|note that|remember that)\b/gi, 'note:')
+      .replace(/\b(it should be noted that|note that|keep in mind)\b/gi, 'note:')
+      .replace(/\b(it is worth noting that|note that|worth mentioning)\b/gi, 'note:')
+      .replace(/\b(it is necessary to|must|need to|have to)\b/gi, 'must')
+      .replace(/\b(it is possible to|can|able to|capable of)\b/gi, 'can')
+      .replace(/\b(it is not possible to|cannot|unable to|incapable of)\b/gi, 'cannot')
+      .replace(/\b(there is a need to|need to|must|should)\b/gi, 'need to')
+      .replace(/\b(there is no need to|no need to|unnecessary|not required)\b/gi, 'no need to')
+      .replace(/\b(in the case of|for|regarding|concerning)\b/gi, 'for')
+      .replace(/\b(with respect to|regarding|concerning|about)\b/gi, 'about')
+      .replace(/\b(in terms of|for|regarding|concerning)\b/gi, 'for')
+      .replace(/\b(as far as.*is concerned|regarding|concerning|about)\b/gi, 'about')
+      .replace(/\b(what I mean is|that is|i.e.|in other words)\b/gi, 'i.e.')
+      .replace(/\b(for example|e.g.|such as|like)\b/gi, 'e.g.')
+      .replace(/\b(and so on|etc.|and the like|and such)\b/gi, 'etc.')
+      .replace(/\b(and so forth|etc.|and the like|and such)\b/gi, 'etc.')
+      .replace(/\b(and the like|etc.|and such|and so on)\b/gi, 'etc.')
+      .replace(/\b(and such|etc.|and the like|and so on)\b/gi, 'etc.')
+      .replace(/\b(and others|etc.|and the rest|and more)\b/gi, 'etc.')
+      .replace(/\b(and more|etc.|and others|and the rest)\b/gi, 'etc.')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    // Remove personal opinions and hedging
+    optimized = optimized
+      .replace(/\b(I think that|I believe that|I feel that|I know that|I would say that)\b/gi, '')
+      .replace(/\b(in my opinion|I think|I believe|I feel|I know|I would say)\b/gi, '')
+      .replace(/\b(from my perspective|from my point of view|in my view)\b/gi, '')
+      .replace(/\b(as far as I can see|as I see it|from what I can tell)\b/gi, '')
+      .replace(/\b(it seems to me that|it appears that|it looks like)\b/gi, '')
+      .replace(/\b(I would argue that|I would suggest that|I would recommend that)\b/gi, '')
+      .replace(/\b(I would like to|I want to|I need to|I would prefer to)\b/gi, '')
+      .replace(/\b(I would hope that|I would expect that|I would imagine that)\b/gi, '')
+      .replace(/\b(I would guess that|I would assume that|I would suppose that)\b/gi, '')
+      .replace(/\b(I would think that|I would consider that|I would say that)\b/gi, '')
+      .replace(/\b(it might be|it could be|it may be|perhaps|maybe|possibly)\b/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    // Remove redundant sentences
+    const sentences = optimized.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    const uniqueSentences = [...new Set(sentences.map(s => s.trim()))];
+    optimized = uniqueSentences.join('. ').trim();
+
+    // Aggressive abbreviation and contraction
+    optimized = optimized
+      .replace(/\b(do not|don't|cannot|can't|will not|won't|should not|shouldn't|would not|wouldn't|could not|couldn't)\b/gi, (match) => {
+        const contractions: { [key: string]: string } = {
+          'do not': "don't", 'don\'t': "don't", 'cannot': "can't", 'can\'t': "can't",
+          'will not': "won't", 'won\'t': "won't", 'should not': "shouldn't", 'shouldn\'t': "shouldn't",
+          'would not': "wouldn't", 'wouldn\'t': "wouldn't", 'could not': "couldn't", 'couldn\'t': "couldn't"
+        };
+        return contractions[match.toLowerCase()] || match;
+      })
+      .replace(/\b(you are|you're|they are|they're|we are|we're|I am|I'm|it is|it's|that is|that's)\b/gi, (match) => {
+        const contractions: { [key: string]: string } = {
+          'you are': "you're", 'you\'re': "you're", 'they are': "they're", 'they\'re': "they're",
+          'we are': "we're", 'we\'re': "we're", 'I am': "I'm", 'I\'m': "I'm",
+          'it is': "it's", 'it\'s': "it's", 'that is': "that's", 'that\'s': "that's"
+        };
+        return contractions[match.toLowerCase()] || match;
+      })
+      .replace(/\b(artificial intelligence|AI|machine learning|ML|application programming interface|API)\b/gi, (match) => {
+        const abbreviations: { [key: string]: string } = {
+          'artificial intelligence': 'AI', 'machine learning': 'ML', 'application programming interface': 'API'
+        };
+        return abbreviations[match.toLowerCase()] || match;
+      })
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    console.log(`[CAPO] Fallback optimization complete: ${prompt.length} → ${optimized.length} chars (${((prompt.length - optimized.length) / prompt.length * 100).toFixed(1)}% reduction)`);
+    
+    return optimized;
+  }
 }
 
 // Generate cache key from prompt

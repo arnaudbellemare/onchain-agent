@@ -85,6 +85,9 @@ class SimpleAPIKeyManager {
     this.keys.set(keyId, apiKey);
     this.keyToId.set(key, keyId);
 
+    console.log(`[API Key Manager] Generated new key: ${keyId} for user: ${userId}`);
+    console.log(`[API Key Manager] Total keys now: ${this.keys.size}`);
+
     return { keyId, key };
   }
 
@@ -92,20 +95,28 @@ class SimpleAPIKeyManager {
    * Validate an API key
    */
   validateAPIKey(key: string): { valid: boolean; keyData?: SimpleAPIKey; reason?: string } {
+    console.log(`[API Key Manager] Validating key: ${key.substring(0, 20)}...`);
+    console.log(`[API Key Manager] Total keys stored: ${this.keys.size}`);
+    console.log(`[API Key Manager] Key mappings: ${this.keyToId.size}`);
+    
     const keyId = this.keyToId.get(key);
     if (!keyId) {
+      console.log(`[API Key Manager] Key not found in mappings`);
       return { valid: false, reason: 'API key not found' };
     }
 
     const keyData = this.keys.get(keyId);
     if (!keyData) {
+      console.log(`[API Key Manager] Key data not found for ID: ${keyId}`);
       return { valid: false, reason: 'API key data not found' };
     }
 
     if (!keyData.isActive) {
+      console.log(`[API Key Manager] Key is inactive`);
       return { valid: false, reason: 'API key is inactive' };
     }
 
+    console.log(`[API Key Manager] Key validation successful`);
     return { valid: true, keyData };
   }
 
