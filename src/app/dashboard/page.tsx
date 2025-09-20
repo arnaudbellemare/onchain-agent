@@ -75,7 +75,7 @@ export default function DashboardPage() {
   // Load API keys
   const loadAPIKeys = async () => {
     try {
-      const response = await fetch('/api/v1/keys');
+      const response = await fetch('/api/v1/keys?action=list');
       const result = await response.json();
       
       if (result.success) {

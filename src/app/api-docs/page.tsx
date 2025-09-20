@@ -1,12 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function APIDocsPage() {
   const [activeTab, setActiveTab] = useState('overview');
   const [apiKey, setApiKey] = useState('');
   const [testResponse, setTestResponse] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+
+  // Load API key from URL parameters on component mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const keyFromUrl = urlParams.get('key');
+      if (keyFromUrl) {
+        setApiKey(decodeURIComponent(keyFromUrl));
+        setActiveTab('testing'); // Automatically switch to testing tab
+      }
+    }
+  }, []);
 
   const testAPI = async (endpoint: string, method: 'GET' | 'POST', data?: any) => {
     setLoading(true);

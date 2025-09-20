@@ -7,6 +7,7 @@ export default function APIKeysPage() {
   const [loading, setLoading] = useState(false);
   const [newKeyName, setNewKeyName] = useState('');
   const [generatedKey, setGeneratedKey] = useState<any>(null);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   // Generate a new API key
   const generateAPIKey = async () => {
@@ -50,7 +51,7 @@ export default function APIKeysPage() {
     if (typeof window === 'undefined') return;
     
     try {
-      const response = await fetch('/api/v1/keys');
+      const response = await fetch('/api/v1/keys?action=list');
       const result = await response.json();
       
       if (result.success) {
@@ -59,6 +60,24 @@ export default function APIKeysPage() {
     } catch (error) {
       console.error('Error loading API keys:', error);
     }
+  };
+
+  // Copy API key to clipboard
+  const copyToClipboard = async (key: string, keyId: string) => {
+    try {
+      await navigator.clipboard.writeText(key);
+      setCopiedKey(keyId);
+      setTimeout(() => setCopiedKey(null), 2000);
+    } catch (error) {
+      console.error('Failed to copy to clipboard:', error);
+      alert('Failed to copy to clipboard');
+    }
+  };
+
+  // Navigate to API docs with the key
+  const navigateToAPIDocs = (key: string) => {
+    const encodedKey = encodeURIComponent(key);
+    window.open(`/api-docs?key=${encodedKey}`, '_blank');
   };
 
   // Delete an API key
@@ -164,6 +183,20 @@ export default function APIKeysPage() {
                   <p><strong>Created:</strong> {new Date(generatedKey.createdAt).toLocaleString()}</p>
                   <p><strong>Permissions:</strong> {generatedKey.permissions.join(', ')}</p>
                 </div>
+              </div>
+              <div className="mt-4 flex space-x-3">
+                <button
+                  onClick={() => navigateToAPIDocs(generatedKey.key)}
+                  className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700"
+                >
+                  🚀 Test in API Docs
+                </button>
+                <button
+                  onClick={() => copyToClipboard(generatedKey.key, generatedKey.id)}
+                  className="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700"
+                >
+                  {copiedKey === generatedKey.id ? '✅ Copied!' : '📋 Copy Key'}
+                </button>
               </div>
               <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded">
                 <p className="text-sm text-yellow-800">

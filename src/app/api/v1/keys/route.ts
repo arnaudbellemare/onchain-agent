@@ -9,15 +9,36 @@ import { simpleApiKeyManager } from '@/lib/simpleApiKeyManager';
 export async function GET(req: NextRequest) {
   try {
     const apiKey = req.headers.get('X-API-Key') || req.headers.get('x-api-key');
+    const url = new URL(req.url);
+    const action = url.searchParams.get('action');
     
-    if (!apiKey) {
+    // For listing keys, we don't require an API key - this is for dashboard display
+    if (action === 'list' || !apiKey) {
+      // Get all keys from the simple manager (for demo purposes)
+      const allKeys = Array.from(simpleApiKeyManager.keys.values());
+      
+      // Sanitize keys (remove actual key values)
+      const sanitizedKeys = allKeys.map(key => ({
+        id: key.id,
+        name: key.name,
+        keyPreview: simpleApiKeyManager.getKeyPreview(key.key),
+        permissions: key.permissions,
+        createdAt: key.createdAt,
+        lastUsed: null, // We don't track this in simple version
+        isActive: key.isActive,
+        usage: key.usage
+      }));
+
       return NextResponse.json({
-        success: false,
-        error: 'API key is required'
-      }, { status: 401 });
+        success: true,
+        data: {
+          keys: sanitizedKeys,
+          total: sanitizedKeys.length
+        }
+      });
     }
 
-    // Validate the API key
+    // Validate the API key for other actions
     console.log(`[API Key Validation] Validating key: ${apiKey.substring(0, 20)}...`);
     const validation = simpleApiKeyManager.validateAPIKey(apiKey);
     console.log(`[API Key Validation] Result:`, validation);
