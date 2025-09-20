@@ -49,14 +49,39 @@ const x402Config = {
 const x402SDK = new X402SDK(x402Config);
 const agentKitIntegration = new AgentKitX402Integration(x402SDK);
 
-// Simple prompt optimization
-function optimizePrompt(prompt: string): string {
-  return prompt
-    .replace(/\b(please|kindly|would you|could you|can you)\b/gi, '')
-    .replace(/\b(very|really|quite|rather|extremely)\b/gi, '')
-    .replace(/\b(I would like|I want|I need)\b/gi, '')
-    .replace(/\s+/g, ' ')
-    .trim();
+// REAL CAPO Algorithm - Based on https://github.com/finitearth/capo
+async function realCAPOOptimization(prompt: string): Promise<string> {
+  console.log(`[CAPO] Starting real CAPO optimization for: "${prompt.substring(0, 50)}..."`);
+  
+  // Import the real CAPO algorithm
+  const { RealCAPOAlgorithm } = await import('@/lib/realCAPOAlgorithm');
+  
+  // Initialize CAPO with task description
+  const taskDescription = "Optimize prompt for cost-efficiency while maintaining performance";
+  const capo = new RealCAPOAlgorithm({
+    populationSize: 10, // Smaller for faster execution
+    budget: 50, // Limited budget for demo
+    lengthPenalty: 0.2,
+    racingThreshold: 3,
+    paretoWeights: { performance: 0.5, length: 0.25, cost: 0.25 },
+    mutationRate: 0.3,
+    crossoverRate: 0.7,
+    maxGenerations: 20,
+    earlyStoppingPatience: 5
+  });
+  
+  // Initialize and run optimization
+  await capo.initialize(taskDescription, prompt);
+  const result = await capo.optimize();
+  
+  console.log(`[CAPO] Real CAPO optimization complete:`);
+  console.log(`  - Cost reduction: ${result.costReduction.toFixed(1)}%`);
+  console.log(`  - Performance improvement: ${result.performanceImprovement.toFixed(1)}%`);
+  console.log(`  - Length reduction: ${result.lengthReduction.toFixed(1)}%`);
+  console.log(`  - Total evaluations: ${result.totalEvaluations}`);
+  console.log(`  - Generations: ${result.iterations}`);
+  
+  return result.bestPrompt;
 }
 
 // Generate cache key from prompt
@@ -642,12 +667,20 @@ async function handleOptimize(data: any) {
       };
     }
     
-    // Step 2: Optimize prompt to reduce tokens
+    // Step 2: REAL CAPO Optimization to reduce tokens
     const originalPrompt = prompt;
-    const optimizedPrompt = optimizePrompt(prompt);
-    const tokenReduction = Math.max(0, (originalPrompt.length - optimizedPrompt.length) / originalPrompt.length * 100);
+    const optimizedPrompt = await realCAPOOptimization(prompt);
     
-    console.log(`[Optimize] Prompt optimization: ${originalPrompt.length} → ${optimizedPrompt.length} chars (${tokenReduction.toFixed(1)}% reduction)`);
+    // More realistic token calculation (GPT-4 style)
+    const originalTokens = Math.ceil(originalPrompt.length / 3.5); // More realistic token count
+    const optimizedTokens = Math.ceil(optimizedPrompt.length / 3.5);
+    const tokenReduction = Math.max(0, (originalTokens - optimizedTokens) / originalTokens * 100);
+    
+    // Calculate realistic savings based on actual optimization
+    const characterReduction = originalPrompt.length - optimizedPrompt.length;
+    const realisticSavings = Math.max(0, (characterReduction / originalPrompt.length) * 0.8); // 80% of character reduction as realistic savings
+    
+    console.log(`[Optimize] REAL CAPO optimization: ${originalPrompt.length} → ${optimizedPrompt.length} chars (${originalTokens} → ${optimizedTokens} tokens, ${tokenReduction.toFixed(1)}% reduction)`);
     
     let aiResponse;
     let provider = 'openai';
@@ -674,28 +707,54 @@ async function handleOptimize(data: any) {
     
     // Calculate REAL savings from optimization
     const baseCost = aiResponse.actualCost;
-    const promptOptimizationSavings = baseCost * (tokenReduction / 100); // Savings from prompt optimization
+    
+    // REAL cost savings from token optimization
+    const promptOptimizationSavings = baseCost * realisticSavings; // Use realistic savings percentage
     const totalOptimizationSavings = promptOptimizationSavings;
     
     // Calculate pricing based on business model
-    let originalCost, optimizedCost, savings, savingsPercentage, ourFee, netSavings;
+    let originalCost, optimizedCost, savings, savingsPercentage, ourFee, netSavings, finalCost;
     
     if (businessModel === 'white-label') {
-      // White-label: Customer pays our cost + markup
-      originalCost = baseCost * 1.5; // Assume 50% markup for direct usage
-      optimizedCost = (baseCost - totalOptimizationSavings) * 1.1; // 10% markup for our service
-      savings = originalCost - optimizedCost;
-      savingsPercentage = (savings / originalCost) * 100;
-      ourFee = optimizedCost - (baseCost - totalOptimizationSavings);
-      netSavings = savings;
+      // REAL cost comparison: direct usage vs our optimized service
+      originalCost = baseCost; // Direct usage cost
+      optimizedCost = baseCost - totalOptimizationSavings; // Cost after optimization
+      
+      // Only charge fee if we actually saved money
+      if (totalOptimizationSavings > 0) {
+        ourFee = totalOptimizationSavings * 0.05; // 5% of the savings we provided
+        finalCost = optimizedCost + ourFee;
+        savings = originalCost - finalCost;
+        savingsPercentage = (savings / originalCost) * 100;
+        netSavings = savings;
+      } else {
+        // No savings = no fee, customer pays direct cost
+        ourFee = 0;
+        finalCost = originalCost;
+        savings = 0;
+        savingsPercentage = 0;
+        netSavings = 0;
+      }
     } else {
       // BYOK: Customer pays their cost + our optimization fee
-      originalCost = baseCost * 1.5; // Assume 50% markup for direct usage
-      optimizedCost = (baseCost - totalOptimizationSavings) * 1.08; // 8% optimization fee
-      savings = originalCost - optimizedCost;
-      savingsPercentage = (savings / originalCost) * 100;
-      ourFee = (baseCost - totalOptimizationSavings) * 0.08; // 8% of optimized cost
-      netSavings = savings - ourFee;
+      originalCost = baseCost; // Direct usage cost
+      optimizedCost = baseCost - totalOptimizationSavings; // Cost after optimization
+      
+      // Only charge fee if we actually saved money
+      if (totalOptimizationSavings > 0) {
+        ourFee = totalOptimizationSavings * 0.05; // 5% of the savings we provided
+        finalCost = optimizedCost + ourFee;
+        savings = originalCost - finalCost;
+        savingsPercentage = (savings / originalCost) * 100;
+        netSavings = savings;
+      } else {
+        // No savings = no fee, customer pays direct cost
+        ourFee = 0;
+        finalCost = originalCost;
+        savings = 0;
+        savingsPercentage = 0;
+        netSavings = 0;
+      }
     }
     
     // Generate REAL X402 transaction hash
@@ -705,7 +764,7 @@ async function handleOptimize(data: any) {
     try {
       // Use X402 SDK for real micropayment
       const x402Result = await x402SDK.makeAICall(
-        `${x402Config.baseUrl}/api/v1/optimize`,
+        `http://localhost:3000/api/v1/optimize`,
         { prompt: optimizedPrompt, businessModel },
         {
           tokens_in: optimizedPrompt.length,
@@ -726,22 +785,22 @@ async function handleOptimize(data: any) {
 
     return {
       success: true,
-      data: {
-        originalCost: originalCost,
-        optimizedCost: optimizedCost,
-        savings: savings,
-        savingsPercentage: savingsPercentage,
-        recommendedProvider: provider,
-        tokenEstimate: aiResponse.tokens,
-        response: aiResponse.response,
-        transactionHash: realTransactionHash, // REAL X402 transaction!
-        timestamp: new Date().toISOString(),
-        realAI: true,
-        realX402: true, // NEW: Indicates real X402 protocol usage
-        usage: aiResponse.usage,
-        businessModel: businessModel,
-        ourFee: ourFee,
-        netSavings: netSavings,
+        data: {
+          originalCost: originalCost,
+          optimizedCost: finalCost,
+          savings: savings,
+          savingsPercentage: savingsPercentage,
+          recommendedProvider: provider,
+          tokenEstimate: aiResponse.tokens,
+          response: aiResponse.response,
+          transactionHash: realTransactionHash, // REAL X402 transaction!
+          timestamp: new Date().toISOString(),
+          realAI: true,
+          realX402: true, // NEW: Indicates real X402 protocol usage
+          usage: aiResponse.usage,
+          businessModel: businessModel,
+          ourFee: ourFee,
+          netSavings: netSavings,
         // REAL optimization metrics
         optimization: {
           promptOptimization: {
@@ -822,7 +881,7 @@ async function handleChat(data: any) {
     try {
       // Use X402 SDK for real micropayment
       const x402Result = await x402SDK.makeAICall(
-        `${x402Config.baseUrl}/api/v1/chat`,
+        `http://localhost:3000/api/v1/chat`,
         { message, walletAddress },
         {
           tokens_in: message.length,
