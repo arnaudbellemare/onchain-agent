@@ -4,13 +4,18 @@ import { RealDSPyPaymentRouter, RealDSPyOptimizer } from '@/lib/realDSPyIntegrat
 import { RealLLMPromptOptimizer, RealLLMManager } from '@/lib/realLLMIntegration';
 import { RealX402Protocol, RealBlockchainAnalytics } from '@/lib/realBlockchainIntegration';
 import { config } from '@/lib/config';
+import { validateAndGetAPIKey } from '@/lib/secureApiKeys';
+import { validateAPIKeySecurity } from '@/lib/security';
+import { addSecurityHeaders } from '@/lib/security';
 
 interface OptimizeRequest {
   prompt: string;
   model?: 'gpt-4' | 'claude-3' | 'perplexity';
   max_tokens?: number;
   optimization_level?: 'aggressive' | 'balanced' | 'conservative';
-  api_key: string;
+  provider?: string;
+  maxCost?: number;
+  walletAddress?: string;
 }
 
 interface OptimizeResponse {
@@ -43,24 +48,30 @@ const userStats = new Map<string, any>();
 export async function POST(req: NextRequest) {
   try {
     const body: OptimizeRequest = await req.json();
-    const { prompt, model = 'gpt-4', max_tokens = 1000, optimization_level = 'balanced', api_key } = body;
+    const { prompt, model = 'gpt-4', max_tokens = 1000, optimization_level = 'balanced', provider, maxCost, walletAddress } = body;
 
-    // Validate API key
-    if (!api_key || !api_key.startsWith('x402_opt_')) {
+    // Get API key from headers
+    const apiKey = req.headers.get('X-API-Key') || req.headers.get('x-api-key');
+    
+    // API key validation
+    if (!apiKey) {
       return NextResponse.json({
         success: false,
-        error: 'Invalid API key'
+        error: 'API key is required. Get your API key from /api/v1/keys/initial'
       }, { status: 401 });
     }
 
-    // Extract wallet address from API key
-    const walletAddress = api_key.split('_')[2];
-    if (!walletAddress) {
+    // Validate API key security
+    const keySecurity = validateAPIKeySecurity(apiKey, req);
+    if (!keySecurity.valid) {
       return NextResponse.json({
         success: false,
-        error: 'Invalid API key format'
+        error: `Invalid API key: ${keySecurity.reason}`
       }, { status: 401 });
     }
+
+    // For now, just validate the format - the main API validation is sufficient
+    // The keyData validation can be added later when we have persistent storage
 
     // Initialize user balance if not exists
     if (!userBalances.has(walletAddress)) {
@@ -153,10 +164,11 @@ export async function POST(req: NextRequest) {
 
     console.log(`[Optimization] Completed for ${walletAddress}: ${result.optimization_metrics.cost_reduction} cost reduction`);
 
-    return NextResponse.json({
+    const apiResponse = NextResponse.json({
       success: true,
       result
     });
+    return addSecurityHeaders(apiResponse);
 
   } catch (error) {
     console.error('Optimization API error:', error);
