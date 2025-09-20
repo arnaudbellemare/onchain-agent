@@ -202,7 +202,7 @@ describe("X402PaymentContract", function () {
       expect(stats.totalPaid).to.equal(amount1 + amount2);
       
       const recipientStats = await x402Contract.getPaymentStats(recipient.address);
-      expect(recipientStats.totalRequests).to.equal(2);
+      expect(recipientStats.totalRequestsMade).to.equal(2);
     });
   });
 
@@ -228,29 +228,6 @@ describe("X402PaymentContract", function () {
     });
   });
 });
-
-// Mock USDC contract for testing
-const MockUSDC = `
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
-
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-
-contract MockUSDC is ERC20, Ownable {
-    constructor() ERC20("Mock USDC", "mUSDC") Ownable(msg.sender) {
-        _mint(msg.sender, 1000000 * 10**6); // 1M USDC
-    }
-
-    function mint(address to, uint256 amount) external {
-        _mint(to, amount);
-    }
-
-    function decimals() public pure override returns (uint8) {
-        return 6;
-    }
-}
-`;
 
 // Helper function to get latest block timestamp
 async function time() {

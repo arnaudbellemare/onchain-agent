@@ -90,6 +90,11 @@ export async function POST(req: NextRequest) {
 
     console.log(`[Chat] Completed for ${walletAddress}: ${result.optimization_metrics.cost_reduction} cost reduction`);
 
+    // Update API key usage
+    const { simpleApiKeyManager } = await import('@/lib/simpleApiKeyManager');
+    const usageUpdated = simpleApiKeyManager.updateUsage(apiKey, '/api/v1/chat', totalCharged, netSavings, provider);
+    console.log(`[Chat] Usage updated: ${usageUpdated} for key: ${apiKey.substring(0, 20)}...`);
+
     const apiResponse = NextResponse.json({
       success: true,
       result

@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { withRateLimit, rateLimitConfigs } from '@/lib/rateLimiter';
-import { createErrorResponse } from '@/lib/validation';
-import { apiKeyRotation } from '@/lib/apiKeyRotation';
+import { simpleApiKeyManager } from '@/lib/simpleApiKeyManager';
 
 /**
  * Initial API key generation endpoint - no authentication required
@@ -23,7 +21,9 @@ async function createInitialAPIKeyHandler(req: NextRequest) {
     const defaultUserId = 'default-user-' + Date.now();
     
     // Create new API key
-    const result = await apiKeyRotation.createAPIKey(defaultUserId, name, keyPermissions);
+    const result = simpleApiKeyManager.generateAPIKey(defaultUserId, name, keyPermissions);
+    console.log(`[API Key Generation] Generated key: ${result.key.substring(0, 20)}...`);
+    console.log(`[API Key Generation] Key ID: ${result.keyId}`);
 
     return NextResponse.json({
       success: true,
@@ -32,8 +32,8 @@ async function createInitialAPIKeyHandler(req: NextRequest) {
         key: result.key, // Only returned once during creation
         name,
         permissions: keyPermissions,
-        created_at: new Date().toISOString(),
-        user_id: defaultUserId,
+        createdAt: new Date().toISOString(),
+        userId: defaultUserId,
       },
       message: 'Initial API key created successfully. Store the key securely as it will not be shown again. Use this key to authenticate future requests.',
       instructions: {
@@ -43,21 +43,24 @@ async function createInitialAPIKeyHandler(req: NextRequest) {
     });
   } catch (error) {
     console.error('Create initial API key error:', error);
-    return createErrorResponse(500, 'Failed to create initial API key: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    return NextResponse.json({
+      success: false,
+      error: 'Failed to create initial API key: ' + (error instanceof Error ? error.message : 'Unknown error')
+    }, { status: 500 });
   }
 }
 
-// Apply middleware stack (no authentication required)
+// Simplified POST handler without middleware
 export const POST = async (req: NextRequest) => {
   try {
-    return await withRateLimit(req, rateLimitConfigs.public, async (req: NextRequest) => {
-      return await createInitialAPIKeyHandler(req);
-    });
+    return await createInitialAPIKeyHandler(req);
   } catch (error) {
+    console.error('POST handler error:', error);
     return new Response(
       JSON.stringify({
         error: 'Request failed',
         message: 'Failed to create initial API key',
+        details: error instanceof Error ? error.message : 'Unknown error'
       }),
       {
         status: 500,

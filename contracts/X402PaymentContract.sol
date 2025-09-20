@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
@@ -48,7 +48,7 @@ contract X402PaymentContract is ReentrancyGuard, Ownable {
     error TransferFailed();
     error Unauthorized();
     
-    constructor(address _usdcToken) {
+    constructor(address _usdcToken) Ownable(msg.sender) {
         usdcToken = IERC20(_usdcToken);
     }
     
@@ -110,7 +110,7 @@ contract X402PaymentContract is ReentrancyGuard, Ownable {
         bytes32 requestId,
         address payer,
         uint256 amount
-    ) external view returns (bool success) {
+    ) external returns (bool success) {
         success = paymentProofs[requestId];
         
         emit PaymentVerified(requestId, payer, amount, success);
@@ -135,14 +135,14 @@ contract X402PaymentContract is ReentrancyGuard, Ownable {
      * @dev Get payment statistics for an address
      * @param user The user address
      * @return totalPaid Total amount paid by the user
-     * @return totalRequests Total requests made to the user (if they're a provider)
+     * @return totalRequestsMade Total requests made to the user (if they're a provider)
      */
     function getPaymentStats(address user) external view returns (
         uint256 totalPaid,
-        uint256 totalRequests
+        uint256 totalRequestsMade
     ) {
         totalPaid = totalPayments[user];
-        totalRequests = totalRequests[user];
+        totalRequestsMade = totalRequests[user];
     }
     
     /**

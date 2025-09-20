@@ -3,81 +3,81 @@
     "total": 9,
     "passed": 5,
     "failed": 4,
-    "duration": 36825,
-    "timestamp": "2025-09-20T00:46:11.553Z"
+    "duration": 5944,
+    "timestamp": "2025-09-20T01:15:54.610Z"
   },
   "tests": [
     {
       "name": "Health Endpoint",
       "status": "passed",
-      "duration": 305
+      "duration": 524
     },
     {
       "name": "API Key Generation",
       "status": "passed",
-      "duration": 564
+      "duration": 825
     },
     {
       "name": "API Key Validation",
       "status": "failed",
-      "error": "Invalid API key should return 401, got 200",
-      "duration": 1012
+      "error": "API key validation failed with status 401: API key is required. Get your API key from /api/v1/keys/initial",
+      "duration": 1048
     },
     {
       "name": "V1 Endpoints",
       "status": "failed",
-      "error": "V1 optimization endpoint failed with status 401",
-      "duration": 1470
+      "error": "V1 info endpoint failed with status 401",
+      "duration": 1287
     },
     {
       "name": "Cost Optimization Endpoints",
       "status": "failed",
-      "error": "Failed to test /api/cost-aware-optimization: Request timeout",
-      "duration": 34491
+      "error": "Failed to test /api/real-x402-demo: Endpoint /api/real-x402-demo returned status 500",
+      "duration": 3200
     },
     {
       "name": "Integration Endpoints",
       "status": "passed",
-      "duration": 35808
+      "duration": 4149
     },
     {
       "name": "Security Features",
       "status": "passed",
-      "duration": 36407
+      "duration": 4956
     },
     {
       "name": "Error Handling",
       "status": "failed",
-      "error": "Invalid endpoint should return 404, got 500",
-      "duration": 36540
+      "error": "Malformed request should return 4xx, got 401",
+      "duration": 5438
     },
     {
       "name": "Performance Metrics",
       "status": "passed",
-      "duration": 36825
+      "duration": 5944
     }
   ],
   "errors": [
     {
       "test": "API Key Validation",
-      "error": "Invalid API key should return 401, got 200"
+      "error": "API key validation failed with status 401: API key is required. Get your API key from /api/v1/keys/initial"
     },
     {
       "test": "V1 Endpoints",
-      "error": "V1 optimization endpoint failed with status 401"
+      "error": "V1 info endpoint failed with status 401"
     },
     {
       "test": "Cost Optimization Endpoints",
-      "error": "Failed to test /api/cost-aware-optimization: Request timeout"
+      "error": "Failed to test /api/real-x402-demo: Endpoint /api/real-x402-demo returned status 500"
     },
     {
       "test": "Error Handling",
-      "error": "Invalid endpoint should return 404, got 500"
+      "error": "Malformed request should return 4xx, got 401"
     }
   ],
   "config": {
     "baseUrl": "http://localhost:3000",
-    "testApiKey": "ak_b5add3abb77319e9c8e47cb749ab6cd7",
+    "testApiKey": "ak_7e3368674b31549c7924d0213a0a025c",
     "verbose": false,
     "timeout": 10000,
     "retries": 3

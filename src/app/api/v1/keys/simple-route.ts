@@ -18,13 +18,11 @@ export async function GET(req: NextRequest) {
     }
 
     // Validate the API key
-    console.log(`[API Key Validation] Validating key: ${apiKey.substring(0, 20)}...`);
     const validation = simpleApiKeyManager.validateAPIKey(apiKey);
-    console.log(`[API Key Validation] Result:`, validation);
     if (!validation.valid || !validation.keyData) {
       return NextResponse.json({
         success: false,
-        error: `Invalid API key: ${validation.reason}`
+        error: 'Invalid API key'
       }, { status: 401 });
     }
 

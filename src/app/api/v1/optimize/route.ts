@@ -7,6 +7,8 @@ import { config } from '@/lib/config';
 import { validateAndGetAPIKey } from '@/lib/secureApiKeys';
 import { validateAPIKeySecurity } from '@/lib/security';
 import { addSecurityHeaders } from '@/lib/security';
+import { costMinimizer } from '@/lib/costMinimizer';
+import { hybridCache } from '@/lib/hybridCache';
 
 interface OptimizeRequest {
   prompt: string;
@@ -45,6 +47,36 @@ interface OptimizeResponse {
 const userBalances = new Map<string, number>();
 const userStats = new Map<string, any>();
 
+// Simple optimization function for fallback
+function simpleOptimize(prompt: string): string {
+  let optimized = prompt;
+  
+  // Remove unnecessary words and phrases
+  const optimizations = [
+    // Remove politeness words
+    optimized.replace(/\b(please|kindly|would you|could you)\b/gi, ''),
+    // Shorten common phrases
+    optimized.replace(/\bI would like to\b/gi, 'I want to'),
+    optimized.replace(/\bI need to\b/gi, 'I must'),
+    optimized.replace(/\bcan you help me\b/gi, 'help'),
+    // Remove redundant words
+    optimized.replace(/\b(very|really|quite|rather)\s+/gi, ''),
+    // Simplify complex sentences
+    optimized.replace(/\b(in order to|so as to)\b/gi, 'to'),
+    // Remove extra spaces
+    optimized.replace(/\s+/g, ' ').trim()
+  ];
+  
+  // Find the shortest valid optimization
+  for (const opt of optimizations) {
+    if (opt.length < optimized.length && opt.length > prompt.length * 0.5) {
+      optimized = opt;
+    }
+  }
+  
+  return optimized;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body: OptimizeRequest = await req.json();
@@ -80,15 +112,17 @@ export async function POST(req: NextRequest) {
 
     const startTime = Date.now();
 
-    // Step 1: CAPO Optimization
+    // Step 1: Hybrid Cost Minimization (with caching)
     const userWallet = walletAddress || 'default-wallet';
-    console.log(`[Optimization] Starting CAPO optimization for ${userWallet}`);
-    const capoResult = await capoOptimizer.optimize(prompt, []);
+    console.log(`[Optimization] Starting hybrid cost minimization for ${userWallet}`);
+    
+    const optimizationResult = costMinimizer.optimize(prompt);
     const optimizationTime = Date.now() - startTime;
 
-    // Step 2: Calculate costs
+    // Step 2: Calculate costs with real optimization
     const originalTokens = Math.ceil(prompt.length / 4);
-    const optimizedTokens = Math.ceil(capoResult.bestPrompt.length / 4);
+    const optimizedPrompt = optimizationResult.optimizedPrompt;
+    const optimizedTokens = Math.ceil(optimizedPrompt.length / 4);
     
     // Real pricing (per 1M tokens)
     const pricing = {
@@ -101,10 +135,12 @@ export async function POST(req: NextRequest) {
     const originalCost = (originalTokens / 1_000_000) * modelPricing.input + (max_tokens / 1_000_000) * modelPricing.output;
     const optimizedCost = (optimizedTokens / 1_000_000) * modelPricing.input + (max_tokens / 1_000_000) * modelPricing.output;
     
-    const savings = originalCost - optimizedCost;
-    const ourFee = savings * 0.13; // 13% of savings
+    // Use the cost minimization result for more accurate savings calculation
+    const actualSavings = originalCost * optimizationResult.costReduction;
+    // Only charge a fee if there are actual savings, and make it proportional
+    const ourFee = actualSavings > 0 ? Math.max(actualSavings * 0.13, 0.0001) : 0; // 13% of savings, minimum $0.0001
     const totalCharged = optimizedCost + ourFee;
-    const netSavings = savings - ourFee;
+    const netSavings = actualSavings - ourFee;
 
     // Step 3: Check user balance
     const currentBalance = userBalances.get(userWallet)!;
@@ -132,27 +168,27 @@ export async function POST(req: NextRequest) {
     };
     
     stats.total_calls++;
-    stats.total_savings += savings;
+    stats.total_savings += actualSavings;
     stats.total_fees += ourFee;
     stats.total_charged += totalCharged;
     userStats.set(userWallet, stats);
 
     // Step 5: Generate response (simulated)
-    const response = `Based on the optimized analysis of your request: "${capoResult.bestPrompt}", here are the comprehensive insights you requested. The optimization reduced your prompt from ${originalTokens} to ${optimizedTokens} tokens while maintaining 96% accuracy.`;
+    const response = `Based on the optimized analysis of your request: "${optimizedPrompt}", here are the comprehensive insights you requested. The hybrid optimization reduced your prompt from ${originalTokens} to ${optimizedTokens} tokens using strategies: ${optimizationResult.strategies.join(', ')}. ${optimizationResult.cacheHit ? 'Cache hit - instant optimization!' : 'Fresh optimization completed.'}`;
 
     const result: OptimizeResponse = {
       response,
       cost_breakdown: {
         original_cost: `$${originalCost.toFixed(6)}`,
         optimized_cost: `$${optimizedCost.toFixed(6)}`,
-        savings: `$${savings.toFixed(6)}`,
+        savings: `$${actualSavings.toFixed(6)}`,
         our_fee: `$${ourFee.toFixed(6)}`,
         total_charged: `$${totalCharged.toFixed(6)}`,
         net_savings: `$${netSavings.toFixed(6)}`
       },
       optimization_metrics: {
-        cost_reduction: `${((savings / originalCost) * 100).toFixed(1)}%`,
-        token_efficiency: `${((originalTokens - optimizedTokens) / originalTokens * 100).toFixed(1)}%`,
+        cost_reduction: `${(optimizationResult.costReduction * 100).toFixed(1)}%`,
+        token_efficiency: `${(optimizationResult.tokenReduction * 100).toFixed(1)}%`,
         accuracy_maintained: '96%',
         optimization_time: `${optimizationTime}ms`
       },
@@ -164,6 +200,11 @@ export async function POST(req: NextRequest) {
     };
 
     console.log(`[Optimization] Completed for ${userWallet}: ${result.optimization_metrics.cost_reduction} cost reduction`);
+
+    // Update API key usage
+    const { simpleApiKeyManager } = await import('@/lib/simpleApiKeyManager');
+    const usageUpdated = simpleApiKeyManager.updateUsage(apiKey, '/api/v1/optimize', totalCharged, actualSavings, model);
+    console.log(`[Optimization] Usage updated: ${usageUpdated} for key: ${apiKey.substring(0, 20)}...`);
 
     const apiResponse = NextResponse.json({
       success: true,
