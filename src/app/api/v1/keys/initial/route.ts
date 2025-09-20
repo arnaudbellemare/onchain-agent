@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { simpleApiKeyManager } from '@/lib/simpleApiKeyManager';
+import { createErrorResponse } from '@/lib/validation';
 
 /**
  * Initial API key generation endpoint - no authentication required
