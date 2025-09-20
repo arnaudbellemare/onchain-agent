@@ -11,9 +11,26 @@ export class ProductionDatabaseService {
   private pool: Pool | null = null;
   private redis: Redis | null = null;
   private isConnected = false;
+  private initializationPromise: Promise<void> | null = null;
 
   constructor() {
-    this.initializeConnections();
+    // Don't initialize connections immediately - wait until first use
+  }
+
+  /**
+   * Ensure database connections are initialized (lazy initialization)
+   */
+  private async ensureConnections(): Promise<void> {
+    if (this.isConnected) {
+      return;
+    }
+
+    if (this.initializationPromise) {
+      return this.initializationPromise;
+    }
+
+    this.initializationPromise = this.initializeConnections();
+    return this.initializationPromise;
   }
 
   /**
@@ -29,6 +46,7 @@ export class ProductionDatabaseService {
     } catch (error) {
       console.error('Failed to initialize production database connections:', error);
       this.isConnected = false;
+      throw error; // Re-throw to allow callers to handle the error
     }
   }
 
@@ -133,6 +151,8 @@ export class ProductionDatabaseService {
    * Execute a query with automatic connection management
    */
   async query<T extends QueryResultRow = any>(text: string, params?: any[]): Promise<QueryResult<T>> {
+    await this.ensureConnections();
+    
     if (!this.pool) {
       throw new Error('Database not initialized');
     }
@@ -148,7 +168,9 @@ export class ProductionDatabaseService {
   /**
    * Get Redis connection
    */
-  getRedis(): Redis {
+  async getRedis(): Promise<Redis> {
+    await this.ensureConnections();
+    
     if (!this.redis) {
       throw new Error('Redis not initialized');
     }
@@ -174,6 +196,8 @@ export class ProductionDatabaseService {
     let redis = false;
 
     try {
+      await this.ensureConnections();
+      
       if (this.pool) {
         await this.query('SELECT 1');
         postgres = true;

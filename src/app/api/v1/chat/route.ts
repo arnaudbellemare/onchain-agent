@@ -30,6 +30,9 @@ interface ChatResponse {
 
 export async function POST(req: NextRequest) {
   try {
+    // Import simpleApiKeyManager once at the top
+    const { simpleApiKeyManager } = await import('@/lib/simpleApiKeyManager');
+    
     const body: ChatRequest = await req.json();
     const { message, walletAddress = '0x123456789', provider = 'openai', maxCost = 0.10 } = body;
 
@@ -44,12 +47,21 @@ export async function POST(req: NextRequest) {
       }, { status: 401 });
     }
 
-    // Validate API key security
+    // Validate API key security (format and patterns)
     const keySecurity = validateAPIKeySecurity(apiKey, req);
     if (!keySecurity.valid) {
       return NextResponse.json({
         success: false,
         error: `Invalid API key: ${keySecurity.reason}`
+      }, { status: 401 });
+    }
+
+    // Validate API key against database (actual key validation)
+    const keyValidation = simpleApiKeyManager.validateAPIKey(apiKey);
+    if (!keyValidation.valid || !keyValidation.keyData) {
+      return NextResponse.json({
+        success: false,
+        error: `Invalid API key: ${keyValidation.reason || 'Key not found'}`
       }, { status: 401 });
     }
 
@@ -91,7 +103,6 @@ export async function POST(req: NextRequest) {
     console.log(`[Chat] Completed for ${walletAddress}: ${result.optimization_metrics.cost_reduction} cost reduction`);
 
     // Update API key usage
-    const { simpleApiKeyManager } = await import('@/lib/simpleApiKeyManager');
     const usageUpdated = simpleApiKeyManager.updateUsage(apiKey, '/api/v1/chat', totalCharged, netSavings, provider);
     console.log(`[Chat] Usage updated: ${usageUpdated} for key: ${apiKey.substring(0, 20)}...`);
 

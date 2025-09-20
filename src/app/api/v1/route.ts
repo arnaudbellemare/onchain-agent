@@ -83,7 +83,7 @@ export async function GET(req: NextRequest) {
     return addSecurityHeaders(response);
   }
 
-  // Validate API key security
+  // Validate API key security (format and patterns)
   const keySecurity = validateAPIKeySecurity(apiKey, req);
   if (!keySecurity.valid) {
     logSecurityEvent('invalid_api_key', {
@@ -96,6 +96,25 @@ export async function GET(req: NextRequest) {
     
     const response = NextResponse.json(
       createResponse(null, false, `Invalid API key: ${keySecurity.reason}`),
+      { status: 401 }
+    );
+    return addSecurityHeaders(response);
+  }
+
+  // Validate API key against database (actual key validation)
+  const { simpleApiKeyManager } = await import('@/lib/simpleApiKeyManager');
+  const keyValidation = simpleApiKeyManager.validateAPIKey(apiKey);
+  if (!keyValidation.valid || !keyValidation.keyData) {
+    logSecurityEvent('invalid_api_key', {
+      ip: clientIP,
+      userAgent,
+      apiKey: apiKey.substring(0, 10) + '...',
+      endpoint: `GET /api/v1?action=${action}`,
+      timestamp: new Date().toISOString()
+    });
+    
+    const response = NextResponse.json(
+      createResponse(null, false, `Invalid API key: ${keyValidation.reason || 'Key not found'}`),
       { status: 401 }
     );
     return addSecurityHeaders(response);
@@ -368,7 +387,7 @@ export async function POST(req: NextRequest) {
       return addSecurityHeaders(response);
     }
 
-    // Validate API key security
+    // Validate API key security (format and patterns)
     const keySecurity = validateAPIKeySecurity(apiKey, req);
     if (!keySecurity.valid) {
       logSecurityEvent('invalid_api_key', {
@@ -386,8 +405,10 @@ export async function POST(req: NextRequest) {
       return addSecurityHeaders(response);
     }
 
-    // const keyData = validateAPIKey(apiKey, clientIP, userAgent);
-    // if (!keyData) {
+    // Validate API key against database (actual key validation)
+    const { simpleApiKeyManager } = await import('@/lib/simpleApiKeyManager');
+    const keyValidation = simpleApiKeyManager.validateAPIKey(apiKey);
+    if (!keyValidation.valid || !keyValidation.keyData) {
       logSecurityEvent('invalid_api_key', {
         ip: clientIP,
         userAgent,
@@ -401,7 +422,7 @@ export async function POST(req: NextRequest) {
         { status: 401 }
       );
       return addSecurityHeaders(response);
-    // }
+    }
 
     // Check rate limits
     // const rateLimit = checkRateLimit(keyData.id);
