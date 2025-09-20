@@ -70,38 +70,36 @@ export async function POST(req: NextRequest) {
       }, { status: 401 });
     }
 
-    // Try real AI first if configured
+    // Only use real AI - no mock responses
+    if (!realAIImplementation.isConfigured()) {
+      return NextResponse.json({
+        success: false,
+        error: 'Real AI providers not configured. Add OPENAI_API_KEY or PERPLEXITY_API_KEY to environment variables.'
+      }, { status: 503 });
+    }
+
     const startTime = Date.now();
     let response: string;
     let originalCost: number;
     let optimizedCost: number;
-    let realAI = false;
+    let realAI = true;
     let usage: any = null;
 
-    if (realAIImplementation.isConfigured()) {
-      try {
-        console.log('[Chat] Using real AI for message:', message.substring(0, 50) + '...');
-        
-        // Use OpenAI for real AI processing
-        const aiResponse = await realAIImplementation.callOpenAI(message, 500);
-        response = aiResponse.response;
-        optimizedCost = aiResponse.actualCost;
-        originalCost = optimizedCost * 1.5; // Assume 50% markup for direct usage
-        realAI = true;
-        usage = aiResponse.usage;
-      } catch (error) {
-        console.error('[Chat] Real AI failed, falling back to mock:', error);
-        // Fall through to mock implementation
-        response = `Hello! I received your message: "${message}". This is a demo response from the AI chat system. I can help you with various tasks including optimization, analysis, and general assistance. How can I help you today?`;
-        originalCost = 0.05; // $0.05
-        optimizedCost = 0.03; // $0.03 (40% reduction)
-      }
-    } else {
-      // Mock chat processing
-      console.log('[Chat] Using mock AI for message:', message.substring(0, 50) + '...');
-      response = `Hello! I received your message: "${message}". This is a demo response from the AI chat system. I can help you with various tasks including optimization, analysis, and general assistance. How can I help you today?`;
-      originalCost = 0.05; // $0.05
-      optimizedCost = 0.03; // $0.03 (40% reduction)
+    try {
+      console.log('[Chat] Using real AI for message:', message.substring(0, 50) + '...');
+      
+      // Use OpenAI for real AI processing
+      const aiResponse = await realAIImplementation.callOpenAI(message, 500);
+      response = aiResponse.response;
+      optimizedCost = aiResponse.actualCost;
+      originalCost = optimizedCost * 1.5; // Assume 50% markup for direct usage
+      usage = aiResponse.usage;
+    } catch (error) {
+      console.error('[Chat] Real AI failed:', error);
+      return NextResponse.json({
+        success: false,
+        error: `Real AI processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      }, { status: 500 });
     }
     
     const processingTime = Date.now() - startTime;

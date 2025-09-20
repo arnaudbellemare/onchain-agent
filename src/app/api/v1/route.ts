@@ -452,17 +452,21 @@ export async function POST(req: NextRequest) {
       case 'optimize':
         result = await handleOptimize(data);
         endpoint = 'optimize';
-        cost = result.data?.optimizedCost || 0;
-        saved = result.data?.savings || 0;
-        provider = result.data?.recommendedProvider || 'unknown';
+        if (result.success && result.data) {
+          cost = result.data.optimizedCost || 0;
+          saved = result.data.savings || 0;
+          provider = result.data.recommendedProvider || 'unknown';
+        }
         break;
       
       case 'chat':
         result = await handleChat(data);
         endpoint = 'chat';
-        cost = result.data?.cost || 0;
-        saved = 0; // Chat doesn't have savings tracking yet
-        provider = result.data?.provider || 'unknown';
+        if (result.success && result.data) {
+          cost = result.data.cost || 0;
+          saved = 0; // Chat doesn't have savings tracking yet
+          provider = result.data.provider || 'unknown';
+        }
         break;
       
       case 'wallet':
@@ -524,61 +528,50 @@ async function handleOptimize(data: any) {
     };
   }
 
-  // Try real AI first if configured
-  if (realAIImplementation.isConfigured()) {
-    try {
-      console.log('[Optimize] Using real AI for prompt:', prompt.substring(0, 50) + '...');
-      
-      // Use OpenAI for real AI processing
-      const aiResponse = await realAIImplementation.callOpenAI(prompt, 1000);
-      
-      // Calculate savings compared to direct API usage (simulate higher cost for direct usage)
-      const directCost = aiResponse.actualCost * 1.5; // Assume 50% markup for direct usage
-      const savings = directCost - aiResponse.actualCost;
-      const savingsPercentage = (savings / directCost) * 100;
-      
-      return {
-        success: true,
-        data: {
-          originalCost: directCost,
-          optimizedCost: aiResponse.actualCost,
-          savings: savings,
-          savingsPercentage: savingsPercentage,
-          recommendedProvider: 'openai',
-          tokenEstimate: aiResponse.tokens,
-          response: aiResponse.response,
-          transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`, // Still mock for now
-          timestamp: new Date().toISOString(),
-          realAI: true,
-          usage: aiResponse.usage
-        }
-      };
-    } catch (error) {
-      console.error('[Optimize] Real AI failed, falling back to mock:', error);
-      // Fall through to mock implementation
-    }
+  // Only use real AI - no mock responses
+  if (!realAIImplementation.isConfigured()) {
+    return {
+      success: false,
+      data: null,
+      error: 'Real AI providers not configured. Add OPENAI_API_KEY or PERPLEXITY_API_KEY to environment variables.'
+    };
   }
 
-  // Fallback to mock optimization result
-  console.log('[Optimize] Using mock AI for prompt:', prompt.substring(0, 50) + '...');
-  const estimatedCost = Math.random() * 0.05 + 0.01; // $0.01 - $0.06
-  const optimizedCost = estimatedCost * (0.6 + Math.random() * 0.3); // 30-40% savings
-  
-  return {
-    success: true,
-    data: {
-      originalCost: estimatedCost,
-      optimizedCost: optimizedCost,
-      savings: estimatedCost - optimizedCost,
-      savingsPercentage: ((estimatedCost - optimizedCost) / estimatedCost) * 100,
-      recommendedProvider: provider || 'openai',
-      tokenEstimate: Math.floor(Math.random() * 1000) + 100,
-      response: `Here's an optimized response to: "${prompt}"\n\nThis response was generated using cost-optimized routing through the x402 protocol, saving you $${(estimatedCost - optimizedCost).toFixed(4)} compared to direct API usage.`,
-      transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`,
-      timestamp: new Date().toISOString(),
-      realAI: false
-    }
-  };
+  try {
+    console.log('[Optimize] Using real AI for prompt:', prompt.substring(0, 50) + '...');
+    
+    // Use OpenAI for real AI processing
+    const aiResponse = await realAIImplementation.callOpenAI(prompt, 1000);
+    
+    // Calculate savings compared to direct API usage (simulate higher cost for direct usage)
+    const directCost = aiResponse.actualCost * 1.5; // Assume 50% markup for direct usage
+    const savings = directCost - aiResponse.actualCost;
+    const savingsPercentage = (savings / directCost) * 100;
+    
+    return {
+      success: true,
+      data: {
+        originalCost: directCost,
+        optimizedCost: aiResponse.actualCost,
+        savings: savings,
+        savingsPercentage: savingsPercentage,
+        recommendedProvider: 'openai',
+        tokenEstimate: aiResponse.tokens,
+        response: aiResponse.response,
+        transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`, // Still mock for now
+        timestamp: new Date().toISOString(),
+        realAI: true,
+        usage: aiResponse.usage
+      }
+    };
+  } catch (error) {
+    console.error('[Optimize] Real AI failed:', error);
+    return {
+      success: false,
+      data: null,
+      error: `Real AI processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    };
+  }
 }
 
 // Handle chat requests
@@ -592,60 +585,43 @@ async function handleChat(data: any) {
     };
   }
 
-  // Try real AI first if configured
-  if (realAIImplementation.isConfigured()) {
-    try {
-      console.log('[Chat] Using real AI for message:', message.substring(0, 50) + '...');
-      
-      // Use OpenAI for real AI processing
-      const aiResponse = await realAIImplementation.callOpenAI(message, 500);
-      
-      return {
-        success: true,
-        data: {
-          message: aiResponse.response,
-          originalMessage: message,
-          cost: aiResponse.actualCost,
-          provider: 'openai',
-          responseTime: Math.floor(Math.random() * 2000) + 500, // Still mock for now
-          transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`, // Still mock for now
-          timestamp: new Date().toISOString(),
-          realAI: true,
-          usage: aiResponse.usage
-        }
-      };
-    } catch (error) {
-      console.error('[Chat] Real AI failed, falling back to mock:', error);
-      // Fall through to mock implementation
-    }
+  // Only use real AI - no mock responses
+  if (!realAIImplementation.isConfigured()) {
+    return {
+      success: false,
+      data: null,
+      error: 'Real AI providers not configured. Add OPENAI_API_KEY or PERPLEXITY_API_KEY to environment variables.'
+    };
   }
 
-  // Fallback to mock chat response
-  console.log('[Chat] Using mock AI for message:', message.substring(0, 50) + '...');
-  const responses = [
-    "Hello! I'm an AI assistant optimized through the x402 protocol for cost efficiency.",
-    "I can help you with various tasks while keeping costs minimal through smart routing.",
-    "Thanks for using our cost-optimized AI service! How can I assist you today?",
-    "I'm powered by multiple AI providers and automatically choose the most cost-effective one.",
-    "The x402 protocol ensures you only pay for what you use, with real-time cost optimization."
-  ];
-
-  const response = responses[Math.floor(Math.random() * responses.length)];
-  const cost = Math.random() * 0.02 + 0.005; // $0.005 - $0.025
-
-  return {
-    success: true,
-    data: {
-      message: response,
-      originalMessage: message,
-      cost: cost,
-      provider: 'optimized',
-      responseTime: Math.floor(Math.random() * 2000) + 500, // 500-2500ms
-      transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`,
-      timestamp: new Date().toISOString(),
-      realAI: false
-    }
-  };
+  try {
+    console.log('[Chat] Using real AI for message:', message.substring(0, 50) + '...');
+    
+    // Use OpenAI for real AI processing
+    const aiResponse = await realAIImplementation.callOpenAI(message, 500);
+    
+    return {
+      success: true,
+      data: {
+        message: aiResponse.response,
+        originalMessage: message,
+        cost: aiResponse.actualCost,
+        provider: 'openai',
+        responseTime: Math.floor(Math.random() * 2000) + 500, // Still mock for now
+        transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`, // Still mock for now
+        timestamp: new Date().toISOString(),
+        realAI: true,
+        usage: aiResponse.usage
+      }
+    };
+  } catch (error) {
+    console.error('[Chat] Real AI failed:', error);
+    return {
+      success: false,
+      data: null,
+      error: `Real AI processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    };
+  }
 }
 
 // Handle wallet connection
