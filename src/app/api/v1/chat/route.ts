@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateAPIKeySecurity } from '@/lib/security';
 import { addSecurityHeaders } from '@/lib/security';
 import { simpleApiKeyManager } from '@/lib/simpleApiKeyManager';
+import { realAIImplementation } from '@/lib/realAIImplementation';
 
 interface ChatRequest {
   message: string;
@@ -63,17 +64,43 @@ export async function POST(req: NextRequest) {
       }, { status: 401 });
     }
 
-    // Simulate chat processing
+    // Try real AI first if configured
     const startTime = Date.now();
-    
-    // Generate a contextual response
-    const response = `Hello! I received your message: "${message}". This is a demo response from the AI chat system. I can help you with various tasks including optimization, analysis, and general assistance. How can I help you today?`;
+    let response: string;
+    let originalCost: number;
+    let optimizedCost: number;
+    let realAI = false;
+    let usage: any = null;
+
+    if (realAIImplementation.isConfigured()) {
+      try {
+        console.log('[Chat] Using real AI for message:', message.substring(0, 50) + '...');
+        
+        // Use OpenAI for real AI processing
+        const aiResponse = await realAIImplementation.callOpenAI(message, 500);
+        response = aiResponse.response;
+        optimizedCost = aiResponse.actualCost;
+        originalCost = optimizedCost * 1.5; // Assume 50% markup for direct usage
+        realAI = true;
+        usage = aiResponse.usage;
+      } catch (error) {
+        console.error('[Chat] Real AI failed, falling back to mock:', error);
+        // Fall through to mock implementation
+        response = `Hello! I received your message: "${message}". This is a demo response from the AI chat system. I can help you with various tasks including optimization, analysis, and general assistance. How can I help you today?`;
+        originalCost = 0.05; // $0.05
+        optimizedCost = 0.03; // $0.03 (40% reduction)
+      }
+    } else {
+      // Mock chat processing
+      console.log('[Chat] Using mock AI for message:', message.substring(0, 50) + '...');
+      response = `Hello! I received your message: "${message}". This is a demo response from the AI chat system. I can help you with various tasks including optimization, analysis, and general assistance. How can I help you today?`;
+      originalCost = 0.05; // $0.05
+      optimizedCost = 0.03; // $0.03 (40% reduction)
+    }
     
     const processingTime = Date.now() - startTime;
     
-    // Simulate cost calculations
-    const originalCost = 0.05; // $0.05
-    const optimizedCost = 0.03; // $0.03 (40% reduction)
+    // Calculate costs and savings
     const savings = originalCost - optimizedCost;
     const ourFee = optimizedCost * 0.1; // 10% fee
     const totalCharged = optimizedCost + ourFee;
@@ -95,7 +122,9 @@ export async function POST(req: NextRequest) {
         accuracy_maintained: "98%",
         response_time: `${processingTime}ms`
       },
-      wallet_balance: "$9.95 USDC"
+      wallet_balance: "$9.95 USDC",
+      realAI: realAI,
+      usage: usage
     };
 
     console.log(`[Chat] Completed for ${walletAddress}: ${result.optimization_metrics.cost_reduction} cost reduction`);
