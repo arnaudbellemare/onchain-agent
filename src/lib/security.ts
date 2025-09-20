@@ -151,7 +151,7 @@ export function validateAPIKeySecurity(
     return { valid: false, reason: 'API key is required' };
   }
   
-  if (!apiKey.startsWith('oa_') || apiKey.length < 32) {
+  if ((!apiKey.startsWith('oa_') && !apiKey.startsWith('ak_')) || apiKey.length < 20) {
     return { valid: false, reason: 'Invalid API key format' };
   }
   

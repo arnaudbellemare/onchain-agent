@@ -1,0 +1,85 @@
+{
+  "summary": {
+    "total": 9,
+    "passed": 5,
+    "failed": 4,
+    "duration": 36825,
+    "timestamp": "2025-09-20T00:46:11.553Z"
+  },
+  "tests": [
+    {
+      "name": "Health Endpoint",
+      "status": "passed",
+      "duration": 305
+    },
+    {
+      "name": "API Key Generation",
+      "status": "passed",
+      "duration": 564
+    },
+    {
+      "name": "API Key Validation",
+      "status": "failed",
+      "error": "Invalid API key should return 401, got 200",
+      "duration": 1012
+    },
+    {
+      "name": "V1 Endpoints",
+      "status": "failed",
+      "error": "V1 optimization endpoint failed with status 401",
+      "duration": 1470
+    },
+    {
+      "name": "Cost Optimization Endpoints",
+      "status": "failed",
+      "error": "Failed to test /api/cost-aware-optimization: Request timeout",
+      "duration": 34491
+    },
+    {
+      "name": "Integration Endpoints",
+      "status": "passed",
+      "duration": 35808
+    },
+    {
+      "name": "Security Features",
+      "status": "passed",
+      "duration": 36407
+    },
+    {
+      "name": "Error Handling",
+      "status": "failed",
+      "error": "Invalid endpoint should return 404, got 500",
+      "duration": 36540
+    },
+    {
+      "name": "Performance Metrics",
+      "status": "passed",
+      "duration": 36825
+    }
+  ],
+  "errors": [
+    {
+      "test": "API Key Validation",
+      "error": "Invalid API key should return 401, got 200"
+    },
+    {
+      "test": "V1 Endpoints",
+      "error": "V1 optimization endpoint failed with status 401"
+    },
+    {
+      "test": "Cost Optimization Endpoints",
+      "error": "Failed to test /api/cost-aware-optimization: Request timeout"
+    },
+    {
+      "test": "Error Handling",
+      "error": "Invalid endpoint should return 404, got 500"
+    }
+  ],
+  "config": {
+    "baseUrl": "http://localhost:3000",
+    "testApiKey": "ak_b5add3abb77319e9c8e47cb749ab6cd7",
+    "verbose": false,
+    "timeout": 10000,
+    "retries": 3
+  }
+}

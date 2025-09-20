@@ -67,6 +67,40 @@ export async function GET(req: NextRequest) {
   // Get API key from headers
   const apiKey = req.headers.get('X-API-Key') || req.headers.get('x-api-key');
   
+  // API key validation for all endpoints
+  if (!apiKey) {
+    logSecurityEvent('invalid_api_key', {
+      ip: clientIP,
+      userAgent,
+      endpoint: `GET /api/v1?action=${action}`,
+      timestamp: new Date().toISOString()
+    });
+    
+    const response = NextResponse.json(
+      createResponse(null, false, 'API key is required. Get your API key from /api/v1/keys/initial'),
+      { status: 401 }
+    );
+    return addSecurityHeaders(response);
+  }
+
+  // Validate API key security
+  const keySecurity = validateAPIKeySecurity(apiKey, req);
+  if (!keySecurity.valid) {
+    logSecurityEvent('invalid_api_key', {
+      ip: clientIP,
+      userAgent,
+      apiKey: apiKey.substring(0, 10) + '...',
+      endpoint: `GET /api/v1?action=${action}`,
+      timestamp: new Date().toISOString()
+    });
+    
+    const response = NextResponse.json(
+      createResponse(null, false, `Invalid API key: ${keySecurity.reason}`),
+      { status: 401 }
+    );
+    return addSecurityHeaders(response);
+  }
+  
   if (action === 'info') {
     return NextResponse.json(createResponse({
       name: 'AI Agent Cost Optimization API',

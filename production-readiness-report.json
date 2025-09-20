@@ -1,0 +1,135 @@
+{
+  "summary": {
+    "total": 96,
+    "passed": 50,
+    "failed": 23,
+    "warnings": 23,
+    "critical_issues": 0,
+    "duration": 3,
+    "timestamp": "2025-09-20T00:57:22.937Z",
+    "production_ready": true
+  },
+  "critical_issues": [],
+  "warnings": [
+    {
+      "name": "Recommended env var: DATABASE_URL",
+      "message": "Missing recommended environment variable",
+      "critical": false
+    },
+    {
+      "name": "Recommended env var: REDIS_URL",
+      "message": "Missing recommended environment variable",
+      "critical": false
+    },
+    {
+      "name": "Recommended env var: API_KEY_ENCRYPTION_KEY",
+      "message": "Missing recommended environment variable",
+      "critical": false
+    },
+    {
+      "name": "Recommended env var: OPENAI_API_KEY",
+      "message": "Missing recommended environment variable",
+      "critical": false
+    },
+    {
+      "name": "Recommended env var: ANTHROPIC_API_KEY",
+      "message": "Missing recommended environment variable",
+      "critical": false
+    },
+    {
+      "name": "Recommended env var: PERPLEXITY_API_KEY",
+      "message": "Missing recommended environment variable",
+      "critical": false
+    },
+    {
+      "name": "Security dep: crypto",
+      "message": "Missing",
+      "critical": false
+    },
+    {
+      "name": "TypeScript noUnusedLocals",
+      "message": "Disabled (recommended for production)",
+      "critical": false
+    },
+    {
+      "name": "TypeScript noUnusedParameters",
+      "message": "Disabled (recommended for production)",
+      "critical": false
+    },
+    {
+      "name": "Security headers config",
+      "message": "Not configured (recommended)",
+      "critical": false
+    },
+    {
+      "name": "PostgreSQL configuration",
+      "message": "Not configured (recommended)",
+      "critical": false
+    },
+    {
+      "name": "Lint config: .eslintrc.js",
+      "message": "Missing",
+      "critical": false
+    },
+    {
+      "name": "Lint config: .eslintrc.json",
+      "message": "Missing",
+      "critical": false
+    },
+    {
+      "name": "Test file/dir: src/__tests__/",
+      "message": "Missing",
+      "critical": false
+    },
+    {
+      "name": "Test scripts",
+      "message": "Missing",
+      "critical": false
+    },
+    {
+      "name": "Documentation: API_DOCUMENTATION.md",
+      "message": "Missing",
+      "critical": false
+    },
+    {
+      "name": "README section: installation",
+      "message": "Missing",
+      "critical": false
+    },
+    {
+      "name": "README section: usage",
+      "message": "Missing",
+      "critical": false
+    },
+    {
+      "name": "README section: configuration",
+      "message": "Missing",
+      "critical": false
+    },
+    {
+      "name": "Next.js optimization: compression",
+      "message": "Not configured (recommended)",
+      "critical": false
+    },
+    {
+      "name": "Next.js optimization: images",
+      "message": "Not configured (recommended)",
+      "critical": false
+    },
+    {
+      "name": "Next.js optimization: swcMinify",
+      "message": "Not configured (recommended)",
+      "critical": false
+    },
+    {
+      "name": "Next.js optimization: poweredByHeader",
+      "message": "Not configured (recommended)",
+      "critical": false
+    }
+  ],
+  "config": {
+    "baseUrl": "http://localhost:3000",
+    "verbose": false,
+    "strict": false
+  }
+}
