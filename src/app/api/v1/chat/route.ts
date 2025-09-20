@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
     let response: string;
     let originalCost: number;
     let optimizedCost: number;
-    let realAI = true;
+    const realAI = true;
     let usage: any = null;
 
     try {
