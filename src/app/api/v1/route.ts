@@ -516,39 +516,42 @@ export async function POST(req: NextRequest) {
 async function handleOptimize(data: any) {
   const { prompt, provider, maxCost, walletAddress } = data;
 
-  if (!prompt || !walletAddress) {
-    return NextResponse.json(
-      createResponse(null, false, 'prompt and walletAddress are required'),
-      { status: 400 }
-    );
+  if (!prompt) {
+    return {
+      success: false,
+      error: 'prompt is required'
+    };
   }
 
   // Mock optimization result - in production this would use the actual optimization engine
   const estimatedCost = Math.random() * 0.05 + 0.01; // $0.01 - $0.06
   const optimizedCost = estimatedCost * (0.6 + Math.random() * 0.3); // 30-40% savings
   
-  return NextResponse.json(createResponse({
-    originalCost: estimatedCost,
-    optimizedCost: optimizedCost,
-    savings: estimatedCost - optimizedCost,
-    savingsPercentage: ((estimatedCost - optimizedCost) / estimatedCost) * 100,
-    recommendedProvider: provider || 'openai',
-    tokenEstimate: Math.floor(Math.random() * 1000) + 100,
-    response: `Here's an optimized response to: "${prompt}"\n\nThis response was generated using cost-optimized routing through the x402 protocol, saving you $${(estimatedCost - optimizedCost).toFixed(4)} compared to direct API usage.`,
-    transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`,
-    timestamp: new Date().toISOString()
-  }));
+  return {
+    success: true,
+    data: {
+      originalCost: estimatedCost,
+      optimizedCost: optimizedCost,
+      savings: estimatedCost - optimizedCost,
+      savingsPercentage: ((estimatedCost - optimizedCost) / estimatedCost) * 100,
+      recommendedProvider: provider || 'openai',
+      tokenEstimate: Math.floor(Math.random() * 1000) + 100,
+      response: `Here's an optimized response to: "${prompt}"\n\nThis response was generated using cost-optimized routing through the x402 protocol, saving you $${(estimatedCost - optimizedCost).toFixed(4)} compared to direct API usage.`,
+      transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`,
+      timestamp: new Date().toISOString()
+    }
+  };
 }
 
 // Handle chat requests
 async function handleChat(data: any) {
   const { message, walletAddress } = data;
 
-  if (!message || !walletAddress) {
-    return NextResponse.json(
-      createResponse(null, false, 'message and walletAddress are required'),
-      { status: 400 }
-    );
+  if (!message) {
+    return {
+      success: false,
+      error: 'message is required'
+    };
   }
 
   // Mock chat response - in production this would use the actual chat system
@@ -563,15 +566,18 @@ async function handleChat(data: any) {
   const response = responses[Math.floor(Math.random() * responses.length)];
   const cost = Math.random() * 0.02 + 0.005; // $0.005 - $0.025
 
-  return NextResponse.json(createResponse({
-    message: response,
-    originalMessage: message,
-    cost: cost,
-    provider: 'optimized',
-    responseTime: Math.floor(Math.random() * 2000) + 500, // 500-2500ms
-    transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`,
-    timestamp: new Date().toISOString()
-  }));
+  return {
+    success: true,
+    data: {
+      message: response,
+      originalMessage: message,
+      cost: cost,
+      provider: 'optimized',
+      responseTime: Math.floor(Math.random() * 2000) + 500, // 500-2500ms
+      transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`,
+      timestamp: new Date().toISOString()
+    }
+  };
 }
 
 // Handle wallet connection
