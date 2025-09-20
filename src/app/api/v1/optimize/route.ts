@@ -74,14 +74,15 @@ export async function POST(req: NextRequest) {
     // The keyData validation can be added later when we have persistent storage
 
     // Initialize user balance if not exists
-    if (!userBalances.has(walletAddress)) {
-      userBalances.set(walletAddress, 10.0); // Demo: $10 USDC balance
+    if (!userBalances.has(walletAddress || 'default-wallet')) {
+      userBalances.set(walletAddress || 'default-wallet', 10.0); // Demo: $10 USDC balance
     }
 
     const startTime = Date.now();
 
     // Step 1: CAPO Optimization
-    console.log(`[Optimization] Starting CAPO optimization for ${walletAddress}`);
+    const userWallet = walletAddress || 'default-wallet';
+    console.log(`[Optimization] Starting CAPO optimization for ${userWallet}`);
     const capoResult = await capoOptimizer.optimize(prompt, []);
     const optimizationTime = Date.now() - startTime;
 
@@ -106,7 +107,7 @@ export async function POST(req: NextRequest) {
     const netSavings = savings - ourFee;
 
     // Step 3: Check user balance
-    const currentBalance = userBalances.get(walletAddress)!;
+    const currentBalance = userBalances.get(userWallet)!;
     if (currentBalance < totalCharged) {
       return NextResponse.json({
         success: false,
@@ -120,10 +121,10 @@ export async function POST(req: NextRequest) {
     const paymentHash = `0x${Math.random().toString(16).substr(2, 64)}`;
     
     // Update user balance
-    userBalances.set(walletAddress, currentBalance - totalCharged);
+    userBalances.set(userWallet, currentBalance - totalCharged);
 
     // Update user stats
-    const stats = userStats.get(walletAddress) || {
+    const stats = userStats.get(userWallet) || {
       total_calls: 0,
       total_savings: 0,
       total_fees: 0,
@@ -134,7 +135,7 @@ export async function POST(req: NextRequest) {
     stats.total_savings += savings;
     stats.total_fees += ourFee;
     stats.total_charged += totalCharged;
-    userStats.set(walletAddress, stats);
+    userStats.set(userWallet, stats);
 
     // Step 5: Generate response (simulated)
     const response = `Based on the optimized analysis of your request: "${capoResult.bestPrompt}", here are the comprehensive insights you requested. The optimization reduced your prompt from ${originalTokens} to ${optimizedTokens} tokens while maintaining 96% accuracy.`;
@@ -162,7 +163,7 @@ export async function POST(req: NextRequest) {
       }
     };
 
-    console.log(`[Optimization] Completed for ${walletAddress}: ${result.optimization_metrics.cost_reduction} cost reduction`);
+    console.log(`[Optimization] Completed for ${userWallet}: ${result.optimization_metrics.cost_reduction} cost reduction`);
 
     const apiResponse = NextResponse.json({
       success: true,
