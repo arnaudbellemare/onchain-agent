@@ -314,12 +314,23 @@ async function handleCreateAgent(data: any) {
   
   let transactionHash = '';
   try {
-    const paymentResult = await x402SDK.makeAICall({
-      prompt: `Create agent: ${name}`,
-      maxTokens: 100,
-      walletAddress: wallet_address,
-      amount: creationFee
-    });
+    const paymentResult = await x402SDK.makeAICall(
+      '/api/v1/agents/create',
+      {
+        prompt: `Create agent: ${name}`,
+        maxTokens: 100,
+        walletAddress: wallet_address,
+        amount: creationFee
+      },
+      {
+        request_id: `agent-create-${Date.now()}`,
+        model: 'gpt-3.5-turbo',
+        tokens_in: 50,
+        tokens_out: 100,
+        inference_seconds: 1.5,
+        cost_usd: creationFee / 1_000_000
+      }
+    );
     transactionHash = paymentResult.transactionHash;
   } catch (error) {
     console.error('[AgentKit] Payment failed, using mock transaction:', error);
