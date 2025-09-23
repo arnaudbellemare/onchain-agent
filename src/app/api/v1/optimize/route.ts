@@ -206,7 +206,9 @@ export async function POST(req: NextRequest) {
     
     // Calculate real savings (original vs optimized with same output length)
     const realSavings = originalWithRealAPI - realCost;
-    const realOurFee = realSavings > 0 ? Math.max(realSavings * 0.13, 0.0001) : 0;
+    // Only charge a fee if we deliver meaningful savings (at least $0.0001 savings)
+    // This protects clients from paying fees when optimization doesn't help
+    const realOurFee = realSavings > 0.0001 ? Math.max(realSavings * 0.13, 0.0001) : 0;
     const realTotalCharged = realCost + realOurFee;
     const realNetSavings = realSavings - realOurFee;
     
@@ -223,14 +225,14 @@ export async function POST(req: NextRequest) {
 
     const result: OptimizeResponse = {
       response,
-      cost_breakdown: {
-        original_cost: `$${originalWithRealAPI.toFixed(6)}`,
-        optimized_cost: `$${realCost.toFixed(6)}`,
-        savings: `$${realSavings.toFixed(6)}`,
-        our_fee: `$${realOurFee.toFixed(6)}`,
-        total_charged: `$${realTotalCharged.toFixed(6)}`,
-        net_savings: `$${realNetSavings.toFixed(6)}`
-      },
+          cost_breakdown: {
+            original_cost: `$${originalWithRealAPI.toFixed(6)}`,
+            optimized_cost: `$${realCost.toFixed(6)}`,
+            savings: `$${realSavings.toFixed(6)}`,
+            our_fee: realOurFee > 0 ? `$${realOurFee.toFixed(6)}` : 'No fee (insufficient savings)',
+            total_charged: `$${realTotalCharged.toFixed(6)}`,
+            net_savings: `$${realNetSavings.toFixed(6)}`
+          },
       optimization_metrics: {
         cost_reduction: `${(optimizationResult.costReduction * 100).toFixed(1)}%`,
         token_efficiency: `${(optimizationResult.tokenReduction * 100).toFixed(1)}%`,
