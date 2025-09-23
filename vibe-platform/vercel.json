@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "env": {
+    "ONCHAIN_AGENT_URL": "https://your-onchain-agent.vercel.app",
+    "PERPLEXITY_API_KEY": "@perplexity_api_key",
+    "X402_PRIVATE_KEY": "@x402_private_key"
+  },
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  }
+}
