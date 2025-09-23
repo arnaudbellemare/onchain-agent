@@ -208,8 +208,8 @@ export async function POST(req: NextRequest) {
     const realSavings = originalWithRealAPI - realCost;
     // Only charge a fee if we deliver meaningful savings (at least $0.0001 savings)
     // This protects clients from paying fees when optimization doesn't help
-    // Competitive 8% fee structure - balanced profitability and client value
-    const realOurFee = realSavings > 0.0001 ? Math.max(realSavings * 0.08, 0.0001) : 0;
+    // 8% fee on actual savings - no minimum, truly proportional
+    const realOurFee = realSavings > 0.0001 ? realSavings * 0.08 : 0;
     const realTotalCharged = realCost + realOurFee;
     const realNetSavings = realSavings - realOurFee;
     
