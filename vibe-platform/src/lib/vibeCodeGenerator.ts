@@ -1,4 +1,4 @@
-import { config } from '@/lib/config';
+// import { config } from '@/lib/config'; // Not used in this implementation
 
 interface CodeGenerationRequest {
   userPrompt: string;
@@ -32,10 +32,12 @@ interface CodeGenerationResult {
 export class VibeCodeGenerator {
   private optimizationEnabled: boolean;
   private onChainAgentUrl: string;
+  private googleAIStudioKey: string;
 
   constructor() {
     this.optimizationEnabled = true;
     this.onChainAgentUrl = 'http://localhost:3000/api/v1/optimize';
+    this.googleAIStudioKey = process.env.GOOGLE_AI_STUDIO_API_KEY || '';
   }
 
   async generateCode(request: CodeGenerationRequest): Promise<CodeGenerationResult> {
@@ -141,10 +143,11 @@ export class VibeCodeGenerator {
       type: 'config'
     });
 
-    // Generate main component
+    // Generate main component using AI
+    const mainComponent = await this.generateMainComponentWithAI(optimizedPrompt, request);
     files.push({
       path: 'src/App.tsx',
-      content: this.generateMainComponent(optimizedPrompt, request),
+      content: mainComponent,
       type: 'component'
     });
 
@@ -163,6 +166,83 @@ export class VibeCodeGenerator {
     });
 
     return files;
+  }
+
+  private async generateMainComponentWithAI(optimizedPrompt: string, request: CodeGenerationRequest): Promise<string> {
+    // Try Google AI Studio first, fallback to static generation
+    if (this.googleAIStudioKey) {
+      try {
+        console.log(`[VibeCodeGenerator] Using Google AI Studio for code generation`);
+        
+        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Goog-Api-Key': this.googleAIStudioKey
+          },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: `Generate a React component for: ${optimizedPrompt}. 
+                Framework: ${request.framework || 'react'}
+                Features: ${request.features?.join(', ') || 'basic functionality'}
+                
+                Return only the JSX/TSX code, no explanations.`
+              }]
+            }]
+          })
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          if (result.candidates?.[0]?.content?.parts?.[0]?.text) {
+            const aiGeneratedCode = result.candidates[0].content.parts[0].text;
+            console.log(`[VibeCodeGenerator] Google AI Studio generated code successfully`);
+            return this.wrapInReactComponent(aiGeneratedCode, optimizedPrompt, request);
+          }
+        }
+      } catch (error) {
+        console.warn(`[VibeCodeGenerator] Google AI Studio failed, using fallback:`, error);
+      }
+    }
+
+    // Fallback to static generation
+    return this.generateMainComponent(optimizedPrompt, request);
+  }
+
+  private wrapInReactComponent(aiCode: string, optimizedPrompt: string, request: CodeGenerationRequest): string {
+    return `import React from 'react';
+import './App.css';
+
+// Generated with OnChain Agent + Google AI Studio cost optimization
+// Original prompt: ${request.userPrompt}
+// Optimized for: ${optimizedPrompt}
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h1>AI-Generated Application</h1>
+        <p>Built with Google AI Studio + OnChain Agent optimization</p>
+        <div className="features">
+          <h2>Features:</h2>
+          <ul>
+            ${request.features?.map(feature => `<li>${feature}</li>`).join('\n            ') || '<li>Basic functionality</li>'}
+          </ul>
+        </div>
+        <div className="cost-optimization">
+          <h3>Cost Optimization Active</h3>
+          <p>This application was generated using optimized prompts to reduce AI costs.</p>
+        </div>
+        <div className="ai-generated-content">
+          ${aiCode}
+        </div>
+      </header>
+    </div>
+  );
+};
+
+export default App;`;
   }
 
   private generatePackageJson(request: CodeGenerationRequest): string {
@@ -231,7 +311,7 @@ const App: React.FC = () => {
 export default App;`;
   }
 
-  private generateStyles(request: CodeGenerationRequest): string {
+  private generateStyles(_request: CodeGenerationRequest): string {
     return `.App {
   text-align: center;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -332,7 +412,7 @@ Built with ❤️ by OnChain Agent + VibeSDK`;
     };
   }
 
-  private async prepareDeployment(files: GeneratedFile[]): Promise<{
+  private async prepareDeployment(_files: GeneratedFile[]): Promise<{
     previewUrl: string;
     deploymentStatus: 'ready' | 'deploying' | 'deployed';
   }> {

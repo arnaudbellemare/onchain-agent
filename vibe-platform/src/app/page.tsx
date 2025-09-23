@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+// import { useState } from 'react'; // Not used in this component
 import Link from 'next/link';
 
 interface GenerationResult {

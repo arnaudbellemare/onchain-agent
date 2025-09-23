@@ -1,0 +1,8 @@
+{
+  "/api/vibe-optimize/route": "/api/vibe-optimize",
+  "/api/deploy/route": "/api/deploy",
+  "/_not-found/page": "/_not-found",
+  "/api/generate-code/route": "/api/generate-code",
+  "/vibe-coding/page": "/vibe-coding",
+  "/page": "/"
+}
