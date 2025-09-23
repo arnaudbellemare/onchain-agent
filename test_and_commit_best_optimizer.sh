@@ -37,13 +37,12 @@ declare -a PROMPT_NAMES=(
 test_optimizer() {
     local optimizer_name="$1"
     local results_array_name="$2"
-    local -n results_ref=$results_array_name
     
     echo -e "${BLUE}📊 TESTING $optimizer_name OPTIMIZER${NC}"
     echo "============================================================"
     echo ""
     
-    results_ref=()
+    local results=()
     for i in "${!TEST_PROMPTS[@]}"; do
         echo "Test $((i+1)): ${PROMPT_NAMES[i]} ($optimizer_name)"
         
@@ -70,8 +69,11 @@ test_optimizer() {
         echo "  Savings: $savings"
         echo ""
         
-        results_ref+=("$cost_reduction")
+        results+=("$cost_reduction")
     done
+    
+    # Return results via global variable
+    eval "$results_array_name=(\"\${results[@]}\")"
 }
 
 # Function to switch optimizer in API route
@@ -95,15 +97,22 @@ switch_optimizer() {
 
 # Function to calculate average
 calculate_average() {
-    local -n array_ref=$1
+    local array_name=$1
     local sum=0
-    local count=${#array_ref[@]}
+    local count=0
     
-    for val in "${array_ref[@]}"; do
+    eval "local array=(\"\${$array_name[@]}\")"
+    count=${#array[@]}
+    
+    for val in "${array[@]}"; do
         sum=$(echo "scale=2; $sum + $val" | bc)
     done
     
-    echo "scale=2; $sum / $count" | bc
+    if [ $count -gt 0 ]; then
+        echo "scale=2; $sum / $count" | bc
+    else
+        echo "0"
+    fi
 }
 
 # Start testing
