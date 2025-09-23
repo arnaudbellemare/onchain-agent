@@ -27,6 +27,7 @@ export default function VibeCodingPage() {
   const [prompt, setPrompt] = useState('');
   const [framework, setFramework] = useState('react');
   const [features, setFeatures] = useState<string[]>([]);
+  const [newFeature, setNewFeature] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [result, setResult] = useState<GenerationResult | null>(null);
   const [isDeploying, setIsDeploying] = useState(false);
@@ -97,9 +98,9 @@ export default function VibeCodingPage() {
   };
 
   const addFeature = () => {
-    const newFeature = prompt('Enter a feature:');
-    if (newFeature) {
-      setFeatures([...features, newFeature]);
+    if (newFeature.trim()) {
+      setFeatures([...features, newFeature.trim()]);
+      setNewFeature('');
     }
   };
 
@@ -195,12 +196,22 @@ export default function VibeCodingPage() {
                 <label className="block text-sm font-medium mb-2">
                   Features
                 </label>
-                <button
-                  onClick={addFeature}
-                  className="w-full p-3 rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors"
-                >
-                  + Add Feature
-                </button>
+                <div className="flex gap-2 mb-2">
+                  <input
+                    type="text"
+                    value={newFeature}
+                    onChange={(e) => setNewFeature(e.target.value)}
+                    placeholder="Enter a feature..."
+                    className="flex-1 px-3 py-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onKeyPress={(e) => e.key === 'Enter' && addFeature()}
+                  />
+                  <button
+                    onClick={addFeature}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Add
+                  </button>
+                </div>
               </div>
             </div>
 
