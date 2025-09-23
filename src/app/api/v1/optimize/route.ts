@@ -9,7 +9,7 @@ import { validateAPIKeySecurity } from '@/lib/security';
 import { addSecurityHeaders } from '@/lib/security';
 import { costMinimizer } from '@/lib/costMinimizer';
 import { hybridCache } from '@/lib/hybridCache';
-import { advancedPromptOptimizer } from '@/lib/advancedPromptOptimizer';
+import { enhancedPromptOptimizer } from '@/lib/enhancedPromptOptimizer';
 
 interface OptimizeRequest {
   prompt: string;
@@ -117,8 +117,8 @@ export async function POST(req: NextRequest) {
     const userWallet = walletAddress || 'default-wallet';
     console.log(`[Optimization] Starting advanced prompt optimization for ${userWallet}`);
     
-    // Use advanced optimizer for better results
-    const optimizationResult = advancedPromptOptimizer.optimize(prompt, 5);
+        // Use enhanced optimizer with dynamic weighting and type-specific strategies
+        const optimizationResult = enhancedPromptOptimizer.optimize(prompt, 4);
     const optimizationTime = Date.now() - startTime;
 
     // Step 2: Calculate costs with real optimization
