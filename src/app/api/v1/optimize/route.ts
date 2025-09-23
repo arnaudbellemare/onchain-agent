@@ -9,6 +9,7 @@ import { validateAPIKeySecurity } from '@/lib/security';
 import { addSecurityHeaders } from '@/lib/security';
 import { costMinimizer } from '@/lib/costMinimizer';
 import { hybridCache } from '@/lib/hybridCache';
+import { advancedPromptOptimizer } from '@/lib/advancedPromptOptimizer';
 
 interface OptimizeRequest {
   prompt: string;
@@ -112,11 +113,12 @@ export async function POST(req: NextRequest) {
 
     const startTime = Date.now();
 
-    // Step 1: Hybrid Cost Minimization (with caching)
+    // Step 1: Advanced Prompt Optimization (with caching)
     const userWallet = walletAddress || 'default-wallet';
-    console.log(`[Optimization] Starting hybrid cost minimization for ${userWallet}`);
+    console.log(`[Optimization] Starting advanced prompt optimization for ${userWallet}`);
     
-    const optimizationResult = costMinimizer.optimize(prompt);
+    // Use advanced optimizer for better results
+    const optimizationResult = advancedPromptOptimizer.optimize(prompt, 5);
     const optimizationTime = Date.now() - startTime;
 
     // Step 2: Calculate costs with real optimization
@@ -124,31 +126,29 @@ export async function POST(req: NextRequest) {
     const optimizedPrompt = optimizationResult.optimizedPrompt;
     const optimizedTokens = Math.ceil(optimizedPrompt.length / 4);
     
-    // Real pricing (per 1M tokens)
+    // Real pricing (per 1M tokens) - Updated to match actual Perplexity pricing
     const pricing = {
-      'gpt-4': { input: 0.5, output: 1.5 },
-      'claude-3': { input: 0.3, output: 1.2 },
-      'perplexity': { input: 0.2, output: 0.8 }
+      'gpt-4': { input: 5.0, output: 15.0 }, // $5/$15 per 1M tokens
+      'claude-3': { input: 3.0, output: 15.0 }, // $3/$15 per 1M tokens  
+      'perplexity': { input: 2.5, output: 5.0 } // $2.5/$5 per 1M tokens (actual Perplexity pricing)
     };
 
     const modelPricing = pricing[model];
-    const originalCost = (originalTokens / 1_000_000) * modelPricing.input + (max_tokens / 1_000_000) * modelPricing.output;
-    const optimizedCost = (optimizedTokens / 1_000_000) * modelPricing.input + (max_tokens / 1_000_000) * modelPricing.output;
-    
-    // Use the cost minimization result for more accurate savings calculation
-    const actualSavings = originalCost * optimizationResult.costReduction;
-    // Only charge a fee if there are actual savings, and make it proportional
-    const ourFee = actualSavings > 0 ? Math.max(actualSavings * 0.13, 0.0001) : 0; // 13% of savings, minimum $0.0001
-    const totalCharged = optimizedCost + ourFee;
-    const netSavings = actualSavings - ourFee;
+    // Calculate estimated costs for comparison (will be replaced with real costs)
+    const estimatedOriginalCost = (originalTokens / 1_000_000) * modelPricing.input + (max_tokens / 1_000_000) * modelPricing.output;
+    const estimatedOptimizedCost = (optimizedTokens / 1_000_000) * modelPricing.input + (max_tokens / 1_000_000) * modelPricing.output;
+    // Temporary variables (will be replaced with real calculations after API call)
+    let ourFee = 0;
+    let totalCharged = estimatedOptimizedCost;
+    let netSavings = 0;
 
-    // Step 3: Check user balance
+    // Step 3: Check user balance (will be updated after real API call)
     const currentBalance = userBalances.get(userWallet)!;
-    if (currentBalance < totalCharged) {
+    if (currentBalance < estimatedOptimizedCost) {
       return NextResponse.json({
         success: false,
         error: 'Insufficient USDC balance',
-        required: totalCharged.toFixed(6),
+        required: estimatedOptimizedCost.toFixed(6),
         current: currentBalance.toFixed(6)
       }, { status: 402 });
     }
@@ -156,10 +156,10 @@ export async function POST(req: NextRequest) {
     // Step 4: Process x402 payment (simulated)
     const paymentHash = `0x${Math.random().toString(16).substr(2, 64)}`;
     
-    // Update user balance
-    userBalances.set(userWallet, currentBalance - totalCharged);
+    // Update user balance (will be corrected after real API call)
+    userBalances.set(userWallet, currentBalance - estimatedOptimizedCost);
 
-    // Update user stats
+    // Update user stats (will be updated after real API call)
     const stats = userStats.get(userWallet) || {
       total_calls: 0,
       total_savings: 0,
@@ -168,23 +168,68 @@ export async function POST(req: NextRequest) {
     };
     
     stats.total_calls++;
-    stats.total_savings += actualSavings;
-    stats.total_fees += ourFee;
-    stats.total_charged += totalCharged;
     userStats.set(userWallet, stats);
 
-    // Step 5: Generate response (simulated)
-    const response = `Based on the optimized analysis of your request: "${optimizedPrompt}", here are the comprehensive insights you requested. The hybrid optimization reduced your prompt from ${originalTokens} to ${optimizedTokens} tokens using strategies: ${optimizationResult.strategies.join(', ')}. ${optimizationResult.cacheHit ? 'Cache hit - instant optimization!' : 'Fresh optimization completed.'}`;
+    // Step 5: Generate response using real AI API
+    let response: string;
+    let realTokens = optimizedTokens;
+    let realCost = estimatedOptimizedCost;
+    
+    try {
+      // Import real AI implementation
+      const { RealAIImplementation } = await import('@/lib/realAIImplementation');
+      const realAI = new RealAIImplementation();
+      
+      // Make real API call based on model
+      if (model === 'perplexity') {
+        const aiResponse = await realAI.callPerplexity(optimizedPrompt, max_tokens);
+        response = aiResponse.response;
+        realTokens = aiResponse.tokens;
+        realCost = aiResponse.actualCost;
+      } else if (model === 'gpt-4') {
+        const aiResponse = await realAI.callOpenAI(optimizedPrompt, max_tokens);
+        response = aiResponse.response;
+        realTokens = aiResponse.tokens;
+        realCost = aiResponse.actualCost;
+      } else {
+        // Fallback to simulated response for other models
+        response = `Based on the optimized analysis of your request: "${optimizedPrompt}", here are the comprehensive insights you requested. The hybrid optimization reduced your prompt from ${originalTokens} to ${optimizedTokens} tokens using strategies: ${optimizationResult.strategies.join(', ')}. ${optimizationResult.cacheHit ? 'Cache hit - instant optimization!' : 'Fresh optimization completed.'}`;
+      }
+    } catch (error) {
+      console.error('Real AI API call failed, using fallback:', error);
+      // Fallback to simulated response
+      response = `Based on the optimized analysis of your request: "${optimizedPrompt}", here are the comprehensive insights you requested. The hybrid optimization reduced your prompt from ${originalTokens} to ${optimizedTokens} tokens using strategies: ${optimizationResult.strategies.join(', ')}. ${optimizationResult.cacheHit ? 'Cache hit - instant optimization!' : 'Fresh optimization completed.'}`;
+    }
+
+    // Calculate what the original prompt would have cost with real API
+    const originalWithRealAPI = (originalTokens / 1_000_000) * modelPricing.input + (realTokens / 1_000_000) * modelPricing.output;
+    
+    // Calculate real savings (original vs optimized with same output length)
+    const realSavings = originalWithRealAPI - realCost;
+    const realOurFee = realSavings > 0 ? Math.max(realSavings * 0.13, 0.0001) : 0;
+    const realTotalCharged = realCost + realOurFee;
+    const realNetSavings = realSavings - realOurFee;
+    
+    // Correct the user balance with real costs
+    const balanceCorrection = estimatedOptimizedCost - realTotalCharged;
+    const correctedBalance = userBalances.get(userWallet)! + balanceCorrection;
+    userBalances.set(userWallet, correctedBalance);
+    
+    // Update user stats with real costs
+    stats.total_savings += realSavings;
+    stats.total_fees += realOurFee;
+    stats.total_charged += realTotalCharged;
+    userStats.set(userWallet, stats);
 
     const result: OptimizeResponse = {
       response,
       cost_breakdown: {
-        original_cost: `$${originalCost.toFixed(6)}`,
-        optimized_cost: `$${optimizedCost.toFixed(6)}`,
-        savings: `$${actualSavings.toFixed(6)}`,
-        our_fee: `$${ourFee.toFixed(6)}`,
-        total_charged: `$${totalCharged.toFixed(6)}`,
-        net_savings: `$${netSavings.toFixed(6)}`
+        original_cost: `$${originalWithRealAPI.toFixed(6)}`,
+        optimized_cost: `$${realCost.toFixed(6)}`,
+        savings: `$${realSavings.toFixed(6)}`,
+        our_fee: `$${realOurFee.toFixed(6)}`,
+        total_charged: `$${realTotalCharged.toFixed(6)}`,
+        net_savings: `$${realNetSavings.toFixed(6)}`
       },
       optimization_metrics: {
         cost_reduction: `${(optimizationResult.costReduction * 100).toFixed(1)}%`,
@@ -203,7 +248,7 @@ export async function POST(req: NextRequest) {
 
     // Update API key usage
     const { simpleApiKeyManager } = await import('@/lib/simpleApiKeyManager');
-    const usageUpdated = simpleApiKeyManager.updateUsage(apiKey, '/api/v1/optimize', totalCharged, actualSavings, model);
+    const usageUpdated = simpleApiKeyManager.updateUsage(apiKey, '/api/v1/optimize', realTotalCharged, realSavings, model);
     console.log(`[Optimization] Usage updated: ${usageUpdated} for key: ${apiKey.substring(0, 20)}...`);
 
     const apiResponse = NextResponse.json({
