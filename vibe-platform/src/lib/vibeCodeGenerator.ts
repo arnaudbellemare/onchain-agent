@@ -395,7 +395,46 @@ Built with ❤️ by OnChain Agent + VibeSDK`;
     savings: string;
     savingsPercentage: string;
   }> {
-    // Calculate token-based costs
+    try {
+      console.log(`[VibeCodeGenerator] Calculating real cost optimization`);
+      
+      // Call the OnChain Agent optimization API for real cost calculation
+      const response = await fetch(this.onChainAgentUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': 'ak_c88d0dde13eaacbead83331aef5667f9feff0129425bba4bbb8143add2e9ec73'
+        },
+        body: JSON.stringify({
+          prompt: originalPrompt,
+          model: 'perplexity',
+          quality: 0.9,
+          max_cost: 0.10,
+          optimization_type: 'cost',
+          use_blockchain: true,
+          use_x402: true
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success && result.result) {
+          const optimization = result.result;
+          console.log(`[VibeCodeGenerator] Real optimization result:`, optimization);
+          
+          return {
+            originalCost: `$${optimization.original_cost || '0.000000'}`,
+            optimizedCost: `$${optimization.optimized_cost || '0.000000'}`,
+            savings: `$${optimization.savings || '0.000000'}`,
+            savingsPercentage: `${optimization.savings_percentage || '0.0'}%`
+          };
+        }
+      }
+    } catch (error) {
+      console.warn(`[VibeCodeGenerator] Real cost calculation failed, using fallback:`, error);
+    }
+
+    // Fallback to token-based calculation if real API fails
     const originalTokens = Math.ceil(originalPrompt.length / 4);
     const optimizedTokens = Math.ceil(optimizedPrompt.length / 4);
     
