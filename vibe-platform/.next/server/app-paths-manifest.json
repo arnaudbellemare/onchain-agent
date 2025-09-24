@@ -1,4 +1,4 @@
 {
-  "/deployments/[deploymentId]/page": "app/deployments/[deploymentId]/page.js",
-  "/api/deploy/route": "app/api/deploy/route.js"
+  "/api/deploy/route": "app/api/deploy/route.js",
+  "/deployments/deploy-real-working-app-1758696050239/page": "app/deployments/deploy-real-working-app-1758696050239/page.js"
 }
