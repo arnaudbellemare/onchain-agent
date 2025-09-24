@@ -407,7 +407,7 @@ export class EnhancedPromptOptimizer {
 
   private removePoliteness(prompt: string): OptimizationResult {
     const politePhrases = ['please', 'kindly', 'thank you', 'could you', 'would you mind', 'if you don\'t mind', 'if possible'];
-    const optimized = prompt;
+    let optimized = prompt;
     
     politePhrases.forEach(phrase => {
       const regex = new RegExp(`\\b${phrase}\\b`, 'gi');
