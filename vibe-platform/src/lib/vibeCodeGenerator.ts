@@ -78,7 +78,7 @@ export class VibeCodeGenerator {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-API-Key': 'ak_c88d0dde13eaacbead83331aef5667f9feff0129425bba4bbb8143add2e9ec73'
+          'X-API-Key': 'ak_default_demo_key_for_vibesdk_integration'
         },
         body: JSON.stringify({
           prompt: originalPrompt,
@@ -403,7 +403,7 @@ Built with ❤️ by OnChain Agent + VibeSDK`;
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-API-Key': 'ak_c88d0dde13eaacbead83331aef5667f9feff0129425bba4bbb8143add2e9ec73'
+          'X-API-Key': 'ak_default_demo_key_for_vibesdk_integration'
         },
         body: JSON.stringify({
           prompt: originalPrompt,
