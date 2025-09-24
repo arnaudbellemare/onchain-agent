@@ -109,17 +109,9 @@ export class RealVercelAPI {
     const { execSync } = require('child_process');
     
     try {
-      // Install Vercel CLI if not available
-      try {
-        execSync('vercel --version', { stdio: 'ignore' });
-      } catch {
-        console.log('[RealVercelAPI] Installing Vercel CLI...');
-        execSync('npm install -g vercel', { stdio: 'inherit' });
-      }
-
-      // Deploy to Vercel
-      console.log('[RealVercelAPI] Deploying to Vercel...');
-      const deployCommand = `cd ${tempDir} && vercel --token ${this.vercelToken} --yes --name ${projectId}`;
+      // Deploy to Vercel using npx (no global install needed)
+      console.log('[RealVercelAPI] Deploying to Vercel using npx...');
+      const deployCommand = `cd ${tempDir} && npx vercel --token ${this.vercelToken} --yes --name ${projectId}`;
       
       const result = execSync(deployCommand, { 
         encoding: 'utf8',
