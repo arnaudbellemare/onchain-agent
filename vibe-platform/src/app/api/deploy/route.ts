@@ -47,20 +47,21 @@ export async function POST(req: NextRequest) {
 
     // Step 3: Install dependencies
     console.log(`[VibeSDK] Installing dependencies for ${framework}`);
-    const installResult = await this.installDependencies(framework);
+    const installResult = await installDependencies(framework);
 
     // Step 4: Build project
     console.log(`[VibeSDK] Building project`);
-    const buildResult = await this.buildProject(framework);
+    const buildResult = await buildProject(framework);
 
     // Step 5: Deploy to Cloudflare Workers
     console.log(`[VibeSDK] Deploying to Cloudflare Workers`);
-    const deploymentResult = await this.deployToWorkers(projectId, framework);
+    const deploymentResult = await deployToWorkers(projectId, framework);
 
     // Step 6: Process x402 micropayment for optimization
+    let paymentResult = null;
     if (useOptimization) {
       console.log(`[VibeSDK] Processing x402 micropayment for cost optimization`);
-      const paymentResult = await this.processOptimizationPayment(projectId);
+      paymentResult = await processOptimizationPayment(projectId);
     }
 
     console.log(`[VibeSDK] Deployment completed: ${deploymentResult.url}`);
@@ -86,7 +87,8 @@ export async function POST(req: NextRequest) {
         },
         optimization: {
           enabled: useOptimization,
-          paymentProcessed: useOptimization,
+          paymentProcessed: paymentResult ? paymentResult.status : 'skipped',
+          transactionId: paymentResult ? paymentResult.transactionId : null,
           costSavings: 'Real-time AI cost optimization active'
         },
         vibe_platform: {
