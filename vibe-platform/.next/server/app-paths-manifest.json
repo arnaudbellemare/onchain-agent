@@ -1,8 +1,8 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
+  "/api/deploy/route": "app/api/deploy/route.js",
+  "/api/vibe-optimize/route": "app/api/vibe-optimize/route.js",
   "/api/generate-code/route": "app/api/generate-code/route.js",
   "/page": "app/page.js",
-  "/vibe-coding/page": "app/vibe-coding/page.js",
-  "/api/vibe-optimize/route": "app/api/vibe-optimize/route.js",
-  "/api/deploy/route": "app/api/deploy/route.js"
+  "/vibe-coding/page": "app/vibe-coding/page.js"
 }
