@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { realVercelDeployment } from '@/lib/realVercelDeployment';
+import { realVercelAPI } from '@/lib/realVercelAPI';
 
 interface DeployRequest {
   projectId: string;
@@ -54,9 +54,9 @@ export async function POST(req: NextRequest) {
     console.log(`[VibeSDK] Building project`);
     const buildResult = await buildProject(framework);
 
-        // Step 5: Create real deployment that actually works
-        console.log(`[VibeSDK] Creating real deployment`);
-        const deploymentResult = await realVercelDeployment.deployApp(projectId, files, framework);
+        // Step 5: Create REAL Vercel deployment that actually works
+        console.log(`[VibeSDK] Creating REAL Vercel deployment`);
+        const deploymentResult = await realVercelAPI.deployToVercel(projectId, files, framework);
 
     // Step 6: Process x402 micropayment for optimization
     let paymentResult = null;
@@ -72,10 +72,12 @@ export async function POST(req: NextRequest) {
       result: {
         projectId,
         deployment: {
-          url: deploymentResult.url,
-          status: 'deployed',
+          url: deploymentResult.vercelUrl,
+          status: deploymentResult.status,
           sandboxId,
-          framework
+          framework,
+          vercelUrl: deploymentResult.vercelUrl,
+          previewUrl: deploymentResult.previewUrl
         },
         files: {
           total: files.length,

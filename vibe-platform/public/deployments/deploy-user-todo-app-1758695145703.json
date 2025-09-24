@@ -1,0 +1,13 @@
+{
+  "projectId": "user-todo-app",
+  "files": [
+    {
+      "path": "src/App.tsx",
+      "content": "import React, { useState } from \"react\";\n\nexport default function App() {\n  const [todos, setTodos] = useState([]);\n  const [input, setInput] = useState(\"\");\n\n  const addTodo = () => {\n    if (input.trim()) {\n      setTodos([...todos, { id: Date.now(), text: input, completed: false }]);\n      setInput(\"\");\n    }\n  };\n\n  const toggleTodo = (id) => {\n    setTodos(todos.map(todo => \n      todo.id === id ? { ...todo, completed: !todo.completed } : todo\n    ));\n  };\n\n  const deleteTodo = (id) => {\n    setTodos(todos.filter(todo => todo.id !== id));\n  };\n\n  return (\n    <div className=\"App\">\n      <h1>Todo App</h1>\n      <div>\n        <input \n          value={input}\n          onChange={(e) => setInput(e.target.value)}\n          placeholder=\"Add a todo...\"\n        />\n        <button onClick={addTodo}>Add</button>\n      </div>\n      <ul>\n        {todos.map(todo => (\n          <li key={todo.id}>\n            <span \n              style={{ textDecoration: todo.completed ? \"line-through\" : \"none\" }}\n              onClick={() => toggleTodo(todo.id)}\n            >\n              {todo.text}\n            </span>\n            <button onClick={() => deleteTodo(todo.id)}>Delete</button>\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n}",
+      "type": "component"
+    }
+  ],
+  "framework": "react",
+  "createdAt": "2025-09-24T06:25:45.703Z",
+  "status": "deployed"
+}
