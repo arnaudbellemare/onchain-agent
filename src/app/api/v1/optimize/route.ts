@@ -138,9 +138,10 @@ export async function POST(req: NextRequest) {
     const estimatedOriginalCost = (originalTokens / 1_000_000) * modelPricing.input + (max_tokens / 1_000_000) * modelPricing.output;
     const estimatedOptimizedCost = (optimizedTokens / 1_000_000) * modelPricing.input + (max_tokens / 1_000_000) * modelPricing.output;
     // Temporary variables (will be replaced with real calculations after API call)
-    let ourFee = 0;
-    let totalCharged = estimatedOptimizedCost;
-    let netSavings = 0;
+    // Fee calculations will be implemented after real API integration
+    // const ourFee = 0;
+    // const totalCharged = estimatedOptimizedCost;
+    // const netSavings = 0;
 
     // Step 3: Check user balance (will be updated after real API call)
     const currentBalance = userBalances.get(userWallet)!;

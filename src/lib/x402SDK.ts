@@ -17,7 +17,7 @@ interface X402Payment {
   currency: string;
   recipient: string;
   requestId: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 interface X402Response {
@@ -81,9 +81,9 @@ export class X402SDK {
    */
   async makeAICall(
     endpoint: string, 
-    payload: any, 
+    payload: Record<string, unknown>, 
     usageMetrics: AIUsageMetrics
-  ): Promise<any> {
+  ): Promise<Record<string, unknown>> {
     try {
       // Calculate cost for this specific request
       const costUSD = this.costCalculator(usageMetrics);
@@ -231,13 +231,14 @@ export class X402SDK {
   private async retryWithPaymentProof(
     payment: X402Payment, 
     receipt: X402Receipt
-  ): Promise<any> {
-    const headers = {
-      'X-402-Payment-Proof': receipt.transactionHash,
-      'X-402-Amount': payment.amount,
-      'X-402-Currency': payment.currency,
-      'X-402-Recipient': payment.recipient
-    };
+  ): Promise<Record<string, unknown>> {
+    // Headers for payment proof (currently unused but available for future use)
+    // const headers = {
+    //   'X-402-Payment-Proof': receipt.transactionHash,
+    //   'X-402-Amount': payment.amount,
+    //   'X-402-Currency': payment.currency,
+    //   'X-402-Recipient': payment.recipient
+    // };
 
     // In production, retry the original API call with payment proof
     // For demo, return success response
@@ -264,10 +265,10 @@ export class X402SDK {
   async batchAICalls(
     requests: Array<{
       endpoint: string;
-      payload: any;
+      payload: Record<string, unknown>;
       usageMetrics: AIUsageMetrics;
     }>
-  ): Promise<any[]> {
+  ): Promise<Record<string, unknown>[]> {
     const results = [];
     let totalCost = 0;
 
@@ -302,7 +303,7 @@ export class X402SDK {
   /**
    * Get payment history
    */
-  async getPaymentHistory(limit: number = 100): Promise<X402Receipt[]> {
+  async getPaymentHistory(_limit: number = 100): Promise<X402Receipt[]> {
     // In production, fetch from database
     // For demo, return empty array
     return [];
@@ -311,7 +312,7 @@ export class X402SDK {
   /**
    * Validate x402 response
    */
-  validateX402Response(response: any): boolean {
+  validateX402Response(response: Record<string, unknown>): boolean {
     return response && 
            typeof response.paymentRequired === 'boolean' &&
            (response.paymentRequired ? 
@@ -335,7 +336,7 @@ export class AgentKitX402Integration {
   /**
    * Deploy evolved GEPA configuration to AgentKit
    */
-  deployEvolvedConfig(configId: string, config: any): void {
+  deployEvolvedConfig(configId: string, config: Record<string, unknown>): void {
     this.evolvedConfigs.set(configId, {
       ...config,
       deployed_at: Date.now(),
@@ -348,7 +349,7 @@ export class AgentKitX402Integration {
   /**
    * Get evolved configuration for AgentKit
    */
-  getEvolvedConfig(configId: string): any {
+  getEvolvedConfig(configId: string): Record<string, unknown> | undefined {
     return this.evolvedConfigs.get(configId);
   }
 
@@ -357,8 +358,8 @@ export class AgentKitX402Integration {
    */
   async routePaymentWithEvolvedPrompt(
     configId: string,
-    paymentRequest: any
-  ): Promise<any> {
+    paymentRequest: Record<string, unknown>
+  ): Promise<Record<string, unknown>> {
     const config = this.getEvolvedConfig(configId);
     if (!config) {
       throw new Error(`Evolved config not found: ${configId}`);
@@ -401,7 +402,7 @@ export class AgentKitX402Integration {
   /**
    * Get all deployed configurations
    */
-  getAllConfigs(): Array<{ id: string; config: any }> {
+  getAllConfigs(): Array<{ id: string; config: Record<string, unknown> }> {
     return Array.from(this.evolvedConfigs.entries()).map(([id, config]) => ({
       id,
       config
