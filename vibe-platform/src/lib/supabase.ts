@@ -25,7 +25,7 @@ export interface DeploymentData {
 }
 
 export class SupabaseDeploymentStore {
-  async saveDeployment(data: Omit<DeploymentData, 'id'>): Promise<DeploymentData> {
+  async saveDeployment(data: DeploymentData): Promise<DeploymentData> {
     const { data: deployment, error } = await supabase
       .from('deployments')
       .insert([data])
