@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// Global deployment store (in production, use a database)
-declare global {
-  var deploymentStore: Map<string, any> | undefined;
-}
+import { deploymentStore } from '@/lib/supabase';
 
 export async function GET(
   request: NextRequest,
@@ -12,14 +8,7 @@ export async function GET(
   try {
     const { deploymentId } = params;
 
-    if (!globalThis.deploymentStore) {
-      return NextResponse.json({
-        success: false,
-        error: 'Deployment not found'
-      }, { status: 404 });
-    }
-
-    const deployment = globalThis.deploymentStore.get(deploymentId);
+    const deployment = await deploymentStore.getDeployment(deploymentId);
     
     if (!deployment) {
       return NextResponse.json({

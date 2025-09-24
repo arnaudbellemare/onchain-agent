@@ -4,6 +4,8 @@
  * This creates actual working deployments instead of fake URLs
  */
 
+import { deploymentStore, DeploymentData } from '@/lib/supabase';
+
 export interface DeploymentResult {
   url: string;
   status: 'deployed' | 'deploying' | 'failed';
@@ -64,25 +66,37 @@ export class RealDeploymentSystem {
   }
 
   /**
-   * Store deployment data (simplified version)
+   * Store deployment data in Supabase
    */
   private async storeDeployment(deploymentId: string, data: any) {
-    // In a real implementation, this would store in a database
-    // For now, we'll use a simple in-memory store
-    if (!globalThis.deploymentStore) {
-      globalThis.deploymentStore = new Map();
+    try {
+      await deploymentStore.saveDeployment({
+        id: deploymentId,
+        projectId: data.projectId,
+        files: data.files,
+        framework: data.framework,
+        status: 'deployed',
+        createdAt: data.createdAt,
+        costOptimization: data.costOptimization
+      });
+      console.log(`[RealDeployment] Deployment stored in Supabase: ${deploymentId}`);
+    } catch (error) {
+      console.error('[RealDeployment] Failed to store deployment:', error);
+      throw error;
     }
-    globalThis.deploymentStore.set(deploymentId, data);
   }
 
   /**
-   * Get deployment data
+   * Get deployment data from Supabase
    */
   async getDeployment(deploymentId: string) {
-    if (!globalThis.deploymentStore) {
+    try {
+      const deployment = await deploymentStore.getDeployment(deploymentId);
+      return deployment;
+    } catch (error) {
+      console.error('[RealDeployment] Failed to get deployment:', error);
       return null;
     }
-    return globalThis.deploymentStore.get(deploymentId);
   }
 
   /**
