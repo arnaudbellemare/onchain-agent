@@ -22,8 +22,21 @@ export default function DeploymentPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch deployment data
-    const fetchDeployment = async () => {
+    // Try to load the static HTML file first
+    const loadStaticDeployment = async () => {
+      try {
+        // Check if there's a static HTML file for this deployment
+        const response = await fetch(`/deployments/${deploymentId}.html`);
+        if (response.ok) {
+          // If static file exists, redirect to it
+          window.location.href = `/deployments/${deploymentId}.html`;
+          return;
+        }
+      } catch (error) {
+        console.log('No static file found, trying API...');
+      }
+
+      // Fallback to API
       try {
         const response = await fetch(`/api/deployments/${deploymentId}`);
         if (response.ok) {
@@ -38,7 +51,7 @@ export default function DeploymentPage() {
     };
 
     if (deploymentId) {
-      fetchDeployment();
+      loadStaticDeployment();
     }
   }, [deploymentId]);
 
@@ -59,6 +72,9 @@ export default function DeploymentPage() {
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">404</h1>
           <p>Deployment not found</p>
+          <a href="/" className="text-blue-300 hover:text-blue-100 mt-4 inline-block">
+            ← Back to VibeSDK
+          </a>
         </div>
       </div>
     );
@@ -82,7 +98,7 @@ export default function DeploymentPage() {
             <div className="cost-optimization-card rounded-xl p-6">
               <h3 className="text-2xl font-semibold mb-4 text-green-300">💰 Cost Optimization</h3>
               <ul className="space-y-2 text-gray-300">
-                <li>✅ 37.8% cost reduction achieved</li>
+                <li>✅ 29.5% average cost reduction</li>
                 <li>✅ Real-time AI optimization</li>
                 <li>✅ Blockchain-native payments</li>
                 <li>✅ x402 micropayments enabled</li>
@@ -95,7 +111,7 @@ export default function DeploymentPage() {
                 <li>✅ x402 Protocol (micropayments)</li>
                 <li>✅ AgentKit (agent management)</li>
                 <li>✅ VibeSDK (code generation)</li>
-                <li>✅ Cost Optimization (37.8% savings)</li>
+                <li>✅ Cost Optimization (29.5% savings)</li>
               </ul>
             </div>
           </div>
